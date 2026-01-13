@@ -34,6 +34,7 @@ import { mockExams } from './data/mock-exams'
 import { cn } from '@/lib/utils'
 import { PracticeSidebar, type PracticeSettings } from './components/practice-sidebar'
 import { PracticeMobileBar } from './components/practice-mobile-bar'
+import { PracticeSkeleton } from './components/practice-skeleton'
 
 interface PracticeModeProps {
   examId: string
@@ -176,9 +177,20 @@ function renderExamHtml(html: string) {
   return <div className='space-y-3'>{nodes.map((n, i) => renderNode(n, i, 'body'))}</div>
 }
 
+function mergeProgress(local: ExamProgress, remote: ExamProgress) {
+  const merged = { ...local }
+  Object.entries(remote).forEach(([qId, rVal]) => {
+    const lVal = merged[qId]
+    if (!lVal || (rVal.lastAnswered || 0) > (lVal.lastAnswered || 0)) {
+      merged[qId] = rVal
+    }
+  })
+  return merged
+}
+
 export function PracticeMode({ examId, initialMode, initialQuestionIndex }: PracticeModeProps) {
   const navigate = useNavigate()
-  const { user, guestId } = useAuth()
+  const { user, guestId, loading: authLoading } = useAuth()
   const userId = user?.uid || guestId
   const exam = mockExams.find((e) => e.id === examId)
   const fallbackQuestions = exam
@@ -202,7 +214,17 @@ export function PracticeMode({ examId, initialMode, initialQuestionIndex }: Prac
   const [selectedAnswers, setSelectedAnswers] = useState<number[]>([])
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [isBookmarked, setIsBookmarked] = useState(false)
-  const [examProgress, setExamProgress] = useState<ExamProgress>({})
+  const [examProgress, setExamProgress] = useState<ExamProgress>(() => {
+    // Try to load synchronously to avoid flash
+    if (typeof window !== 'undefined' && userId && examId) {
+      try {
+        return ProgressService.getExamProgress(userId, examId)
+      } catch {
+        return {}
+      }
+    }
+    return {}
+  })
   const [settings, setSettings] = useState<PracticeSettings>({
     autoNext: false,
     studyMode: false,
@@ -211,6 +233,9 @@ export function PracticeMode({ examId, initialMode, initialQuestionIndex }: Prac
     mistakesMode: initialMode === 'mistakes',
   })
   const [showClearConfirm, setShowClearConfirm] = useState(false)
+  const [isReady, setIsReady] = useState(false)
+  const [isProgressLoaded, setIsProgressLoaded] = useState(false)
+  const [isRemoteSynced, setIsRemoteSynced] = useState(false)
 
   // Filter questions for "My Mistakes" mode
   const [mistakeQuestions, setMistakeQuestions] = useState<PracticeQuestion[] | null>(null)
@@ -259,7 +284,7 @@ export function PracticeMode({ examId, initialMode, initialQuestionIndex }: Prac
     } else {
         setMistakeQuestions(null)
       }
-  }, [settings.mistakesMode, settings.consecutiveCorrect, allQuestions]) // Intentionally omit examProgress to avoid shifting list while practicing
+  }, [settings.mistakesMode, settings.consecutiveCorrect, allQuestions, isRemoteSynced]) // Re-run when remote data syncs, but avoid examProgress to prevent shifting while practicing
 
   const questions = settings.mistakesMode ? mistakeQuestions : allQuestions
 
@@ -267,20 +292,39 @@ export function PracticeMode({ examId, initialMode, initialQuestionIndex }: Prac
   useEffect(() => {
     if (userId && examId) {
       const progress = ProgressService.getExamProgress(userId, examId)
-      setExamProgress(progress)
+      // Only set if we have data or if it's the first load (to avoid overwriting with empty)
+      if (Object.keys(progress).length > 0 || !isProgressLoaded) {
+        setExamProgress(progress)
+      }
+      setIsProgressLoaded(true)
     }
   }, [userId, examId])
 
   useEffect(() => {
-    if (!user?.uid) return
+    if (!user?.uid) {
+      setIsRemoteSynced(true)
+      return
+    }
+
+    setIsRemoteSynced(false)
     const unsub = RemoteProgress.subscribeExamProgress(user.uid, examId, (p) => {
-      setExamProgress(p || {})
+      setExamProgress(prev => mergeProgress(prev, p || {}))
+      setIsRemoteSynced(true)
     })
     return () => unsub()
   }, [user?.uid, examId])
 
   // Sync current question state with progress
   useEffect(() => {
+    // Wait for auth to settle
+    if (authLoading) return
+
+    // Wait for progress to be loaded if we are waiting for user
+    if (!isProgressLoaded && userId) return
+
+    // Wait for remote sync if logged in, UNLESS we already have local data to show
+    if (user?.uid && !isRemoteSynced && Object.keys(examProgress).length === 0) return
+
     if (questions && questions[currentQuestionIndex] && userId) {
       const qId = questions[currentQuestionIndex].id
       const progress = examProgress[qId]
@@ -296,8 +340,11 @@ export function PracticeMode({ examId, initialMode, initialQuestionIndex }: Prac
         setIsSubmitted(false)
         setSelectedAnswers([])
       }
+      
+      // Mark as ready once we've synced the first time
+      setIsReady(true)
     }
-  }, [questions, currentQuestionIndex, userId, examProgress])
+  }, [questions, currentQuestionIndex, userId, examProgress, isProgressLoaded, authLoading, isRemoteSynced, user?.uid])
 
   useEffect(() => {
     let cancelled = false
@@ -515,35 +562,8 @@ export function PracticeMode({ examId, initialMode, initialQuestionIndex }: Prac
     setShowClearConfirm(false)
   }
 
-  if (isLoading && !questions) {
-    return (
-      <>
-        <Header>
-          <div className='flex items-center gap-4'>
-            {exam ? (
-              <Link to='/exams/$examId' params={{ examId }}>
-                <Button variant='ghost' size='icon'>
-                  <ArrowLeft className='h-4 w-4' />
-                </Button>
-              </Link>
-            ) : (
-              <Link to='/exams'>
-                <Button variant='ghost' size='icon'>
-                  <ArrowLeft className='h-4 w-4' />
-                </Button>
-              </Link>
-            )}
-            <h1 className='text-lg font-semibold'>{title} - Practice</h1>
-          </div>
-          <div className='ms-auto flex items-center space-x-4'>
-            <ThemeSwitch />
-          </div>
-        </Header>
-        <Main className='mx-auto w-full max-w-3xl'>
-          <div className='text-sm text-muted-foreground'>Loading questions…</div>
-        </Main>
-      </>
-    )
+  if ((isLoading && !questions) || !isReady || authLoading) {
+    return <PracticeSkeleton />
   }
 
   if (loadError || !questions || !question) {

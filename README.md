@@ -51,13 +51,11 @@ Value (JSON Object):
   - Bookmark toggle: writes `bookmarked`.
   - Clear Progress: clears answer-related fields, preserves `bookmarked`.
 - **Subscriptions**:
-  - Practice/Study Mode subscribe to `examtopics_progress/{uid}/{examId}` to reflect remote changes live.
-- **Merge Strategy on Login**:
-  - Merge local Guest → local User:
-    - If User has data for a question, keep User’s existing data.
-    - If User lacks data, copy Guest’s data.
-    - `bookmarked` uses logical OR.
-  - After merge, push the User’s local progress to Firebase for cross-device availability.
+  - Practice/Study modes subscribe to `examtopics_progress/{uid}/{examId}` to reflect remote changes live.
+- **Merge Strategy**:
+  - **Login Merge**: Merges Guest progress into User account. If User has existing data for a question, it is preserved unless the Guest data is newer.
+  - **Live Sync**: Uses a smart merge strategy that prioritizes the most recent `lastAnswered` timestamp between local and remote data to prevent overwriting recent progress with stale remote data.
+  - **Optimized Loading**: Prioritizes rendering local data immediately to eliminate UI flash, while background synchronization ensures consistency.
 
 ### Firebase Setup
 - **Environment Variables**:
@@ -213,6 +211,9 @@ Route: `/exams/$examId/practice`
   - Show explanation
   - Auto-record progress
   - **Clear Progress**: Requires double confirmation via a dialog to prevent accidental deletion
+- **Performance**:
+  - **Smart Loading**: Uses a skeleton screen to prevent UI flash during initial load.
+  - **Instant Render**: Displays local progress immediately while synchronizing with the cloud in the background.
 
 ## Study Mode Guide
 
