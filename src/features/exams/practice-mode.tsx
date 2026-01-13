@@ -14,6 +14,16 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog"
 import { Label } from '@/components/ui/label'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Checkbox } from '@/components/ui/checkbox'
@@ -194,10 +204,11 @@ export function PracticeMode({ examId, initialMode }: PracticeModeProps) {
   const [settings, setSettings] = useState<PracticeSettings>({
     autoNext: false,
     studyMode: false,
-    consecutiveCorrect: 0,
+    consecutiveCorrect: 3,
     fontSize: 'normal',
     mistakesMode: initialMode === 'mistakes',
   })
+  const [showClearConfirm, setShowClearConfirm] = useState(false)
 
   // Filter questions for "My Mistakes" mode
   const [mistakeQuestions, setMistakeQuestions] = useState<PracticeQuestion[] | null>(null)
@@ -459,18 +470,21 @@ export function PracticeMode({ examId, initialMode }: PracticeModeProps) {
 
   const handleClearProgress = () => {
     if (!userId) return
-    if (confirm('Are you sure you want to clear your progress for this exam?')) {
-      ProgressService.clearExamProgress(userId, examId)
-      if (user?.uid) {
-        void RemoteProgress.clearExamProgress(user.uid, examId)
-      }
-      setExamProgress({})
-      setIsSubmitted(false)
-      setSelectedAnswers([])
-      if (settings.mistakesMode) {
-        setMistakeQuestions([])
-      }
+    setShowClearConfirm(true)
+  }
+
+  const confirmClearProgress = () => {
+    ProgressService.clearExamProgress(userId, examId)
+    if (user?.uid) {
+      void RemoteProgress.clearExamProgress(user.uid, examId)
     }
+    setExamProgress({})
+    setIsSubmitted(false)
+    setSelectedAnswers([])
+    if (settings.mistakesMode) {
+      setMistakeQuestions([])
+    }
+    setShowClearConfirm(false)
   }
 
   if (isLoading && !questions) {
@@ -748,6 +762,23 @@ export function PracticeMode({ examId, initialMode }: PracticeModeProps) {
         isBookmarked={isBookmarked}
         onToggleBookmark={toggleBookmark}
       />
+
+      <AlertDialog open={showClearConfirm} onOpenChange={setShowClearConfirm}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This action cannot be undone. This will permanently delete your progress for this exam.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={confirmClearProgress} className="bg-red-600 hover:bg-red-700">
+              Continue
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   )
 }

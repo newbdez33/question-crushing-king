@@ -192,11 +192,12 @@ Route: `/exams/$examId/practice`
 - **Settings Panel**:
   - **Auto next**: Auto-jump on correct answer
   - **Font size**: Adjust font size for the question content, options, and explanation
-  - **Consecutive correct**: Wrong answer removal threshold (for My Mistakes mode)
+  - **Consecutive correct**: Wrong answer removal threshold (Only visible in "My Mistakes" mode, default: 3)
 - **Interaction**:
   - Instant grading after submission
   - Show explanation
   - Auto-record progress
+  - **Clear Progress**: Requires double confirmation via a dialog to prevent accidental deletion
 
 ## Study Mode Guide
 

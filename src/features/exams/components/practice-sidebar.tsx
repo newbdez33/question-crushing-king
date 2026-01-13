@@ -106,33 +106,35 @@ export function PracticeSidebar({
               />
             </div>
 
-            <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <Label className="text-sm font-normal">Consecutive correct</Label>
-                <div className="flex items-center gap-2">
-                  <Button 
-                    variant="outline" 
-                    size="icon" 
-                    className="h-8 w-8"
-                    onClick={() => onSettingsChange({...settings, consecutiveCorrect: Math.max(0, settings.consecutiveCorrect - 1)})}
-                  >
-                    -
-                  </Button>
-                  <div className="w-8 text-center text-sm">{settings.consecutiveCorrect}</div>
-                  <Button 
-                    variant="outline" 
-                    size="icon" 
-                    className="h-8 w-8"
-                    onClick={() => onSettingsChange({...settings, consecutiveCorrect: settings.consecutiveCorrect + 1})}
-                  >
-                    +
-                  </Button>
+            {settings.mistakesMode && (
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <Label className="text-sm font-normal">Consecutive correct</Label>
+                  <div className="flex items-center gap-2">
+                    <Button 
+                      variant="outline" 
+                      size="icon" 
+                      className="h-8 w-8"
+                      onClick={() => onSettingsChange({...settings, consecutiveCorrect: Math.max(0, settings.consecutiveCorrect - 1)})}
+                    >
+                      -
+                    </Button>
+                    <div className="w-8 text-center text-sm">{settings.consecutiveCorrect}</div>
+                    <Button 
+                      variant="outline" 
+                      size="icon" 
+                      className="h-8 w-8"
+                      onClick={() => onSettingsChange({...settings, consecutiveCorrect: settings.consecutiveCorrect + 1})}
+                    >
+                      +
+                    </Button>
+                  </div>
                 </div>
+                <p className="text-xs text-muted-foreground text-right leading-tight">
+                  Auto remove wrong questions<br/>0 means never remove
+                </p>
               </div>
-              <p className="text-xs text-muted-foreground text-right leading-tight">
-                Auto remove wrong questions<br/>0 means never remove
-              </p>
-            </div>
+            )}
 
             <div className="space-y-2">
               <Label className="text-sm font-normal">Font size</Label>
