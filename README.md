@@ -177,14 +177,21 @@ Route: `/exams/$examId/practice`
 
 - **Layout**:
   - **Top**: Question number, type (Single/Multiple Choice)
-  - **Middle**: Question stem (HTML/Image), options list
-  - **Bottom**: Navigation bar (Previous/Next icon buttons), Submit Answer button
+  - **Middle**: Question stem (HTML/Image), options list with A/B/C/D indicators
+  - **Bottom**: 
+    - **Left**: Previous Question button
+    - **Center**: Submit Answer button (absolute centered)
+    - **Right**: Next Question button
   - **Responsive**:
     - **Desktop (≥ lg)**: 右侧 Sidebar 显示答题卡与设置面板
     - **Mobile (< lg)**: 隐藏右侧 Sidebar，显示底部 Tabbar（Bookmark、Correct、Wrong、Answer Card）。点击 Answer Card 打开底部弹层 Sheet 显示答题卡网格，可跳题
+- **Submission Feedback**:
+  - Highlights correct/incorrect status with color coding
+  - Displays explicit text for "Correct Answer" and "Your Answer" using A/B/C/D codes
+  - Shows explanation if available
 - **Settings Panel**:
   - **Auto next**: Auto-jump on correct answer
-  - **Font size**: Font size adjustment
+  - **Font size**: Adjust font size for the question content, options, and explanation
   - **Consecutive correct**: Wrong answer removal threshold (for My Mistakes mode)
 - **Interaction**:
   - Instant grading after submission

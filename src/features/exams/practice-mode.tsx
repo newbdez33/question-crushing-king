@@ -546,7 +546,7 @@ export function PracticeMode({ examId, initialMode }: PracticeModeProps) {
             <Card>
               <CardHeader>
                 <div className='flex items-start justify-between gap-4'>
-                  <CardTitle className='text-base font-medium leading-normal'>
+                  <CardTitle className='font-medium leading-normal'>
                     <Badge variant='outline' className='mb-2 me-2'>
                       Question {currentQuestionIndex + 1} of {questions.length}
                     </Badge>
@@ -579,23 +579,35 @@ export function PracticeMode({ examId, initialMode }: PracticeModeProps) {
                     onValueChange={(val) => handleSelectAnswer(parseInt(val))}
                     disabled={isSubmitted}
                   >
-                    {question.options.map((option, idx) => (
-                      <div
-                        key={idx}
-                        className={cn(
-                          'flex items-center space-x-2 rounded-lg border p-4 transition-colors',
-                          isSubmitted && question.correctAnswers.includes(idx) && 'border-green-500 bg-green-50 dark:bg-green-950/20',
-                          isSubmitted && selectedAnswers.includes(idx) && !question.correctAnswers.includes(idx) && 'border-red-500 bg-red-50 dark:bg-red-950/20',
-                          !isSubmitted && 'hover:bg-muted/50'
-                        )}
-                      >
-                        <RadioGroupItem value={idx.toString()} id={`option-${idx}`} />
-                        <Label
-                          htmlFor={`option-${idx}`}
-                          className='flex-1 cursor-pointer font-normal leading-relaxed'
+                    {question.options.map((option, idx) => {
+                      const isSelected = selectedAnswers.includes(idx)
+                      return (
+                        <div
+                          key={idx}
+                          className={cn(
+                            'flex items-center space-x-3 rounded-lg border p-4 transition-colors cursor-pointer',
+                            isSubmitted && question.correctAnswers.includes(idx) && 'border-green-500 bg-green-50 dark:bg-green-950/20',
+                            isSubmitted && isSelected && !question.correctAnswers.includes(idx) && 'border-red-500 bg-red-50 dark:bg-red-950/20',
+                            !isSubmitted && 'hover:bg-muted/50',
+                            isSelected && !isSubmitted && 'border-primary bg-accent'
+                          )}
+                          onClick={() => !isSubmitted && handleSelectAnswer(idx)}
                         >
-                          {option.html ? renderExamHtml(option.html) : option.text}
-                        </Label>
+                          <RadioGroupItem value={idx.toString()} id={`option-${idx}`} className="sr-only" />
+                          <div className={cn(
+                            "flex h-6 w-6 shrink-0 items-center justify-center rounded-full border text-xs font-medium transition-colors",
+                            isSelected 
+                              ? "border-primary bg-primary text-primary-foreground" 
+                              : "border-muted-foreground"
+                          )}>
+                            {String.fromCharCode(65 + idx)}
+                          </div>
+                          <Label
+                            htmlFor={`option-${idx}`}
+                            className={cn('flex-1 cursor-pointer font-normal leading-relaxed', fontSizeClass)}
+                          >
+                            {option.html ? renderExamHtml(option.html) : option.text}
+                          </Label>
                         {isSubmitted && question.correctAnswers.includes(idx) && (
                           <CheckCircle className='h-5 w-5 text-green-500' />
                         )}
@@ -603,7 +615,8 @@ export function PracticeMode({ examId, initialMode }: PracticeModeProps) {
                           <XCircle className='h-5 w-5 text-red-500' />
                         )}
                       </div>
-                    ))}
+                    )
+                  })}
                   </RadioGroup>
                 ) : (
                   <div className='grid gap-3' key={question.id}>
@@ -613,10 +626,11 @@ export function PracticeMode({ examId, initialMode }: PracticeModeProps) {
                         <div
                           key={idx}
                           className={cn(
-                            'flex items-center space-x-2 rounded-lg border p-4 transition-colors',
+                            'flex items-center space-x-3 rounded-lg border p-4 transition-colors cursor-pointer',
                             isSubmitted && question.correctAnswers.includes(idx) && 'border-green-500 bg-green-50 dark:bg-green-950/20',
                             isSubmitted && isSelected && !question.correctAnswers.includes(idx) && 'border-red-500 bg-red-50 dark:bg-red-950/20',
-                            !isSubmitted && 'hover:bg-muted/50'
+                            !isSubmitted && 'hover:bg-muted/50',
+                            isSelected && !isSubmitted && 'border-primary bg-accent'
                           )}
                           onClick={() => !isSubmitted && handleSelectAnswer(idx)}
                         >
@@ -625,10 +639,19 @@ export function PracticeMode({ examId, initialMode }: PracticeModeProps) {
                             checked={isSelected}
                             onCheckedChange={() => !isSubmitted && handleSelectAnswer(idx)}
                             disabled={isSubmitted}
+                            className="sr-only"
                           />
+                          <div className={cn(
+                            "flex h-6 w-6 shrink-0 items-center justify-center rounded-full border text-xs font-medium transition-colors",
+                            isSelected 
+                              ? "border-primary bg-primary text-primary-foreground" 
+                              : "border-muted-foreground"
+                          )}>
+                            {String.fromCharCode(65 + idx)}
+                          </div>
                           <Label
                             htmlFor={`option-${idx}`}
-                            className='flex-1 cursor-pointer font-normal leading-relaxed'
+                            className={cn('flex-1 cursor-pointer font-normal leading-relaxed', fontSizeClass)}
                           >
                             {option.html ? renderExamHtml(option.html) : option.text}
                           </Label>
@@ -652,8 +675,18 @@ export function PracticeMode({ examId, initialMode }: PracticeModeProps) {
                     <p className='font-semibold'>
                       {isCorrect ? 'Correct Answer!' : 'Incorrect Answer'}
                     </p>
+                    <div className='mt-2 flex gap-6 text-sm'>
+                      <p>
+                        <span className='font-semibold'>Correct Answer: </span>
+                        {question.correctAnswers.map(i => String.fromCharCode(65 + i)).join(', ')}
+                      </p>
+                      <p>
+                        <span className='font-semibold'>Your Answer: </span>
+                        {selectedAnswers.slice().sort((a, b) => a - b).map(i => String.fromCharCode(65 + i)).join(', ')}
+                      </p>
+                    </div>
                     {question.explanation && (
-                      <div className='mt-2 text-sm'>
+                      <div className='mt-2'>
                         <p className='font-semibold'>Explanation:</p>
                         <p>{question.explanation}</p>
                       </div>
@@ -661,34 +694,34 @@ export function PracticeMode({ examId, initialMode }: PracticeModeProps) {
                   </div>
                 )}
               </CardContent>
-              <CardFooter className='flex items-center justify-between border-t bg-muted/50 p-6'>
-                <div className="flex gap-2">
-                  <Button
-                    variant='outline'
-                    size='icon'
-                    onClick={handlePrev}
-                    disabled={currentQuestionIndex === 0}
-                    title="Previous Question"
-                  >
-                    <ChevronLeft className='h-4 w-4' />
-                  </Button>
-
-                  <Button 
-                    variant='outline' 
-                    size='icon'
-                    onClick={handleNext} 
-                    disabled={currentQuestionIndex === questions.length - 1}
-                    title="Next Question"
-                  >
-                    <ChevronRight className='h-4 w-4' />
-                  </Button>
-                </div>
+              <CardFooter className='relative flex items-center justify-between border-t bg-muted/50 p-6'>
+                <Button
+                  variant='outline'
+                  size='icon'
+                  onClick={handlePrev}
+                  disabled={currentQuestionIndex === 0}
+                  title="Previous Question"
+                >
+                  <ChevronLeft className='h-4 w-4' />
+                </Button>
                 
                 {!isSubmitted && (
-                  <Button onClick={handleSubmit} disabled={!canSubmit} className="min-w-[120px]">
-                    Submit Answer
-                  </Button>
+                  <div className="absolute left-1/2 -translate-x-1/2">
+                    <Button onClick={handleSubmit} disabled={!canSubmit} className="min-w-[120px]">
+                      Submit Answer
+                    </Button>
+                  </div>
                 )}
+
+                <Button 
+                  variant='outline' 
+                  size='icon'
+                  onClick={handleNext} 
+                  disabled={currentQuestionIndex === questions.length - 1}
+                  title="Next Question"
+                >
+                  <ChevronRight className='h-4 w-4' />
+                </Button>
               </CardFooter>
             </Card>
           </Main>
