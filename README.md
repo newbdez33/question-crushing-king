@@ -83,6 +83,12 @@ Value (JSON Object):
 }
 ```
 
+### Sync Hooks
+
+- Auth context listens to Firebase Auth and merges local guest progress into the user account on login, then syncs to Realtime DB.
+- Practice/Study modes subscribe to `examtopics_progress/{uid}/{examId}` and update local state when remote progress changes.
+- Progress service exposes helpers to read/write progress in a way that is compatible with both localStorage and Firebase.
+
 ## Tech Stack
 
 **UI:** [ShadcnUI](https://ui.shadcn.com) (TailwindCSS + RadixUI)  
