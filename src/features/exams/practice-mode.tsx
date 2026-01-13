@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef, type ReactNode } from 'react'
-import { Link } from '@tanstack/react-router'
+import { Link, useNavigate } from '@tanstack/react-router'
 import { ArrowLeft, CheckCircle, XCircle, ChevronLeft, ChevronRight, Bookmark } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -38,6 +38,7 @@ import { PracticeMobileBar } from './components/practice-mobile-bar'
 interface PracticeModeProps {
   examId: string
   initialMode?: 'mistakes'
+  initialQuestionIndex?: number
 }
 
 type DemoOption = {
@@ -175,7 +176,8 @@ function renderExamHtml(html: string) {
   return <div className='space-y-3'>{nodes.map((n, i) => renderNode(n, i, 'body'))}</div>
 }
 
-export function PracticeMode({ examId, initialMode }: PracticeModeProps) {
+export function PracticeMode({ examId, initialMode, initialQuestionIndex }: PracticeModeProps) {
+  const navigate = useNavigate()
   const { user, guestId } = useAuth()
   const userId = user?.uid || guestId
   const exam = mockExams.find((e) => e.id === examId)
@@ -196,7 +198,7 @@ export function PracticeMode({ examId, initialMode }: PracticeModeProps) {
   const [title, setTitle] = useState(exam?.title ?? examId)
   const [isLoading, setIsLoading] = useState(true)
   const [loadError, setLoadError] = useState<string | null>(null)
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(initialQuestionIndex ?? 0)
   const [selectedAnswers, setSelectedAnswers] = useState<number[]>([])
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [isBookmarked, setIsBookmarked] = useState(false)
@@ -212,8 +214,25 @@ export function PracticeMode({ examId, initialMode }: PracticeModeProps) {
 
   // Filter questions for "My Mistakes" mode
   const [mistakeQuestions, setMistakeQuestions] = useState<PracticeQuestion[] | null>(null)
+  const prevMistakesMode = useRef(settings.mistakesMode)
 
   useEffect(() => {
+    if (initialQuestionIndex !== undefined) {
+      setCurrentQuestionIndex(initialQuestionIndex)
+    }
+  }, [initialQuestionIndex])
+
+  useEffect(() => {
+    navigate({
+      search: (prev: any) => ({ ...prev, q: currentQuestionIndex + 1 }),
+      replace: true,
+    })
+  }, [currentQuestionIndex, navigate])
+
+  useEffect(() => {
+    const wasMistakesMode = prevMistakesMode.current
+    prevMistakesMode.current = settings.mistakesMode
+
     if (settings.mistakesMode && allQuestions) {
       const filtered = allQuestions.filter((q) => {
         const p = examProgress[q.id]
@@ -227,10 +246,19 @@ export function PracticeMode({ examId, initialMode }: PracticeModeProps) {
         return false
       })
       setMistakeQuestions(filtered)
-      setCurrentQuestionIndex(0)
+      
+      if (settings.mistakesMode !== wasMistakesMode) {
+        setCurrentQuestionIndex(0)
+      } else {
+        // Clamp index to ensure it's valid
+        setCurrentQuestionIndex((prev) => {
+          if (prev < filtered.length) return prev
+          return 0
+        })
+      }
     } else {
-      setMistakeQuestions(null)
-    }
+        setMistakeQuestions(null)
+      }
   }, [settings.mistakesMode, settings.consecutiveCorrect, allQuestions]) // Intentionally omit examProgress to avoid shifting list while practicing
 
   const questions = settings.mistakesMode ? mistakeQuestions : allQuestions
@@ -281,7 +309,7 @@ export function PracticeMode({ examId, initialMode }: PracticeModeProps) {
       setTitle(exam?.title ?? examId)
       // Only reset if no questions loaded yet
       if (!allQuestions) {
-        setCurrentQuestionIndex(0)
+        setCurrentQuestionIndex(initialQuestionIndex ?? 0)
       }
 
       try {
@@ -351,7 +379,7 @@ export function PracticeMode({ examId, initialMode }: PracticeModeProps) {
   const canSubmit = !isSubmitted && selectedAnswers.length > 0
   const isCorrect = isSubmitted && question && sameSelections(selectedAnswers, question.correctAnswers)
 
-  const didAutoNavigate = useRef(false)
+  const didAutoNavigate = useRef(initialQuestionIndex !== undefined)
   useEffect(() => {
     if (didAutoNavigate.current) return
     if (isLoading) return
@@ -542,7 +570,7 @@ export function PracticeMode({ examId, initialMode }: PracticeModeProps) {
     <div className='flex min-h-screen flex-col bg-background'>
       <Header fixed>
         <div className='flex items-center gap-4'>
-          <Link to='/exams'>
+          <Link to='/exams/$examId' params={{ examId }}>
             <Button variant='ghost' size='icon'>
               <ArrowLeft className='h-4 w-4' />
             </Button>
@@ -554,7 +582,7 @@ export function PracticeMode({ examId, initialMode }: PracticeModeProps) {
         </div>
       </Header>
 
-      <div className='flex flex-1 pt-16 items-start justify-center gap-4'>
+      <div className='flex flex-1 pt-0 items-start justify-center gap-4'>
         <div className='w-full max-w-3xl'>
           <Main className={cn('w-full pb-24 lg:pr-0', fontSizeClass)}>
             <Card>

@@ -175,6 +175,10 @@ Relevant implementations can be found in:
 
 Route: `/exams/$examId/practice`
 
+- **URL Parameters**:
+  - `q`: Current question number (1-based), e.g., `?q=5` (Automatically updated during navigation for persistence)
+  - `mode`: Set to `mistakes` to enter "My Mistakes" mode
+
 - **Layout**:
   - **Top**: Question number, type (Single/Multiple Choice)
   - **Middle**: Question stem (HTML/Image), options list with A/B/C/D indicators
