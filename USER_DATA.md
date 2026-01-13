@@ -1,6 +1,6 @@
 # User Data Documentation
 
-This document describes the structure of user data stored locally in the application. The application currently uses `localStorage` for data persistence.
+This document describes the structure of user data stored locally in the application, and its mapping to Firebase Realtime Database for authenticated users.
 
 ## Storage Keys
 
@@ -19,7 +19,7 @@ This document describes the structure of user data stored locally in the applica
 
 ### 2. Progress Data (`examtopics_progress`)
 
-This item stores a JSON object containing progress for all users (both guest and authenticated).
+This item stores a JSON object containing progress for all users (both guest and authenticated). For authenticated users, the same structure is mirrored in Firebase Realtime Database for cross-device sync.
 
 #### Schema Hierarchy
 
@@ -88,20 +88,22 @@ interface QuestionProgress {
 
 - **Authenticated User**:
   - Identified by their unique Firebase User UID.
-  - Progress is saved locally under this Firebase UID.
-  - Enables persistent identity (though currently data is still local-only).
+  - Progress is saved locally under this Firebase UID and also synced to Firebase Realtime Database under `examtopics_progress/{uid}`.
+  - Screens subscribe to `examtopics_progress/{uid}/{examId}` and reflect remote changes in real-time.
 
 ### Guest Data Merge Process (On Login)
 When a guest user logs in or signs up:
 1. **Trigger**: The application detects an authentication state change (via `onAuthStateChanged`).
-2. **Action**: The system invokes `ProgressService.mergeProgress(guestId, userId)`.
-3. **Merge Strategy**:
+2. **Action**: The system invokes `ProgressService.mergeProgress(guestId, userId)` to merge Guest data into the User’s local progress, then pushes the merged result to Firebase.
+3. **Merge Strategy (Local)**:
    - The system iterates through all exam progress stored under the `guestId`.
    - **Data Preservation**: 
      - If the User account (Target) already has data for a specific question, the **User's existing data is preserved** (Target overwrites Source).
      - If the User account has no data for a question, the **Guest's data is copied over**.
    - **Bookmarks**: Special logic applies. A question is marked as bookmarked if it was bookmarked in **either** the Guest session OR the User account (Logical OR).
    - **Result**: The User account ends up with a superset of their previous data plus any new non-conflicting progress from the guest session.
+4. **Sync to Firebase**:
+   - After merge, the system writes the merged local User data to `examtopics_progress/{uid}` in Firebase so it’s available across devices.
 
 - **Progress Tracking**:
   - `status`: Updated immediately upon submitting an answer.
@@ -113,3 +115,35 @@ When a guest user logs in or signs up:
 
 - **Clearing Progress**:
   - When "Clear Progress" is triggered for an exam, answer-related fields (`status`, `lastAnswered`, `consecutiveCorrect`, `userSelection`) are removed, but `bookmarked` status is preserved.
+  - For authenticated users, the same clear operation is applied in Firebase under `examtopics_progress/{uid}/{examId}`.
+
+## Firebase Realtime Database
+
+### Base Path
+- `examtopics_progress/{uid}/{examId}/{questionId}`
+
+### Fields
+- `status`: `"correct" | "incorrect" | "skipped"`
+- `lastAnswered`: number (timestamp ms)
+- `userSelection`: number[]
+- `consecutiveCorrect`: number
+- `timesWrong`: number
+- `bookmarked`: boolean
+
+### Subscriptions
+- UI subscribes to `examtopics_progress/{uid}/{examId}` via Firebase listeners and updates local UI state when remote data changes.
+
+### Rules (Example)
+- Only the authenticated user can read/write their subtree:
+```
+{
+  "rules": {
+    "examtopics_progress": {
+      "$uid": {
+        ".read": "auth != null && auth.uid == $uid",
+        ".write": "auth != null && auth.uid == $uid"
+      }
+    }
+  }
+}
+```

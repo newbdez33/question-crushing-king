@@ -1,10 +1,12 @@
-import { useEffect, useState, useMemo } from 'react'
+import { useEffect, useState, useRef, type ReactNode } from 'react'
 import { Link } from '@tanstack/react-router'
 import { ArrowLeft, CheckCircle, XCircle, ChevronLeft, ChevronRight, Bookmark } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { useAuth } from '@/context/auth-context'
 import { ProgressService, type ExamProgress } from '@/services/progress-service'
+import * as RemoteProgress from '@/services/firebase-progress'
+import { toast } from 'sonner'
 import {
   Card,
   CardContent,
@@ -21,6 +23,7 @@ import { ThemeSwitch } from '@/components/theme-switch'
 import { mockExams } from './data/mock-exams'
 import { cn } from '@/lib/utils'
 import { PracticeSidebar, type PracticeSettings } from './components/practice-sidebar'
+import { PracticeMobileBar } from './components/practice-mobile-bar'
 
 interface PracticeModeProps {
   examId: string
@@ -99,15 +102,14 @@ function renderExamHtml(html: string) {
   const doc = new DOMParser().parseFromString(html, 'text/html')
   const nodes = Array.from(doc.body.childNodes)
 
-  const renderNode = (node: ChildNode, key: string | number): ReactNode => {
+  const renderNode = (node: ChildNode, key: string | number, parentTag?: string): ReactNode => {
     if (node.nodeType === Node.TEXT_NODE) {
       const text = (node.textContent ?? '').trim()
       if (!text) return null
-      return (
-        <p key={key} className='leading-relaxed'>
-          {text}
-        </p>
-      )
+      if (parentTag === 'p' || parentTag === 'li') {
+        return text
+      }
+      return <span key={key} className='leading-relaxed'>{text}</span>
     }
 
     if (node.nodeType !== Node.ELEMENT_NODE) return null
@@ -115,7 +117,7 @@ function renderExamHtml(html: string) {
     const el = node as Element
     const tag = el.tagName.toLowerCase()
     const children = Array.from(el.childNodes).map((child, index) =>
-      renderNode(child, `${key}-${index}`)
+      renderNode(child, `${key}-${index}`, tag)
     )
 
     if (tag === 'p') {
@@ -160,7 +162,7 @@ function renderExamHtml(html: string) {
     )
   }
 
-  return <div className='space-y-3'>{nodes.map((n, i) => renderNode(n, i))}</div>
+  return <div className='space-y-3'>{nodes.map((n, i) => renderNode(n, i, 'body'))}</div>
 }
 
 export function PracticeMode({ examId, initialMode }: PracticeModeProps) {
@@ -229,6 +231,14 @@ export function PracticeMode({ examId, initialMode }: PracticeModeProps) {
       setExamProgress(progress)
     }
   }, [userId, examId])
+
+  useEffect(() => {
+    if (!user?.uid) return
+    const unsub = RemoteProgress.subscribeExamProgress(user.uid, examId, (p) => {
+      setExamProgress(p || {})
+    })
+    return () => unsub()
+  }, [user?.uid, examId])
 
   // Sync current question state with progress
   useEffect(() => {
@@ -330,6 +340,23 @@ export function PracticeMode({ examId, initialMode }: PracticeModeProps) {
   const canSubmit = !isSubmitted && selectedAnswers.length > 0
   const isCorrect = isSubmitted && question && sameSelections(selectedAnswers, question.correctAnswers)
 
+  const didAutoNavigate = useRef(false)
+  useEffect(() => {
+    if (didAutoNavigate.current) return
+    if (isLoading) return
+    if (settings.mistakesMode) return
+    if (!questions || questions.length === 0) return
+    const entries = Object.entries(examProgress).filter(([, p]) => p?.lastAnswered)
+    if (entries.length === 0) return
+    entries.sort((a, b) => (b[1].lastAnswered || 0) - (a[1].lastAnswered || 0))
+    const targetId = entries[0][0]
+    const idx = questions.findIndex((q) => q.id === targetId)
+    if (idx >= 0) {
+      setCurrentQuestionIndex(idx)
+      didAutoNavigate.current = true
+    }
+  }, [questions, examProgress, isLoading, settings.mistakesMode])
+
   const handleSelectAnswer = (index: number) => {
     if (isSubmitted) return // Prevent changes if submitted
 
@@ -355,6 +382,11 @@ export function PracticeMode({ examId, initialMode }: PracticeModeProps) {
     
     // Save to service
     ProgressService.saveAnswer(userId, examId, question.id, status, selectedAnswers)
+    if (user?.uid) {
+      void RemoteProgress.saveAnswer(user.uid, examId, question.id, status, selectedAnswers, examProgress[question.id])
+    } else {
+      toast.message('Saved locally. Sign in to sync to cloud')
+    }
     
     // Update local state
     setIsSubmitted(true)
@@ -409,6 +441,11 @@ export function PracticeMode({ examId, initialMode }: PracticeModeProps) {
     const newState = !isBookmarked
     setIsBookmarked(newState)
     ProgressService.toggleBookmark(userId, examId, question.id)
+    if (user?.uid) {
+      void RemoteProgress.toggleBookmark(user.uid, examId, question.id, newState)
+    } else {
+      toast.message('Bookmark saved locally. Sign in to sync to cloud')
+    }
     
     // Update local progress
     setExamProgress(prev => ({
@@ -424,6 +461,9 @@ export function PracticeMode({ examId, initialMode }: PracticeModeProps) {
     if (!userId) return
     if (confirm('Are you sure you want to clear your progress for this exam?')) {
       ProgressService.clearExamProgress(userId, examId)
+      if (user?.uid) {
+        void RemoteProgress.clearExamProgress(user.uid, examId)
+      }
       setExamProgress({})
       setIsSubmitted(false)
       setSelectedAnswers([])
@@ -655,7 +695,7 @@ export function PracticeMode({ examId, initialMode }: PracticeModeProps) {
         </div>
 
         {/* Right Sidebar */}
-        <div className="py-6 pr-4">
+        <div className="hidden lg:block py-6 pr-4">
           <PracticeSidebar 
             questions={questions}
             progress={examProgress}
@@ -667,6 +707,14 @@ export function PracticeMode({ examId, initialMode }: PracticeModeProps) {
           />
         </div>
       </div>
+      <PracticeMobileBar
+        questions={questions ?? []}
+        progress={examProgress}
+        currentQuestionIndex={currentQuestionIndex}
+        onNavigate={handleNavigate}
+        isBookmarked={isBookmarked}
+        onToggleBookmark={toggleBookmark}
+      />
     </div>
   )
 }

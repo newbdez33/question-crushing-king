@@ -5,6 +5,8 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { useAuth } from '@/context/auth-context'
 import { ProgressService } from '@/services/progress-service'
+import * as RemoteProgress from '@/services/firebase-progress'
+import { toast } from 'sonner'
 import {
   Card,
   CardContent,
@@ -82,15 +84,14 @@ function renderExamHtml(html: string) {
   const doc = new DOMParser().parseFromString(html, 'text/html')
   const nodes = Array.from(doc.body.childNodes)
 
-  const renderNode = (node: ChildNode, key: string | number): ReactNode => {
+  const renderNode = (node: ChildNode, key: string | number, parentTag?: string): ReactNode => {
     if (node.nodeType === Node.TEXT_NODE) {
       const text = (node.textContent ?? '').trim()
       if (!text) return null
-      return (
-        <p key={key} className='leading-relaxed'>
-          {text}
-        </p>
-      )
+      if (parentTag === 'p' || parentTag === 'li') {
+        return text
+      }
+      return <span key={key} className='leading-relaxed'>{text}</span>
     }
 
     if (node.nodeType !== Node.ELEMENT_NODE) return null
@@ -98,7 +99,7 @@ function renderExamHtml(html: string) {
     const el = node as Element
     const tag = el.tagName.toLowerCase()
     const children = Array.from(el.childNodes).map((child, index) =>
-      renderNode(child, `${key}-${index}`)
+      renderNode(child, `${key}-${index}`, tag)
     )
 
     if (tag === 'p') {
@@ -143,7 +144,7 @@ function renderExamHtml(html: string) {
     )
   }
 
-  return <div className='space-y-3'>{nodes.map((n, i) => renderNode(n, i))}</div>
+  return <div className='space-y-3'>{nodes.map((n, i) => renderNode(n, i, 'body'))}</div>
 }
 
 export function StudyMode({ examId }: StudyModeProps) {
@@ -173,6 +174,17 @@ export function StudyMode({ examId }: StudyModeProps) {
       setIsBookmarked(progress[qId]?.bookmarked || false)
     }
   }, [questions, currentQuestionIndex, userId, examId])
+
+  useEffect(() => {
+    if (!user?.uid) return
+    const unsub = RemoteProgress.subscribeExamProgress(user.uid, examId, (exam) => {
+      const qId = questions?.[currentQuestionIndex]?.id
+      if (qId) {
+        setIsBookmarked(exam[qId]?.bookmarked || false)
+      }
+    })
+    return () => unsub()
+  }, [user?.uid, examId, questions, currentQuestionIndex])
 
   useEffect(() => {
     let cancelled = false
@@ -321,7 +333,12 @@ export function StudyMode({ examId }: StudyModeProps) {
     if (!userId) return
     const newState = !isBookmarked
     setIsBookmarked(newState)
-    ProgressService.toggleBookmark(userId, examId, question.id, newState)
+    ProgressService.toggleBookmark(userId, examId, question.id)
+    if (user?.uid) {
+      void RemoteProgress.toggleBookmark(user.uid, examId, question.id, newState)
+    } else {
+      toast.message('Bookmark saved locally. Sign in to sync to cloud')
+    }
   }
 
   return (

@@ -40,13 +40,9 @@ Exam Topics is a web-based application designed to help users practice for certi
 - **Interface**:
   - **Question Area**: Displays Question Text (supports HTML/Images), Options (Radio/Checkbox), and Type Tag (Single/Multiple Choice).
   - **Footer Navigation**: "Previous" (Icon), "Next" (Icon), "Submit Answer" (Text).
-  - **Sidebar (Desktop) / Drawer (Mobile)**:
-    - **Answer Sheet**: Grid of question numbers color-coded by status (Green=Correct, Red=Incorrect, Gray=Unanswered).
-    - **Settings**:
-      - **Auto next when correct**: Automatically advances after a correct submission.
-      - **Eye protection**: Reduces screen brightness/contrast (Visual toggle).
-      - **Consecutive correct**: Filter for "My Mistakes" mode (removes questions after N consecutive correct answers).
-      - **Font size**: Toggle between Small, Normal, Large.
+  - **Responsive**:
+    - **Desktop (≥ lg)**: 右侧 Sidebar，包含答题卡与设置面板（Auto next、Font size、Consecutive correct）
+    - **Mobile (< lg)**: 隐藏右侧 Sidebar，显示底部 Tabbar（Bookmark、Correct、Wrong、Answer Card）。点击 Answer Card 打开底部弹层 Sheet，展示答题卡网格并支持跳题
 - **Interaction**:
   - User selects answer(s) and clicks "Submit".
   - **Immediate Feedback**:

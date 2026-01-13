@@ -11,19 +11,19 @@ Question bank practice application based on Shadcn Admin Dashboard, designed to 
 - **Image Mapping**: Image static resources mapped to `public/data/images`
 - **UI/UX**: Retains dark mode, responsive layout, and sidebar capabilities from the original template
 
-## Auth & Persistence (Firebase + LocalStorage)
+## Auth & Persistence (Firebase + LocalStorage + Realtime DB)
 
 ### Authentication
 - **Firebase Auth**: Used for Sign Up, Sign In, Logout, and Forgot Password.
 - **Guest Mode**: Users can access content without logging in. A persistent UUID is generated and stored in `localStorage` for guests.
-- **Data Merging**: When a guest signs up or logs in, their local progress is merged into their account (future: synced to Firebase Realtime DB).
+- **Data Merging & Sync**: When a guest signs up or logs in, their local progress is merged into their account and then pushed to Firebase Realtime Database for cross-device sync.
 
 ### Local Storage Structure
 The application uses `localStorage` to persist user progress and settings. The key structure is designed to be compatible with Firebase Realtime Database paths.
 
 Key: `examtopics_progress`
 Value (JSON Object):
-```json
+```
 {
   "userId_or_guestId": {
     "examId": {
@@ -31,6 +31,52 @@ Value (JSON Object):
         "status": "correct" | "incorrect" | "skipped",
         "bookmarked": boolean,
         "lastAnswered": timestamp
+      }
+    }
+  }
+}
+```
+
+### Realtime Sync (Authenticated Users)
+- **Path**: `examtopics_progress/{uid}/{examId}/{questionId}`
+- **Fields**:
+  - `status`: `"correct" | "incorrect" | "skipped"`
+  - `lastAnswered`: number (ms)
+  - `userSelection`: number[]
+  - `consecutiveCorrect`: number
+  - `timesWrong`: number
+  - `bookmarked`: boolean
+- **Write Points**:
+  - Practice Mode submit: writes status, selections, timestamps, counts.
+  - Bookmark toggle: writes `bookmarked`.
+  - Clear Progress: clears answer-related fields, preserves `bookmarked`.
+- **Subscriptions**:
+  - Practice/Study Mode subscribe to `examtopics_progress/{uid}/{examId}` to reflect remote changes live.
+- **Merge Strategy on Login**:
+  - Merge local Guest → local User:
+    - If User has data for a question, keep User’s existing data.
+    - If User lacks data, copy Guest’s data.
+    - `bookmarked` uses logical OR.
+  - After merge, push the User’s local progress to Firebase for cross-device availability.
+
+### Firebase Setup
+- **Environment Variables**:
+  - `VITE_FIREBASE_API_KEY`
+  - `VITE_FIREBASE_AUTH_DOMAIN`
+  - `VITE_FIREBASE_PROJECT_ID`
+  - `VITE_FIREBASE_STORAGE_BUCKET`
+  - `VITE_FIREBASE_MESSAGING_SENDER_ID`
+  - `VITE_FIREBASE_APP_ID`
+  - `VITE_FIREBASE_MEASUREMENT_ID`
+  - `VITE_FIREBASE_DATABASE_URL` (Realtime DB)
+- **Database Rules** (example):
+```json
+{
+  "rules": {
+    "examtopics_progress": {
+      "$uid": {
+        ".read": "auth != null && auth.uid == $uid",
+        ".write": "auth != null && auth.uid == $uid"
       }
     }
   }
@@ -127,7 +173,9 @@ Route: `/exams/$examId/practice`
   - **Top**: Question number, type (Single/Multiple Choice)
   - **Middle**: Question stem (HTML/Image), options list
   - **Bottom**: Navigation bar (Previous/Next icon buttons), Submit Answer button
-  - **Sidebar (Desktop) / Drawer (Mobile)**: Answer sheet (Color-coded), Settings panel
+  - **Responsive**:
+    - **Desktop (≥ lg)**: 右侧 Sidebar 显示答题卡与设置面板
+    - **Mobile (< lg)**: 隐藏右侧 Sidebar，显示底部 Tabbar（Bookmark、Correct、Wrong、Answer Card）。点击 Answer Card 打开底部弹层 Sheet 显示答题卡网格，可跳题
 - **Settings Panel**:
   - **Auto next**: Auto-jump on correct answer
   - **Font size**: Font size adjustment

@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, useState, ReactNode } from 'react
 import { User, onAuthStateChanged, signOut as firebaseSignOut } from 'firebase/auth'
 import { auth } from '@/lib/firebase'
 import { ProgressService } from '@/services/progress-service'
+import { mergeLocalIntoRemote } from '@/services/firebase-progress'
 
 interface AuthContextType {
   user: User | null
@@ -34,6 +35,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         // Merge guest progress into user progress
         if (storedGuestId) {
           ProgressService.mergeProgress(storedGuestId, currentUser.uid)
+          const merged = ProgressService.getUserProgress(currentUser.uid)
+          void mergeLocalIntoRemote(currentUser.uid, merged)
         }
       }
       setUser(currentUser)
