@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link } from '@tanstack/react-router'
-import { ArrowLeft, BookOpen, Bookmark, CheckCircle, RotateCcw, AlertCircle, Brain } from 'lucide-react'
+import { ArrowLeft, BookOpen, CheckCircle, RotateCcw, AlertCircle, Brain } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -12,6 +12,9 @@ import { Header } from '@/components/layout/header'
 import { Main } from '@/components/layout/main'
 import { ProfileDropdown } from '@/components/profile-dropdown'
 import { ThemeSwitch } from '@/components/theme-switch'
+import { useAuth } from '@/context/auth-context'
+import { ProgressService, type ExamProgress } from '@/services/progress-service'
+import * as RemoteProgress from '@/services/firebase-progress'
 import { mockExams } from './data/mock-exams'
 
 interface ExamDetailsProps {
@@ -19,9 +22,27 @@ interface ExamDetailsProps {
 }
 
 export function ExamDetails({ examId }: ExamDetailsProps) {
+  const { user, guestId } = useAuth()
+  const userId = user?.uid || guestId
   const fallbackExam = mockExams.find((e) => e.id === examId)
   const [demoQuestionCount, setDemoQuestionCount] = useState<number | null>(null)
   const [isLoading, setIsLoading] = useState(!fallbackExam)
+  const [progress, setProgress] = useState<ExamProgress>({})
+
+  useEffect(() => {
+    if (userId && examId) {
+      const local = ProgressService.getExamProgress(userId, examId)
+      setProgress(local)
+    }
+  }, [userId, examId])
+
+  useEffect(() => {
+    if (!user?.uid) return
+    const unsub = RemoteProgress.subscribeExamProgress(user.uid, examId, (p) => {
+      setProgress(p || {})
+    })
+    return () => unsub()
+  }, [user?.uid, examId])
 
   useEffect(() => {
     let cancelled = false
@@ -53,16 +74,38 @@ export function ExamDetails({ examId }: ExamDetailsProps) {
     }
   }, [examId, fallbackExam])
 
-  const exam = useMemo(() => {
-    if (fallbackExam) return fallbackExam
+  const stats = useMemo(() => {
+    const questions = Object.values(progress)
+    const answered = questions.filter((q) => q.status).length
+    const lastStudiedTimestamp = questions.reduce(
+      (max, q) => Math.max(max, q.lastAnswered || 0),
+      0
+    )
+
     return {
+      answered,
+      lastStudied:
+        lastStudiedTimestamp > 0
+          ? new Date(lastStudiedTimestamp).toISOString()
+          : undefined,
+    }
+  }, [progress])
+
+  const exam = useMemo(() => {
+    const base = fallbackExam || {
       id: examId,
       title: `${examId} (Demo)`,
       description: `Demo from /public/data/${examId}.json`,
       questionCount: demoQuestionCount ?? 0,
       lastStudied: undefined as string | undefined,
     }
-  }, [demoQuestionCount, examId, fallbackExam])
+
+    return {
+      ...base,
+      questionCount: fallbackExam ? base.questionCount : (demoQuestionCount ?? 0),
+      lastStudied: stats.lastStudied || base.lastStudied,
+    }
+  }, [demoQuestionCount, examId, fallbackExam, stats])
 
   if (isLoading && !fallbackExam) {
     return (
@@ -83,6 +126,13 @@ export function ExamDetails({ examId }: ExamDetailsProps) {
   return (
     <>
       <Header>
+        <div className='flex items-center gap-4'>
+          <Link to='/exams'>
+            <Button variant='ghost' size='icon'>
+              <ArrowLeft className='h-4 w-4' />
+            </Button>
+          </Link>
+        </div>
         <div className='ms-auto flex items-center space-x-4'>
           <ThemeSwitch />
           <ProfileDropdown />
@@ -91,22 +141,10 @@ export function ExamDetails({ examId }: ExamDetailsProps) {
 
       <Main>
         <div className='mb-6'>
-          <Link
-            to='/exams'
-            className='mb-4 inline-flex items-center text-sm text-muted-foreground hover:text-foreground'
-          >
-            <ArrowLeft className='mr-2 h-4 w-4' />
-            Back to My Exams
-          </Link>
           <div className='flex items-start justify-between'>
             <div>
               <h1 className='text-3xl font-bold tracking-tight'>{exam.title}</h1>
               <p className='mt-2 text-muted-foreground'>{exam.description}</p>
-            </div>
-            <div className='flex space-x-2'>
-              <Button variant='outline' size='icon'>
-                <Bookmark className='h-4 w-4' />
-              </Button>
             </div>
           </div>
         </div>
@@ -140,8 +178,15 @@ export function ExamDetails({ examId }: ExamDetailsProps) {
               <CheckCircle className='h-4 w-4 text-muted-foreground' />
             </CardHeader>
             <CardContent>
-              <div className='text-2xl font-bold'>0%</div>
-              <p className='text-xs text-muted-foreground'>0 of {exam.questionCount} completed</p>
+              <div className='text-2xl font-bold'>
+                {exam.questionCount > 0
+                  ? Math.round((stats.answered / exam.questionCount) * 100)
+                  : 0}
+                %
+              </div>
+              <p className='text-xs text-muted-foreground'>
+                {stats.answered} of {exam.questionCount} completed
+              </p>
             </CardContent>
           </Card>
         </div>

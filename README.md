@@ -171,6 +171,17 @@ Relevant implementations can be found in:
 - Practice Mode Component: [practice-mode.tsx](file:///c:/Users/newbd/projects/dev/examtopics/src/features/exams/practice-mode.tsx)
 - Study Mode Component: [study-mode.tsx](file:///c:/Users/newbd/projects/dev/examtopics/src/features/exams/study-mode.tsx)
 
+## Exam Details Page
+
+Route: `/exams/$examId`
+
+- **UI Updates**:
+  - Moved "Back" button to the header for better consistency with Practice/Study modes.
+  - Removed redundant bookmark button from the header.
+- **Statistics**:
+  - Displays real-time progress based on `localStorage` (and Firebase sync if logged in).
+  - Shows "Last Studied" timestamp and completion percentage.
+
 ## Practice Mode Guide
 
 Route: `/exams/$examId/practice`
