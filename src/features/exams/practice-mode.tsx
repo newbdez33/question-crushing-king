@@ -3,7 +3,7 @@ import { Link, useNavigate } from '@tanstack/react-router'
 import { ArrowLeft, CheckCircle, XCircle, ChevronLeft, ChevronRight, Bookmark } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { useAuth } from '@/context/auth-context'
+import { useAuth } from '@/context/auth-ctx'
 import { ProgressService, type ExamProgress } from '@/services/progress-service'
 import * as RemoteProgress from '@/services/firebase-progress'
 import { toast } from 'sonner'
@@ -236,6 +236,11 @@ export function PracticeMode({ examId, initialMode, initialQuestionIndex }: Prac
   const [isReady, setIsReady] = useState(false)
   const [isProgressLoaded, setIsProgressLoaded] = useState(false)
   const [isRemoteSynced, setIsRemoteSynced] = useState(false)
+  const [showFireworks, setShowFireworks] = useState(false)
+  const examProgressRef = useRef(examProgress)
+  const userIdRef = useRef(userId)
+  const userUidRef = useRef(user?.uid)
+  const examIdRef = useRef(examId)
 
   // Filter questions for "My Mistakes" mode
   const [mistakeQuestions, setMistakeQuestions] = useState<PracticeQuestion[] | null>(null)
@@ -264,10 +269,10 @@ export function PracticeMode({ examId, initialMode, initialQuestionIndex }: Prac
     prevMistakesMode.current = settings.mistakesMode
 
     if (settings.mistakesMode && allQuestions) {
-      if (userId) {
+      if (userIdRef.current) {
         const toGraduate: string[] = []
         allQuestions.forEach((q) => {
-          const p = examProgress[q.id]
+          const p = examProgressRef.current[q.id]
           if (!p) return
           const isMistakeFlag =
             p.status === 'incorrect' || (p.timesWrong && p.timesWrong > 0)
@@ -275,18 +280,18 @@ export function PracticeMode({ examId, initialMode, initialQuestionIndex }: Prac
           if (isMistakeFlag && consec >= settings.consecutiveCorrect) {
             toGraduate.push(q.id)
             ProgressService.saveAnswer(
-              userId,
-              examId,
+              userIdRef.current,
+              examIdRef.current,
               q.id,
               'correct',
               p.userSelection,
               true,
               { resetTimesWrong: true }
             )
-            if (user?.uid) {
+            if (userUidRef.current) {
               void RemoteProgress.saveAnswer(
-                user.uid,
-                examId,
+                userUidRef.current,
+                examIdRef.current,
                 q.id,
                 'correct',
                 p.userSelection,
@@ -316,7 +321,7 @@ export function PracticeMode({ examId, initialMode, initialQuestionIndex }: Prac
       }
 
       const filtered = allQuestions.filter((q) => {
-        const p = examProgress[q.id]
+        const p = examProgressRef.current[q.id]
         if (!p) return false
 
         if (p.status === 'incorrect' || (p.timesWrong && p.timesWrong > 0)) {
@@ -353,7 +358,7 @@ export function PracticeMode({ examId, initialMode, initialQuestionIndex }: Prac
       }
       setIsProgressLoaded(true)
     }
-  }, [userId, examId])
+  }, [userId, examId, isProgressLoaded])
 
   useEffect(() => {
     if (!user?.uid) {
@@ -441,10 +446,6 @@ export function PracticeMode({ examId, initialMode, initialQuestionIndex }: Prac
       setLoadError(null)
       setAllQuestions(fallbackQuestions)
       setTitle(exam?.title ?? examId)
-      // Only reset if no questions loaded yet
-      if (!allQuestions) {
-        setCurrentQuestionIndex(initialQuestionIndex ?? 0)
-      }
 
       try {
         const response = await fetch(`/data/${examId}.json`)
@@ -538,6 +539,19 @@ export function PracticeMode({ examId, initialMode, initialQuestionIndex }: Prac
       didAutoNavigate.current = true
     }
   }, [questions, examProgress, isLoading, settings.mistakesMode])
+
+  useEffect(() => {
+    examProgressRef.current = examProgress
+  }, [examProgress])
+  useEffect(() => {
+    userIdRef.current = userId
+  }, [userId])
+  useEffect(() => {
+    userUidRef.current = user?.uid
+  }, [user?.uid])
+  useEffect(() => {
+    examIdRef.current = examId
+  }, [examId])
 
   const handleSelectAnswer = (index: number) => {
     if (isSubmitted) return // Prevent changes if submitted
@@ -639,6 +653,7 @@ export function PracticeMode({ examId, initialMode, initialQuestionIndex }: Prac
       toast.success('Great job! This question has been removed from My Mistakes.', {
         description: `You answered it correctly ${settings.consecutiveCorrect} times in a row.`,
       })
+      setShowFireworks(true)
     }
 
     // Auto Next Logic
@@ -965,6 +980,9 @@ export function PracticeMode({ examId, initialMode, initialQuestionIndex }: Prac
           />
         </div>
       </div>
+      {showFireworks && (
+        <FireworksOverlay onDone={() => setShowFireworks(false)} />
+      )}
       <PracticeMobileBar
         questions={questions ?? []}
         progress={examProgress}
@@ -992,6 +1010,95 @@ export function PracticeMode({ examId, initialMode, initialQuestionIndex }: Prac
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+    </div>
+  )
+}
+
+function FireworksOverlay({ onDone }: { onDone: () => void }) {
+  const canvasRef = useRef<HTMLCanvasElement | null>(null)
+  useEffect(() => {
+    const canvas = canvasRef.current
+    if (!canvas) return
+    const ctx = canvas.getContext('2d')
+    if (!ctx) return
+    const dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1))
+    const resize = () => {
+      const w = window.innerWidth
+      const h = window.innerHeight
+      canvas.width = Math.floor(w * dpr)
+      canvas.height = Math.floor(h * dpr)
+      canvas.style.width = `${w}px`
+      canvas.style.height = `${h}px`
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
+    }
+    resize()
+    const colors = ['#f97316', '#22c55e', '#3b82f6', '#eab308', '#ef4444', '#a855f7']
+    const bursts = []
+    for (let i = 0; i < 3; i++) {
+      const cx = Math.random() * window.innerWidth * 0.8 + window.innerWidth * 0.1
+      const cy = Math.random() * window.innerHeight * 0.5 + window.innerHeight * 0.2
+      const particles = []
+      const count = 60
+      const base = Math.random() * 2 + 2
+      const color = colors[Math.floor(Math.random() * colors.length)]
+      for (let j = 0; j < count; j++) {
+        const angle = (j / count) * Math.PI * 2 + Math.random() * 0.3
+        const speed = base + Math.random() * 2
+        particles.push({
+          x: cx,
+          y: cy,
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed,
+          life: 60 + Math.floor(Math.random() * 20),
+          size: 2 + Math.random() * 2,
+          color,
+          alpha: 1,
+        })
+      }
+      bursts.push(particles)
+    }
+    let raf = 0
+    let ended = false
+    const tick = () => {
+      ctx.fillStyle = 'rgba(0,0,0,0.05)'
+      ctx.fillRect(0, 0, canvas.width, canvas.height)
+      let active = 0
+      for (const particles of bursts) {
+        for (const p of particles) {
+          if (p.life <= 0) continue
+          active++
+          p.x += p.vx
+          p.y += p.vy
+          p.vx *= 0.985
+          p.vy = p.vy * 0.985 + 0.04
+          p.life -= 1
+          p.alpha = Math.max(0, p.life / 80)
+          ctx.globalAlpha = p.alpha
+          ctx.fillStyle = p.color
+          ctx.beginPath()
+          ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2)
+          ctx.fill()
+        }
+      }
+      ctx.globalAlpha = 1
+      if (active > 0 && !ended) {
+        raf = requestAnimationFrame(tick)
+      } else {
+        ended = true
+        onDone()
+      }
+    }
+    raf = requestAnimationFrame(tick)
+    const onResize = () => resize()
+    window.addEventListener('resize', onResize)
+    return () => {
+      cancelAnimationFrame(raf)
+      window.removeEventListener('resize', onResize)
+    }
+  }, [onDone])
+  return (
+    <div className="pointer-events-none fixed inset-0 z-50">
+      <canvas ref={canvasRef} className="h-full w-full" />
     </div>
   )
 }

@@ -1,5 +1,5 @@
 import { useNavigate, useLocation } from '@tanstack/react-router'
-import { useAuth } from '@/context/auth-context'
+import { useAuth } from '@/context/auth-ctx'
 import { ConfirmDialog } from '@/components/confirm-dialog'
 
 interface SignOutDialogProps {
@@ -36,4 +36,3 @@ export function SignOutDialog({ open, onOpenChange }: SignOutDialogProps) {
     />
   )
 }
-

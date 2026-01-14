@@ -1,17 +1,11 @@
-import { createContext, useContext, useEffect, useState, type ReactNode } from 'react'
+import { useEffect, useState, type ReactNode } from 'react'
 import { onAuthStateChanged, signOut as firebaseSignOut, type User } from 'firebase/auth'
 import { auth } from '@/lib/firebase'
 import { ProgressService } from '@/services/progress-service'
 import { mergeLocalIntoRemote } from '@/services/firebase-progress'
+import { AuthContext } from './auth-ctx'
 
-interface AuthContextType {
-  user: User | null
-  guestId: string
-  loading: boolean
-  logout: () => Promise<void>
-}
-
-const AuthContext = createContext<AuthContextType | undefined>(undefined)
+ 
 
 const GUEST_ID_KEY = 'examtopics_guest_id'
 
@@ -55,10 +49,4 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   )
 }
 
-export function useAuth() {
-  const context = useContext(AuthContext)
-  if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider')
-  }
-  return context
-}
+export {}

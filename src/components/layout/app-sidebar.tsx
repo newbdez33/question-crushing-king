@@ -1,6 +1,6 @@
 import { useNavigate } from '@tanstack/react-router'
 import { useLayout } from '@/context/layout-provider'
-import { useAuth } from '@/context/auth-context'
+import { useAuth } from '@/context/auth-ctx'
 import {
   Sidebar,
   SidebarContent,
