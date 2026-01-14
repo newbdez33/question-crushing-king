@@ -53,10 +53,21 @@ Exam Topics is a web-based application designed to help users practice for certi
 
 ### 4.4 Study Mode
 - **Purpose**: Review content without testing.
+- **Layout**: 与 Practice Mode 对齐
+  - **Header**: 固定头部，返回详情页按钮与考试标题
+  - **Main Card**:
+    - CardHeader 左侧以 Badge 显示题号与题型
+    - 题干支持 HTML/图片；右侧 Bookmark
+    - 选项中自动高亮正确答案
+    - Explanation 默认展开
+  - **Footer**: Previous/Next 图标按钮
+  - **Responsive**:
+    - **Desktop (≥ lg)**: 右侧 Sidebar 提供 Answer Sheet（题号跳转）与 Settings（Font size）
+    - **Mobile (< lg)**: 底部栏包含 Answer Card 入口，点击打开 Sheet 显示答题卡网格
 - **Behavior**:
-  - Correct answer is automatically highlighted.
-  - Explanation is visible by default.
-  - Navigation allows browsing through all questions.
+  - 自动展示正确答案与解释
+  - 支持通过答题卡跳题
+  - Settings：Font size（small/normal/large）
 
 ### 4.5 My Mistakes Mode
 - **Entry**: Accessible via "My Mistakes" card on Exam Details.

@@ -6,7 +6,7 @@ Question bank practice application based on Shadcn Admin Dashboard, designed to 
 
 - **Question Bank Management**: Load JSON question banks from `/public/data`
 - **Practice Mode**: Answer questions one by one, instant grading, and navigation (previous/next)
-- **Study Mode**: Show correct answers and explanations, support previous/next navigation
+- **Study Mode**: Show correct answers and explanations, support previous/next navigation, desktop Answer Sheet with Settings (Font size), mobile Answer Card sheet
 - **Rich Content**: Question stem and options support HTML content (including images)
 - **Image Mapping**: Image static resources mapped to `public/data/images`
 - **UI/UX**: Retains dark mode, responsive layout, and sidebar capabilities from the original template
@@ -200,11 +200,21 @@ Route: `/exams/$examId/practice`
 
 Route: `/exams/$examId/study`
 
-- **Layout**: Simplified practice interface
+- **Layout**: 与 Practice 一致的页面骨架
+  - **Header**: 固定头部，返回详情页按钮与标题
+  - **Main Card**:
+    - 顶部以 Badge 显示题号与题型（Single/Multiple）
+    - 题干支持 HTML/图片；右上角 Bookmark
+    - 选项列表中自动高亮正确选项
+    - Explanation 区块默认展开
+  - **Footer**: Previous/Next 图标按钮
+  - **Responsive**:
+    - **Desktop (≥ lg)**: 右侧 Sidebar 显示答题卡（题号网格）与 Settings（Font size）
+    - **Mobile (< lg)**: 显示底部栏；点击 Answer Card 打开底部 Sheet 答题卡网格，可跳题
 - **Features**:
-  - Auto-show correct answer
-  - Auto-expand explanation
-  - Navigation only
+  - 自动展示正确答案与解释
+  - 导航与跳题（答题卡）
+  - Settings：Font size（small/normal/large）
 
 ## My Mistakes Mode
 

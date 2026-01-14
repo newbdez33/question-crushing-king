@@ -19,6 +19,8 @@ import { Main } from '@/components/layout/main'
 import { ThemeSwitch } from '@/components/theme-switch'
 import { mockExams } from './data/mock-exams'
 import { cn } from '@/lib/utils'
+import { StudySidebar, type StudySettings } from './components/study-sidebar'
+import { StudyMobileBar } from './components/study-mobile-bar'
 
 interface StudyModeProps {
   examId: string
@@ -166,6 +168,7 @@ export function StudyMode({ examId }: StudyModeProps) {
   const [isLoading, setIsLoading] = useState(true)
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
   const [isBookmarked, setIsBookmarked] = useState(false)
+  const [settings, setSettings] = useState<StudySettings>({ fontSize: 'normal' })
 
   useEffect(() => {
     if (questions && questions[currentQuestionIndex] && userId) {
@@ -329,6 +332,15 @@ export function StudyMode({ examId }: StudyModeProps) {
     }
   }
 
+  const handleNavigate = (index: number) => {
+    if (index < 0 || index >= questions.length) return
+    setCurrentQuestionIndex(index)
+  }
+
+  const handleSettingsChange = (next: StudySettings) => {
+    setSettings(next)
+  }
+
   const toggleBookmark = () => {
     if (!userId) return
     const newState = !isBookmarked
@@ -342,8 +354,8 @@ export function StudyMode({ examId }: StudyModeProps) {
   }
 
   return (
-    <>
-      <Header>
+    <div className='flex min-h-screen flex-col bg-background'>
+      <Header fixed>
         <div className='flex items-center gap-4'>
           {exam ? (
             <Link to='/exams/$examId' params={{ examId }}>
@@ -365,93 +377,122 @@ export function StudyMode({ examId }: StudyModeProps) {
         </div>
       </Header>
 
-      <Main className='max-w-3xl mx-auto w-full'>
-        <div className='mb-4 flex items-center justify-between text-sm text-muted-foreground'>
-          <span>
-            Question {currentQuestionIndex + 1} of {questions.length}
-          </span>
-          <Button
-            variant='ghost'
-            size='sm'
-            className={cn('gap-2', isBookmarked && 'text-yellow-500 hover:text-yellow-600')}
-            onClick={toggleBookmark}
-          >
-            <Bookmark className={cn('h-4 w-4', isBookmarked && 'fill-current')} />
-            {isBookmarked ? 'Bookmarked' : 'Bookmark'}
-          </Button>
-        </div>
-        <div className='mb-4'>
-          <Badge variant='secondary'>{formatQuestionType(question.type)}</Badge>
-        </div>
-
-        <Card>
-          <CardHeader>
-            <CardTitle className='text-lg leading-7 font-normal tracking-normal text-pretty'>
-              {question.contentHtml ? renderExamHtml(question.contentHtml) : question.text}
-            </CardTitle>
-          </CardHeader>
-          <CardContent className='space-y-6'>
-            <div className='space-y-3'>
-              {question.options.map((option, index) => {
-                const isCorrect = question.correctAnswers.includes(index)
-                let itemClass =
-                  'flex items-center space-x-3 rounded-md border p-4'
-
-                if (isCorrect) {
-                  itemClass +=
-                    ' bg-green-50 border-green-200 dark:bg-green-900/20 dark:border-green-900 ring-1 ring-green-500'
-                }
-
-                return (
-                  <div key={index} className={itemClass}>
-                    <div
-                      className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full border text-xs ${isCorrect ? 'border-green-600 bg-green-600 text-white' : 'border-muted-foreground'}`}
-                    >
-                        {String.fromCharCode(65 + index)}
+      <div className='flex flex-1 pt-0 items-start justify-center gap-4'>
+        <div className='w-full max-w-3xl'>
+          <Main className={cn('w-full pb-24 lg:pr-0', {
+            'text-sm': settings.fontSize === 'small',
+            'text-base': settings.fontSize === 'normal',
+            'text-lg': settings.fontSize === 'large',
+          })}>
+            <Card>
+              <CardHeader>
+                <div className='flex items-start justify-between gap-4'>
+                  <CardTitle className='font-medium leading-normal'>
+                    <Badge variant='outline' className='mb-2 me-2'>
+                      Question {currentQuestionIndex + 1} of {questions.length}
+                    </Badge>
+                    <Badge variant='secondary' className='mb-2'>
+                      {formatQuestionType(question.type)}
+                    </Badge>
+                    <div className='mt-2'>
+                      {question.contentHtml ? (
+                        renderExamHtml(question.contentHtml)
+                      ) : (
+                        <p>{question.text}</p>
+                      )}
                     </div>
-                    <span
-                      className={
-                        isCorrect ? 'font-medium text-green-900 dark:text-green-100' : ''
-                      }
-                    >
-                      {option}
-                    </span>
+                  </CardTitle>
+                  <Button
+                    variant='ghost'
+                    size='sm'
+                    className={cn('gap-2', isBookmarked && 'text-yellow-500 hover:text-yellow-600')}
+                    onClick={toggleBookmark}
+                  >
+                    <Bookmark className={cn('h-4 w-4', isBookmarked && 'fill-current')} />
+                  </Button>
+                </div>
+              </CardHeader>
+              <CardContent className='space-y-6'>
+                <div className='space-y-3'>
+                  {question.options.map((option, index) => {
+                    const isCorrect = question.correctAnswers.includes(index)
+                    let itemClass =
+                      'flex items-center space-x-3 rounded-md border p-4'
+
+                    if (isCorrect) {
+                      itemClass +=
+                        ' bg-green-50 border-green-200 dark:bg-green-900/20 dark:border-green-900 ring-1 ring-green-500'
+                    }
+
+                    return (
+                      <div key={index} className={itemClass}>
+                        <div
+                          className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full border text-xs ${isCorrect ? 'border-green-600 bg-green-600 text-white' : 'border-muted-foreground'}`}
+                        >
+                            {String.fromCharCode(65 + index)}
+                        </div>
+                        <span
+                          className={
+                            isCorrect ? 'font-medium text-green-900 dark:text-green-100' : ''
+                          }
+                        >
+                          {option}
+                        </span>
+                      </div>
+                    )
+                  })}
+                </div>
+
+                <div className='rounded-md border border-blue-100 bg-blue-50 p-4 dark:border-blue-900 dark:bg-blue-900/10'>
+                  <div className='mb-2 flex items-center gap-2 font-semibold text-blue-700 dark:text-blue-300'>
+                    <Lightbulb className='h-4 w-4' />
+                    <span>Explanation</span>
                   </div>
-                )
-              })}
-            </div>
+                  <p className='text-sm text-muted-foreground'>
+                    {question.explanation || 'No explanation provided.'}
+                  </p>
+                </div>
 
-            <div className='rounded-md border border-blue-100 bg-blue-50 p-4 dark:border-blue-900 dark:bg-blue-900/10'>
-              <div className='mb-2 flex items-center gap-2 font-semibold text-blue-700 dark:text-blue-300'>
-                <Lightbulb className='h-4 w-4' />
-                <span>Explanation</span>
-              </div>
-              <p className='text-sm text-muted-foreground'>
-                {question.explanation || 'No explanation provided.'}
-              </p>
-            </div>
+              </CardContent>
+              <CardFooter className='flex justify-between border-t p-6'>
+                <Button
+                  variant='outline'
+                  onClick={handlePrev}
+                  disabled={currentQuestionIndex === 0}
+                  className='w-24'
+                >
+                  <ChevronLeft className='h-4 w-4' />
+                </Button>
 
-          </CardContent>
-          <CardFooter className='flex justify-between border-t p-6'>
-            <Button
-              variant='outline'
-              onClick={handlePrev}
-              disabled={currentQuestionIndex === 0}
-              className='w-24'
-            >
-              <ChevronLeft className='h-4 w-4' />
-            </Button>
+                <Button
+                  onClick={handleNext}
+                  disabled={isLastQuestion}
+                  className='w-24'
+                >
+                  <ChevronRight className='h-4 w-4' />
+                </Button>
+              </CardFooter>
+            </Card>
+          </Main>
+        </div>
+        <div className='hidden lg:block py-6 pr-4'>
+          <StudySidebar
+            questions={questions}
+            currentQuestionIndex={currentQuestionIndex}
+            onNavigate={handleNavigate}
+            settings={settings}
+            onSettingsChange={handleSettingsChange}
+          />
+        </div>
+      </div>
 
-            <Button
-              onClick={handleNext}
-              disabled={isLastQuestion}
-              className='w-24'
-            >
-              <ChevronRight className='h-4 w-4' />
-            </Button>
-          </CardFooter>
-        </Card>
-      </Main>
-    </>
+      <StudyMobileBar
+        questions={questions ?? []}
+        currentQuestionIndex={currentQuestionIndex}
+        onNavigate={handleNavigate}
+        isBookmarked={isBookmarked}
+        onToggleBookmark={toggleBookmark}
+      />
+    </div>
   )
 }
