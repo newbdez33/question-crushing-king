@@ -434,11 +434,20 @@ export function PracticeMode({ examId, initialMode, initialQuestionIndex }: Prac
     if (!questions || questions.length === 0) return
     const entries = Object.entries(examProgress).filter(([, p]) => p?.lastAnswered)
     if (entries.length === 0) return
-    entries.sort((a, b) => (b[1].lastAnswered || 0) - (a[1].lastAnswered || 0))
-    const targetId = entries[0][0]
-    const idx = questions.findIndex((q) => q.id === targetId)
-    if (idx >= 0) {
-      setCurrentQuestionIndex(idx)
+    
+    // Find max index among answered questions
+    let maxIndex = -1
+    // Optimize: Iterate backwards through questions to find the highest index that has progress
+    for (let i = questions.length - 1; i >= 0; i--) {
+      const q = questions[i]
+      if (examProgress[q.id]?.lastAnswered) {
+        maxIndex = i
+        break
+      }
+    }
+
+    if (maxIndex >= 0) {
+      setCurrentQuestionIndex(maxIndex)
       didAutoNavigate.current = true
     }
   }, [questions, examProgress, isLoading, settings.mistakesMode])

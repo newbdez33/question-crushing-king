@@ -51,11 +51,13 @@ Value (JSON Object):
   - Bookmark toggle: writes `bookmarked`.
   - Clear Progress: clears answer-related fields, preserves `bookmarked`.
 - **Subscriptions**:
-  - Practice/Study modes subscribe to `examtopics_progress/{uid}/{examId}` to reflect remote changes live.
-- **Merge Strategy**:
-  - **Login Merge**: Merges Guest progress into User account. If User has existing data for a question, it is preserved unless the Guest data is newer.
-  - **Live Sync**: Uses a smart merge strategy that prioritizes the most recent `lastAnswered` timestamp between local and remote data to prevent overwriting recent progress with stale remote data.
-  - **Optimized Loading**: Prioritizes rendering local data immediately to eliminate UI flash, while background synchronization ensures consistency.
+  - Practice/Study Mode subscribe to `examtopics_progress/{uid}/{examId}` to reflect remote changes live.
+- **Merge Strategy on Login**:
+  - Merge local Guest → local User:
+    - If User has data for a question, keep User’s existing data.
+    - If User lacks data, copy Guest’s data.
+    - `bookmarked` uses logical OR.
+  - After merge, push the User’s local progress to Firebase for cross-device availability.
 
 ### Firebase Setup
 - **Environment Variables**:
@@ -169,51 +171,28 @@ Relevant implementations can be found in:
 - Practice Mode Component: [practice-mode.tsx](file:///c:/Users/newbd/projects/dev/examtopics/src/features/exams/practice-mode.tsx)
 - Study Mode Component: [study-mode.tsx](file:///c:/Users/newbd/projects/dev/examtopics/src/features/exams/study-mode.tsx)
 
-## Exam Details Page
-
-Route: `/exams/$examId`
-
-- **UI Updates**:
-  - Moved "Back" button to the header for better consistency with Practice/Study modes.
-  - Removed redundant bookmark button from the header.
-- **Statistics**:
-  - Displays real-time progress based on `localStorage` (and Firebase sync if logged in).
-  - Shows "Last Studied" timestamp and completion percentage.
-
 ## Practice Mode Guide
 
 Route: `/exams/$examId/practice`
 
-- **URL Parameters**:
-  - `q`: Current question number (1-based), e.g., `?q=5` (Automatically updated during navigation for persistence)
-  - `mode`: Set to `mistakes` to enter "My Mistakes" mode
-
 - **Layout**:
   - **Top**: Question number, type (Single/Multiple Choice)
-  - **Middle**: Question stem (HTML/Image), options list with A/B/C/D indicators
-  - **Bottom**: 
-    - **Left**: Previous Question button
-    - **Center**: Submit Answer button (absolute centered)
-    - **Right**: Next Question button
+  - **Middle**: Question stem (HTML/Image), options list
+  - **Bottom**: Navigation bar (Previous/Next icon buttons), Submit Answer button
   - **Responsive**:
     - **Desktop (≥ lg)**: 右侧 Sidebar 显示答题卡与设置面板
     - **Mobile (< lg)**: 隐藏右侧 Sidebar，显示底部 Tabbar（Bookmark、Correct、Wrong、Answer Card）。点击 Answer Card 打开底部弹层 Sheet 显示答题卡网格，可跳题
-- **Submission Feedback**:
-  - Highlights correct/incorrect status with color coding
-  - Displays explicit text for "Correct Answer" and "Your Answer" using A/B/C/D codes
-  - Shows explanation if available
 - **Settings Panel**:
   - **Auto next**: Auto-jump on correct answer
-  - **Font size**: Adjust font size for the question content, options, and explanation
-  - **Consecutive correct**: Wrong answer removal threshold (Only visible in "My Mistakes" mode, default: 3)
+  - **Font size**: Font size adjustment
+  - **Consecutive correct**: Wrong answer removal threshold (for My Mistakes mode)
 - **Interaction**:
   - Instant grading after submission
   - Show explanation
   - Auto-record progress
-  - **Clear Progress**: Requires double confirmation via a dialog to prevent accidental deletion
-- **Performance**:
-  - **Smart Loading**: Uses a skeleton screen to prevent UI flash during initial load.
-  - **Instant Render**: Displays local progress immediately while synchronizing with the cloud in the background.
+  - **Auto-Navigation**:
+    - When entering Practice Mode (without `?q=` param), it automatically jumps to the **highest question number** you have previously answered.
+    - If `?q=` param is present (e.g. refresh page), it stays on the specified question.
 
 ## Study Mode Guide
 
