@@ -4,13 +4,15 @@
   "version": "2.2.1",
   "type": "module",
   "scripts": {
+    "predev": "pnpm typecheck",
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
     "format:check": "prettier --check .",
     "format": "prettier --write .",
-    "knip": "knip"
+    "knip": "knip",
+    "typecheck": "tsc -b --noEmit --pretty"
   },
   "dependencies": {
     "@clerk/clerk-react": "^5.58.1",

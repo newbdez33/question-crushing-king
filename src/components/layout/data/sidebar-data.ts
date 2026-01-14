@@ -11,6 +11,7 @@ export const sidebarData: SidebarData = {
     email: 'satnaingdev@gmail.com',
     avatar: '/avatars/shadcn.jpg',
   },
+  teams: [],
   navGroups: [
     {
       title: 'General',

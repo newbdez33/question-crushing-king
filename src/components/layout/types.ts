@@ -6,6 +6,12 @@ type User = {
   avatar: string
 }
 
+type Team = {
+  name: string
+  logo?: string
+  href?: LinkProps['to'] | (string & {})
+}
+
 type BaseNavItem = {
   title: string
   badge?: string
@@ -35,4 +41,4 @@ type SidebarData = {
   navGroups: NavGroup[]
 }
 
-export type { SidebarData, NavGroup, NavItem, NavCollapsible, NavLink }
+export type { SidebarData, NavGroup, NavItem, NavCollapsible, NavLink, Team }

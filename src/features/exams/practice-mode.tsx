@@ -256,7 +256,9 @@ export function PracticeMode({ examId, initialMode, initialQuestionIndex }: Prac
 
   useEffect(() => {
     navigate({
-      search: (prev: Record<string, unknown>) => ({
+      to: '/exams/$examId/practice',
+      params: { examId: examIdRef.current },
+      search: (prev) => ({
         ...prev,
         q: currentQuestionIndex + 1,
       }),
@@ -772,7 +774,9 @@ export function PracticeMode({ examId, initialMode, initialQuestionIndex }: Prac
               <ArrowLeft className='h-4 w-4' />
             </Button>
           </Link>
-          <h1 className='text-lg font-semibold'>{title} - Practice</h1>
+          <h1 className='text-lg font-semibold'>
+            {title} - {settings.mistakesMode ? 'My Mistakes' : 'Practice'}
+          </h1>
         </div>
         <div className='ms-auto flex items-center space-x-4'>
           <ThemeSwitch />
@@ -1032,12 +1036,22 @@ function FireworksOverlay({ onDone }: { onDone: () => void }) {
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
     }
     resize()
-    const colors = ['#f97316', '#22c55e', '#3b82f6', '#eab308', '#ef4444', '#a855f7']
-    const bursts = []
+    const colors: string[] = ['#f97316', '#22c55e', '#3b82f6', '#eab308', '#ef4444', '#a855f7']
+    type Particle = {
+      x: number
+      y: number
+      vx: number
+      vy: number
+      life: number
+      size: number
+      color: string
+      alpha: number
+    }
+    const bursts: Particle[][] = []
     for (let i = 0; i < 3; i++) {
       const cx = Math.random() * window.innerWidth * 0.8 + window.innerWidth * 0.1
       const cy = Math.random() * window.innerHeight * 0.5 + window.innerHeight * 0.2
-      const particles = []
+      const particles: Particle[] = []
       const count = 60
       const base = Math.random() * 2 + 2
       const color = colors[Math.floor(Math.random() * colors.length)]

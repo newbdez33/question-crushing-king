@@ -194,7 +194,7 @@ export function ExamDetails({ examId }: ExamDetailsProps) {
         <div className='mt-8'>
           <h2 className='mb-4 text-xl font-semibold'>Study Modes</h2>
           <div className='grid gap-4 md:grid-cols-2'>
-            <Link to={`/exams/${exam.id}/practice`}>
+            <Link to="/exams/$examId/practice" params={{ examId: exam.id }}>
               <Card className='cursor-pointer transition-colors hover:bg-muted/50 h-full'>
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
@@ -210,7 +210,7 @@ export function ExamDetails({ examId }: ExamDetailsProps) {
               </Card>
             </Link>
 
-            <Link to={`/exams/${exam.id}/study`}>
+            <Link to="/exams/$examId/study" params={{ examId: exam.id }}>
               <Card className='cursor-pointer transition-colors hover:bg-muted/50 h-full'>
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
@@ -226,7 +226,7 @@ export function ExamDetails({ examId }: ExamDetailsProps) {
               </Card>
             </Link>
 
-            <Link to={`/exams/${exam.id}/practice`} search={{ mode: 'mistakes' }}>
+            <Link to="/exams/$examId/practice" params={{ examId: exam.id }} search={{ mode: 'mistakes' }}>
               <Card className='cursor-pointer transition-colors hover:bg-muted/50 h-full'>
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">

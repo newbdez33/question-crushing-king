@@ -256,19 +256,11 @@ export function StudyMode({ examId }: StudyModeProps) {
       <>
         <Header>
           <div className='flex items-center gap-4'>
-            {exam ? (
-              <Link to='/exams/$examId' params={{ examId }}>
-                <Button variant='ghost' size='icon'>
-                  <ArrowLeft className='h-4 w-4' />
-                </Button>
-              </Link>
-            ) : (
-              <Link to='/exams'>
-                <Button variant='ghost' size='icon'>
-                  <ArrowLeft className='h-4 w-4' />
-                </Button>
-              </Link>
-            )}
+            <Link to='/exams/$examId' params={{ examId }}>
+              <Button variant='ghost' size='icon'>
+                <ArrowLeft className='h-4 w-4' />
+              </Button>
+            </Link>
             <h1 className='text-lg font-semibold'>{title} - Study Mode</h1>
           </div>
           <div className='ms-auto flex items-center space-x-4'>
@@ -288,19 +280,11 @@ export function StudyMode({ examId }: StudyModeProps) {
       <>
         <Header>
           <div className='flex items-center gap-4'>
-            {exam ? (
-              <Link to='/exams/$examId' params={{ examId }}>
-                <Button variant='ghost' size='icon'>
-                  <ArrowLeft className='h-4 w-4' />
-                </Button>
-              </Link>
-            ) : (
-              <Link to='/exams'>
-                <Button variant='ghost' size='icon'>
-                  <ArrowLeft className='h-4 w-4' />
-                </Button>
-              </Link>
-            )}
+            <Link to='/exams/$examId' params={{ examId }}>
+              <Button variant='ghost' size='icon'>
+                <ArrowLeft className='h-4 w-4' />
+              </Button>
+            </Link>
             <h1 className='text-lg font-semibold'>{title} - Study Mode</h1>
           </div>
           <div className='ms-auto flex items-center space-x-4'>
@@ -357,19 +341,11 @@ export function StudyMode({ examId }: StudyModeProps) {
     <div className='flex min-h-screen flex-col bg-background'>
       <Header fixed>
         <div className='flex items-center gap-4'>
-          {exam ? (
-            <Link to='/exams/$examId' params={{ examId }}>
-              <Button variant='ghost' size='icon'>
-                <ArrowLeft className='h-4 w-4' />
-              </Button>
-            </Link>
-          ) : (
-            <Link to='/exams'>
-              <Button variant='ghost' size='icon'>
-                <ArrowLeft className='h-4 w-4' />
-              </Button>
-            </Link>
-          )}
+          <Link to='/exams/$examId' params={{ examId }}>
+            <Button variant='ghost' size='icon'>
+              <ArrowLeft className='h-4 w-4' />
+            </Button>
+          </Link>
           <h1 className='text-lg font-semibold'>{title} - Study Mode</h1>
         </div>
         <div className='ms-auto flex items-center space-x-4'>

@@ -119,10 +119,16 @@ Install dependencies
   pnpm install
 ```
 
-Start the server
+Type-check
 
 ```bash
-  pnpm run dev
+  pnpm typecheck
+```
+
+Start the server (pre-check runs automatically)
+
+```bash
+  pnpm dev
 ```
 
 ## Question Bank JSON & DEMO Data
@@ -221,6 +227,7 @@ Route: `/exams/$examId/study`
 Route: `/exams/$examId/practice?mode=mistakes`
 
 - **Entry Point**: "My Mistakes" card on Exam Details page
+- **Header Title**: When in My Mistakes mode, the Practice page header displays “My Mistakes”
 - **Logic**:
   - Only loads historical wrong answers or unmastered questions (filtered based on `timesWrong` and `consecutiveCorrect`).
   - Uses the **Consecutive correct** setting as the graduation threshold:
@@ -235,3 +242,18 @@ Route: `/exams/$examId/practice?mode=mistakes`
   - The **Consecutive correct** value is persisted per user+exam in `localStorage` and, for authenticated users, also synced to Firebase for cross-device consistency.
 
 For more details on the overall tech stack and directory structure, see [TEMPLATE.md](./TEMPLATE.md).
+
+## Deployment Notes (Cloudflare Workers)
+
+- Cloudflare build runs: `tsc -b && vite build`, enforcing strict TypeScript checks.
+- Recommended local flow:
+  - `pnpm typecheck` to ensure no TS errors
+  - `pnpm build` to validate production build
+- Routing
+  - Use union paths with params for TanStack Router:
+    - `to="/exams/$examId/practice"` with `params={{ examId }}`
+    - Avoid template strings like ``/exams/${id}/practice`` which are not part of the generated unions.
+- Types
+  - Keep UI types in sync with data (e.g., SidebarData requires `teams: Team[]`).
+  - Avoid implicit `any[]`; annotate arrays like fireworks `Particle[][]`.
+  - For `navigate({ search })`, let the updater infer or match the route’s validated search keys.
