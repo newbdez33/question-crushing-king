@@ -3,7 +3,7 @@ import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Link, useNavigate } from '@tanstack/react-router'
-import { Loader2, LogIn } from 'lucide-react'
+import { Loader2 } from 'lucide-react'
 import { toast } from 'sonner'
 import {
   signInWithEmailAndPassword,
@@ -12,7 +12,7 @@ import {
 } from 'firebase/auth'
 import { auth } from '@/lib/firebase'
 import { IconGoogle } from '@/assets/brand-icons'
-import { sleep, cn } from '@/lib/utils'
+import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import {
   Form,
@@ -63,12 +63,12 @@ export function UserAuthForm({
 
       toast.success(`Welcome back, ${data.email}!`)
 
-      // Redirect to the stored location or default to dashboard
       const targetPath = redirectTo || '/'
       navigate({ to: targetPath, replace: true })
-    } catch (error: any) {
-      console.error(error)
-      toast.error(error.message || 'Failed to sign in')
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : 'Failed to sign in'
+      toast.error(message)
     } finally {
       setIsLoading(false)
     }
@@ -82,9 +82,12 @@ export function UserAuthForm({
       toast.success('Signed in with Google successfully!')
       const targetPath = redirectTo || '/'
       navigate({ to: targetPath, replace: true })
-    } catch (error: any) {
-      console.error(error)
-      toast.error(error.message || 'Failed to sign in with Google')
+    } catch (error) {
+      const message =
+        error instanceof Error
+          ? error.message
+          : 'Failed to sign in with Google'
+      toast.error(message)
     } finally {
       setIsLoading(false)
     }
@@ -160,4 +163,3 @@ export function UserAuthForm({
     </Form>
   )
 }
-

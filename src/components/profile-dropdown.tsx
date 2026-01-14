@@ -1,5 +1,4 @@
 import { Link, useNavigate } from '@tanstack/react-router'
-import { LogIn, LogOut, User } from 'lucide-react'
 import useDialogState from '@/hooks/use-dialog-state'
 import { useAuth } from '@/context/auth-context'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
@@ -73,12 +72,6 @@ export function ProfileDropdown() {
               <DropdownMenuGroup>
                 <DropdownMenuItem asChild>
                   <Link to='/settings'>
-                    Profile
-                    <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link to='/settings'>
                     Settings
                     <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
                   </Link>
@@ -103,4 +96,3 @@ export function ProfileDropdown() {
     </>
   )
 }
-

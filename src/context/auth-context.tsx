@@ -1,5 +1,5 @@
-import { createContext, useContext, useEffect, useState, ReactNode } from 'react'
-import { User, onAuthStateChanged, signOut as firebaseSignOut } from 'firebase/auth'
+import { createContext, useContext, useEffect, useState, type ReactNode } from 'react'
+import { onAuthStateChanged, signOut as firebaseSignOut, type User } from 'firebase/auth'
 import { auth } from '@/lib/firebase'
 import { ProgressService } from '@/services/progress-service'
 import { mergeLocalIntoRemote } from '@/services/firebase-progress'
@@ -18,23 +18,21 @@ const GUEST_ID_KEY = 'examtopics_guest_id'
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
   const [loading, setLoading] = useState(true)
-  const [guestId, setGuestId] = useState<string>('')
-
-  useEffect(() => {
-    // Initialize Guest ID
+  const [guestId] = useState<string>(() => {
+    if (typeof window === 'undefined') return ''
     let storedGuestId = localStorage.getItem(GUEST_ID_KEY)
     if (!storedGuestId) {
       storedGuestId = crypto.randomUUID()
       localStorage.setItem(GUEST_ID_KEY, storedGuestId)
     }
-    setGuestId(storedGuestId)
+    return storedGuestId
+  })
 
+  useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       if (currentUser) {
-        // User just logged in or session restored
-        // Merge guest progress into user progress
-        if (storedGuestId) {
-          ProgressService.mergeProgress(storedGuestId, currentUser.uid)
+        if (guestId) {
+          ProgressService.mergeProgress(guestId, currentUser.uid)
           const merged = ProgressService.getUserProgress(currentUser.uid)
           void mergeLocalIntoRemote(currentUser.uid, merged)
         }
@@ -44,7 +42,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     })
 
     return () => unsubscribe()
-  }, [])
+  }, [guestId])
 
   const logout = async () => {
     await firebaseSignOut(auth)

@@ -26,6 +26,7 @@ interface PracticeSidebarProps {
   onClearProgress: () => void
   settings: PracticeSettings
   onSettingsChange: (settings: PracticeSettings) => void
+  mistakesSessionStatus: Record<string, 'correct' | 'incorrect' | undefined>
 }
 
 export function PracticeSidebar({
@@ -36,11 +37,23 @@ export function PracticeSidebar({
   onClearProgress,
   settings,
   onSettingsChange,
+  mistakesSessionStatus,
 }: PracticeSidebarProps) {
-  // Calculate stats
-  const relevantProgress = questions.map(q => progress[q.id]).filter(p => p && p.status)
-  const correct = relevantProgress.filter(p => p?.status === 'correct').length
-  const incorrect = relevantProgress.filter(p => p?.status === 'incorrect').length
+  let correct = 0
+  let incorrect = 0
+
+  if (settings.mistakesMode) {
+    const statuses = questions
+      .map((q) => mistakesSessionStatus[q.id])
+      .filter((s): s is 'correct' | 'incorrect' => !!s)
+    correct = statuses.filter((s) => s === 'correct').length
+    incorrect = statuses.filter((s) => s === 'incorrect').length
+  } else {
+    const relevantProgress = questions.map(q => progress[q.id]).filter(p => p && p.status)
+    correct = relevantProgress.filter(p => p?.status === 'correct').length
+    incorrect = relevantProgress.filter(p => p?.status === 'incorrect').length
+  }
+
   const totalAnswered = correct + incorrect
   const accuracy = totalAnswered > 0 ? Math.round((correct / totalAnswered) * 10000) / 100 : 0
 
@@ -61,7 +74,9 @@ export function PracticeSidebar({
           <div className="max-h-[260px] overflow-y-auto pr-2">
             <div className="grid grid-cols-5 gap-2">
               {questions.map((q, idx) => {
-                const status = progress[q.id]?.status
+                const status = settings.mistakesMode
+                  ? mistakesSessionStatus[q.id]
+                  : progress[q.id]?.status
                 const isCurrent = idx === currentQuestionIndex
                 
                 return (
@@ -115,7 +130,7 @@ export function PracticeSidebar({
                       variant="outline" 
                       size="icon" 
                       className="h-8 w-8"
-                      onClick={() => onSettingsChange({...settings, consecutiveCorrect: Math.max(0, settings.consecutiveCorrect - 1)})}
+                      onClick={() => onSettingsChange({...settings, consecutiveCorrect: Math.max(1, settings.consecutiveCorrect - 1)})}
                     >
                       -
                     </Button>
@@ -131,7 +146,7 @@ export function PracticeSidebar({
                   </div>
                 </div>
                 <p className="text-xs text-muted-foreground text-right leading-tight">
-                  Auto remove wrong questions<br/>0 means never remove
+                  Auto remove wrong questions based on consecutive correct count
                 </p>
               </div>
             )}

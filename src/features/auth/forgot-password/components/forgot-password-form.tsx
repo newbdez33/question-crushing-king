@@ -3,7 +3,7 @@ import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useNavigate } from '@tanstack/react-router'
-import { ArrowRight, Loader2 } from 'lucide-react'
+import { Loader2 } from 'lucide-react'
 import { toast } from 'sonner'
 import { sendPasswordResetEmail } from 'firebase/auth'
 import { auth } from '@/lib/firebase'
@@ -44,11 +44,11 @@ export function ForgotPasswordForm({
       await sendPasswordResetEmail(auth, data.email)
       toast.success(`Password reset email sent to ${data.email}`)
       form.reset()
-      // Optionally navigate back to sign in after a delay
       setTimeout(() => navigate({ to: '/sign-in' }), 3000)
-    } catch (error: any) {
-      console.error(error)
-      toast.error(error.message || 'Failed to send reset email')
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : 'Failed to send reset email'
+      toast.error(message)
     } finally {
       setIsLoading(false)
     }
@@ -82,4 +82,3 @@ export function ForgotPasswordForm({
     </Form>
   )
 }
-

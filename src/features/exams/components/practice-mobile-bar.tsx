@@ -11,6 +11,8 @@ interface PracticeMobileBarProps {
   onNavigate: (index: number) => void
   isBookmarked: boolean
   onToggleBookmark: () => void
+  mistakesMode: boolean
+  mistakesSessionStatus: Record<string, 'correct' | 'incorrect' | undefined>
 }
 
 export function PracticeMobileBar({
@@ -20,10 +22,23 @@ export function PracticeMobileBar({
   onNavigate,
   isBookmarked,
   onToggleBookmark,
+  mistakesMode,
+  mistakesSessionStatus,
 }: PracticeMobileBarProps) {
-  const relevant = questions.map((q) => progress[q.id]).filter((p) => p && p.status)
-  const correct = relevant.filter((p) => p?.status === 'correct').length
-  const incorrect = relevant.filter((p) => p?.status === 'incorrect').length
+  let correct = 0
+  let incorrect = 0
+
+  if (mistakesMode) {
+    const statuses = questions
+      .map((q) => mistakesSessionStatus[q.id])
+      .filter((s): s is 'correct' | 'incorrect' => !!s)
+    correct = statuses.filter((s) => s === 'correct').length
+    incorrect = statuses.filter((s) => s === 'incorrect').length
+  } else {
+    const relevant = questions.map((q) => progress[q.id]).filter((p) => p && p.status)
+    correct = relevant.filter((p) => p?.status === 'correct').length
+    incorrect = relevant.filter((p) => p?.status === 'incorrect').length
+  }
 
   return (
     <div className="fixed bottom-0 inset-x-0 z-40 border-t bg-background lg:hidden">
@@ -64,7 +79,9 @@ export function PracticeMobileBar({
             <div className="mx-auto w-full max-w-3xl px-4 py-4">
               <div className="grid grid-cols-6 gap-2">
                 {questions.map((q, idx) => {
-                  const status = progress[q.id]?.status
+                  const status = mistakesMode
+                    ? mistakesSessionStatus[q.id]
+                    : progress[q.id]?.status
                   const isCurrent = idx === currentQuestionIndex
                   return (
                     <button

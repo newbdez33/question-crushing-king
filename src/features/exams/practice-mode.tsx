@@ -239,7 +239,9 @@ export function PracticeMode({ examId, initialMode, initialQuestionIndex }: Prac
 
   // Filter questions for "My Mistakes" mode
   const [mistakeQuestions, setMistakeQuestions] = useState<PracticeQuestion[] | null>(null)
+  const [mistakesSessionStatus, setMistakesSessionStatus] = useState<Record<string, 'correct' | 'incorrect'>>({})
   const prevMistakesMode = useRef(settings.mistakesMode)
+  const settingsLoadedRef = useRef(false)
 
   useEffect(() => {
     if (initialQuestionIndex !== undefined) {
@@ -249,7 +251,10 @@ export function PracticeMode({ examId, initialMode, initialQuestionIndex }: Prac
 
   useEffect(() => {
     navigate({
-      search: (prev: any) => ({ ...prev, q: currentQuestionIndex + 1 }),
+      search: (prev: Record<string, unknown>) => ({
+        ...prev,
+        q: currentQuestionIndex + 1,
+      }),
       replace: true,
     })
   }, [currentQuestionIndex, navigate])
@@ -259,13 +264,62 @@ export function PracticeMode({ examId, initialMode, initialQuestionIndex }: Prac
     prevMistakesMode.current = settings.mistakesMode
 
     if (settings.mistakesMode && allQuestions) {
+      if (userId) {
+        const toGraduate: string[] = []
+        allQuestions.forEach((q) => {
+          const p = examProgress[q.id]
+          if (!p) return
+          const isMistakeFlag =
+            p.status === 'incorrect' || (p.timesWrong && p.timesWrong > 0)
+          const consec = p.consecutiveCorrect || 0
+          if (isMistakeFlag && consec >= settings.consecutiveCorrect) {
+            toGraduate.push(q.id)
+            ProgressService.saveAnswer(
+              userId,
+              examId,
+              q.id,
+              'correct',
+              p.userSelection,
+              true,
+              { resetTimesWrong: true }
+            )
+            if (user?.uid) {
+              void RemoteProgress.saveAnswer(
+                user.uid,
+                examId,
+                q.id,
+                'correct',
+                p.userSelection,
+                p,
+                true,
+                { resetTimesWrong: true }
+              )
+            }
+          }
+        })
+        if (toGraduate.length > 0) {
+          setExamProgress((prev) => {
+            const next = { ...prev }
+            toGraduate.forEach((qId) => {
+              const prevEntry = next[qId] || {}
+              const consec = prevEntry.consecutiveCorrect || 0
+              next[qId] = {
+                ...prevEntry,
+                status: 'correct',
+                timesWrong: 0,
+                consecutiveCorrect: consec,
+              }
+            })
+            return next
+          })
+        }
+      }
+
       const filtered = allQuestions.filter((q) => {
         const p = examProgress[q.id]
-        if (!p) return false // Not attempted
-        
-        // Include if currently incorrect OR (was wrong before AND threshold not met)
+        if (!p) return false
+
         if (p.status === 'incorrect' || (p.timesWrong && p.timesWrong > 0)) {
-          if (settings.consecutiveCorrect === 0) return true
           return (p.consecutiveCorrect || 0) < settings.consecutiveCorrect
         }
         return false
@@ -273,6 +327,7 @@ export function PracticeMode({ examId, initialMode, initialQuestionIndex }: Prac
       setMistakeQuestions(filtered)
       
       if (settings.mistakesMode !== wasMistakesMode) {
+        setMistakesSessionStatus({})
         setCurrentQuestionIndex(0)
       } else {
         // Clamp index to ensure it's valid
@@ -314,6 +369,36 @@ export function PracticeMode({ examId, initialMode, initialQuestionIndex }: Prac
     return () => unsub()
   }, [user?.uid, examId])
 
+  useEffect(() => {
+    if (!userId || !examId) return
+    if (settingsLoadedRef.current) return
+
+    const localSettings = ProgressService.getExamSettings(userId, examId)
+    if (localSettings.mistakesConsecutiveCorrect && localSettings.mistakesConsecutiveCorrect > 0) {
+      setSettings(prev => ({
+        ...prev,
+        consecutiveCorrect: localSettings.mistakesConsecutiveCorrect || prev.consecutiveCorrect,
+      }))
+    }
+
+    if (user?.uid) {
+      RemoteProgress.getExamSettings(user.uid, examId)
+        .then(remote => {
+          if (remote.mistakesConsecutiveCorrect && remote.mistakesConsecutiveCorrect > 0) {
+            setSettings(prev => ({
+              ...prev,
+              consecutiveCorrect: remote.mistakesConsecutiveCorrect || prev.consecutiveCorrect,
+            }))
+          }
+        })
+        .finally(() => {
+          settingsLoadedRef.current = true
+        })
+    } else {
+      settingsLoadedRef.current = true
+    }
+  }, [userId, examId, user?.uid])
+
   // Sync current question state with progress
   useEffect(() => {
     // Wait for auth to settle
@@ -328,23 +413,25 @@ export function PracticeMode({ examId, initialMode, initialQuestionIndex }: Prac
     if (questions && questions[currentQuestionIndex] && userId) {
       const qId = questions[currentQuestionIndex].id
       const progress = examProgress[qId]
-      
+
       setIsBookmarked(progress?.bookmarked || false)
-      
-      if (progress?.status) {
-        setIsSubmitted(true)
-        if (progress.userSelection) {
-          setSelectedAnswers(progress.userSelection)
+
+      if (!settings.mistakesMode) {
+        if (progress?.status) {
+          setIsSubmitted(true)
+          if (progress.userSelection) {
+            setSelectedAnswers(progress.userSelection)
+          }
+        } else {
+          setIsSubmitted(false)
+          setSelectedAnswers([])
         }
-      } else {
-        setIsSubmitted(false)
-        setSelectedAnswers([])
       }
-      
+
       // Mark as ready once we've synced the first time
       setIsReady(true)
     }
-  }, [questions, currentQuestionIndex, userId, examProgress, isProgressLoaded, authLoading, isRemoteSynced, user?.uid])
+  }, [questions, currentQuestionIndex, userId, examProgress, isProgressLoaded, authLoading, isRemoteSynced, user?.uid, settings.mistakesMode])
 
   useEffect(() => {
     let cancelled = false
@@ -473,33 +560,86 @@ export function PracticeMode({ examId, initialMode, initialQuestionIndex }: Prac
     if (!canSubmit || !question || !userId) return
     
     const correct = sameSelections(selectedAnswers, question.correctAnswers)
-    const status = correct ? 'correct' : 'incorrect'
+    const prevProgress = examProgress[question.id]
+    const prevConsecutive = prevProgress?.consecutiveCorrect || 0
+    const newConsecutive = correct ? prevConsecutive + 1 : 0
     
-    // Save to service
-    ProgressService.saveAnswer(userId, examId, question.id, status, selectedAnswers)
+    let persistedStatus: 'correct' | 'incorrect'
+    if (correct) {
+      if (settings.mistakesMode) {
+        persistedStatus = newConsecutive >= settings.consecutiveCorrect ? 'correct' : 'incorrect'
+      } else {
+        persistedStatus = 'correct'
+      }
+    } else {
+      persistedStatus = 'incorrect'
+    }
+    
+    const graduatedNow =
+      settings.mistakesMode &&
+      correct &&
+      prevConsecutive < settings.consecutiveCorrect &&
+      newConsecutive >= settings.consecutiveCorrect
+
+    ProgressService.saveAnswer(
+      userId,
+      examId,
+      question.id,
+      persistedStatus,
+      selectedAnswers,
+      correct,
+      { resetTimesWrong: graduatedNow }
+    )
     if (user?.uid) {
-      void RemoteProgress.saveAnswer(user.uid, examId, question.id, status, selectedAnswers, examProgress[question.id])
+      void RemoteProgress.saveAnswer(
+        user.uid,
+        examId,
+        question.id,
+        persistedStatus,
+        selectedAnswers,
+        examProgress[question.id],
+        correct,
+        { resetTimesWrong: graduatedNow }
+      )
     } else {
       toast.message('Saved locally. Sign in to sync to cloud')
     }
     
     // Update local state
     setIsSubmitted(true)
-    setExamProgress(prev => ({
-      ...prev,
-      [question.id]: {
-        ...prev[question.id],
-        status,
-        lastAnswered: Date.now(),
-        userSelection: selectedAnswers,
-        consecutiveCorrect: correct 
-          ? ((prev[question.id]?.consecutiveCorrect || 0) + 1) 
-          : 0,
-        timesWrong: !correct
-          ? ((prev[question.id]?.timesWrong || 0) + 1)
-          : (prev[question.id]?.timesWrong || 0)
+    if (settings.mistakesMode) {
+      setMistakesSessionStatus(prev => ({
+        ...prev,
+        [question.id]: correct ? 'correct' : 'incorrect',
+      }))
+    }
+    setExamProgress(prev => {
+      const prevEntry = prev[question.id] || {}
+      const prevTimesWrong = prevEntry.timesWrong || 0
+      let nextTimesWrong = prevTimesWrong
+      if (!correct) {
+        nextTimesWrong = prevTimesWrong + 1
+      } else if (graduatedNow) {
+        nextTimesWrong = 0
       }
-    }))
+      return {
+        ...prev,
+        [question.id]: {
+          ...prevEntry,
+          status: persistedStatus,
+          lastAnswered: Date.now(),
+          userSelection: selectedAnswers,
+          consecutiveCorrect: correct ? newConsecutive : 0,
+          timesWrong: nextTimesWrong,
+        },
+      }
+    })
+
+    if (graduatedNow) {
+      toast.success('Great job! This question has been removed from My Mistakes.', {
+        description: `You answered it correctly ${settings.consecutiveCorrect} times in a row.`,
+      })
+    }
 
     // Auto Next Logic
     if (settings.autoNext && correct) {
@@ -529,6 +669,19 @@ export function PracticeMode({ examId, initialMode, initialQuestionIndex }: Prac
     setSelectedAnswers([])
     setIsSubmitted(false)
     setCurrentQuestionIndex(index)
+  }
+
+  const handleSettingsChange = (next: PracticeSettings) => {
+    setSettings(next)
+    if (!userId) return
+    ProgressService.saveExamSettings(userId, examId, {
+      mistakesConsecutiveCorrect: next.consecutiveCorrect,
+    })
+    if (user?.uid) {
+      void RemoteProgress.saveExamSettings(user.uid, examId, {
+        mistakesConsecutiveCorrect: next.consecutiveCorrect,
+      })
+    }
   }
 
   const toggleBookmark = () => {
@@ -807,7 +960,8 @@ export function PracticeMode({ examId, initialMode, initialQuestionIndex }: Prac
             onNavigate={handleNavigate}
             onClearProgress={handleClearProgress}
             settings={settings}
-            onSettingsChange={setSettings}
+            onSettingsChange={handleSettingsChange}
+            mistakesSessionStatus={mistakesSessionStatus}
           />
         </div>
       </div>
@@ -818,6 +972,8 @@ export function PracticeMode({ examId, initialMode, initialQuestionIndex }: Prac
         onNavigate={handleNavigate}
         isBookmarked={isBookmarked}
         onToggleBookmark={toggleBookmark}
+        mistakesMode={settings.mistakesMode}
+        mistakesSessionStatus={mistakesSessionStatus}
       />
 
       <AlertDialog open={showClearConfirm} onOpenChange={setShowClearConfirm}>

@@ -3,11 +3,11 @@ import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useNavigate } from '@tanstack/react-router'
-import { createUserWithEmailAndPassword } from 'firebase/auth'
+import { createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from 'firebase/auth'
 import { toast } from 'sonner'
 import { Loader2 } from 'lucide-react'
 import { auth } from '@/lib/firebase'
-import { IconFacebook, IconGithub } from '@/assets/brand-icons'
+import { IconGoogle } from '@/assets/brand-icons'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import {
@@ -61,9 +61,28 @@ export function SignUpForm({
       await createUserWithEmailAndPassword(auth, data.email, data.password)
       toast.success('Account created successfully!')
       navigate({ to: '/' })
-    } catch (error: any) {
-      console.error(error)
-      toast.error(error.message || 'Failed to create account')
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : 'Failed to create account'
+      toast.error(message)
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  async function handleGoogleSignUp() {
+    setIsLoading(true)
+    try {
+      const provider = new GoogleAuthProvider()
+      await signInWithPopup(auth, provider)
+      toast.success('Signed in with Google successfully!')
+      navigate({ to: '/' })
+    } catch (error) {
+      const message =
+        error instanceof Error
+          ? error.message
+          : 'Failed to sign in with Google'
+      toast.error(message)
     } finally {
       setIsLoading(false)
     }
@@ -137,16 +156,9 @@ export function SignUpForm({
             className='w-full'
             type='button'
             disabled={isLoading}
+            onClick={handleGoogleSignUp}
           >
-            <IconGithub className='h-4 w-4' /> GitHub
-          </Button>
-          <Button
-            variant='outline'
-            className='w-full'
-            type='button'
-            disabled={isLoading}
-          >
-            <IconFacebook className='h-4 w-4' /> Facebook
+            <IconGoogle className='h-4 w-4' /> Google
           </Button>
         </div>
       </form>

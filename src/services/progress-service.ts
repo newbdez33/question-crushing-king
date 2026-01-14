@@ -20,14 +20,26 @@ export interface AppProgress {
 }
 
 const STORAGE_KEY = 'examtopics_progress'
+const SETTINGS_KEY = 'examtopics_settings'
+
+export interface ExamSettings {
+  mistakesConsecutiveCorrect?: number
+}
+
+export interface UserSettings {
+  [examId: string]: ExamSettings
+}
+
+export interface AppSettings {
+  [userId: string]: UserSettings
+}
 
 export const ProgressService = {
   getAllProgress(): AppProgress {
     try {
       const data = localStorage.getItem(STORAGE_KEY)
       return data ? JSON.parse(data) : {}
-    } catch (error) {
-      console.error('Failed to parse progress from localStorage', error)
+    } catch {
       return {}
     }
   },
@@ -42,12 +54,33 @@ export const ProgressService = {
     return userProgress[examId] || {}
   },
 
+  getAllSettings(): AppSettings {
+    try {
+      const data = localStorage.getItem(SETTINGS_KEY)
+      return data ? JSON.parse(data) : {}
+    } catch {
+      return {}
+    }
+  },
+
+  getUserSettings(userId: string): UserSettings {
+    const all = this.getAllSettings()
+    return all[userId] || {}
+  },
+
+  getExamSettings(userId: string, examId: string): ExamSettings {
+    const userSettings = this.getUserSettings(userId)
+    return userSettings[examId] || {}
+  },
+
   saveAnswer(
     userId: string,
     examId: string,
     questionId: string,
     status: 'correct' | 'incorrect' | 'skipped',
-    userSelection?: number[]
+    userSelection?: number[],
+    isCorrectAttempt?: boolean,
+    options?: { resetTimesWrong?: boolean }
   ) {
     const all = this.getAllProgress()
     if (!all[userId]) all[userId] = {}
@@ -56,10 +89,16 @@ export const ProgressService = {
 
     const questionData = all[userId][examId][questionId]
     
-    // Update consecutive correct count
-    if (status === 'correct') {
+    const isCorrect = typeof isCorrectAttempt === 'boolean'
+      ? isCorrectAttempt
+      : status === 'correct'
+
+    if (isCorrect) {
       questionData.consecutiveCorrect = (questionData.consecutiveCorrect || 0) + 1
-    } else if (status === 'incorrect') {
+      if (options?.resetTimesWrong) {
+        questionData.timesWrong = 0
+      }
+    } else {
       questionData.consecutiveCorrect = 0
       questionData.timesWrong = (questionData.timesWrong || 0) + 1
     }
@@ -71,6 +110,16 @@ export const ProgressService = {
     }
 
     this._saveToStorage(all)
+  },
+
+  saveExamSettings(userId: string, examId: string, settings: ExamSettings) {
+    const all = this.getAllSettings()
+    if (!all[userId]) all[userId] = {}
+    all[userId][examId] = {
+      ...all[userId][examId],
+      ...settings,
+    }
+    this._saveSettingsToStorage(all)
   },
 
   clearExamProgress(userId: string, examId: string) {
@@ -156,5 +205,9 @@ export const ProgressService = {
 
   _saveToStorage(data: AppProgress) {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(data))
+  },
+
+  _saveSettingsToStorage(data: AppSettings) {
+    localStorage.setItem(SETTINGS_KEY, JSON.stringify(data))
   }
 }

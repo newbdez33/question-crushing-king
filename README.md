@@ -14,7 +14,9 @@ Question bank practice application based on Shadcn Admin Dashboard, designed to 
 ## Auth & Persistence (Firebase + LocalStorage + Realtime DB)
 
 ### Authentication
-- **Firebase Auth**: Used for Sign Up, Sign In, Logout, and Forgot Password.
+- **Firebase Auth**:
+  - Email + password Sign Up / Sign In flows.
+  - Google Sign-In available on both Sign In and Sign Up screens.
 - **Guest Mode**: Users can access content without logging in. A persistent UUID is generated and stored in `localStorage` for guests.
 - **Data Merging & Sync**: When a guest signs up or logs in, their local progress is merged into their account and then pushed to Firebase Realtime Database for cross-device sync.
 
@@ -209,6 +211,17 @@ Route: `/exams/$examId/study`
 Route: `/exams/$examId/practice?mode=mistakes`
 
 - **Entry Point**: "My Mistakes" card on Exam Details page
-- **Logic**: Only loads historical wrong answers or unmastered questions (filtered based on `timesWrong` and `consecutiveCorrect`)
+- **Logic**:
+  - Only loads historical wrong answers or unmastered questions (filtered based on `timesWrong` and `consecutiveCorrect`).
+  - Uses the **Consecutive correct** setting as the graduation threshold:
+    - Each correct attempt in My Mistakes mode increases `consecutiveCorrect` for that question.
+    - Any incorrect attempt resets `consecutiveCorrect` to `0` and increments `timesWrong`.
+    - When `consecutiveCorrect` for a question reaches the configured threshold，该题被视为已掌握：
+      - 该题会被移出 My Mistakes 池，并在本地和云端进度中记录为“已毕业”（状态标记为 `correct`，错误计数清零）。
+      - 之后即使调整 **Consecutive correct** 数值，这道已经毕业的题也不会因为阈值变化重新出现在 My Mistakes 中，除非用户在之后又把它答错。
+  - In My Mistakes mode, the answer sheet shows per-session answer status:
+  - Initially, all questions appear as "unanswered".
+  - After answering in this session, tiles turn green/red based on the current attempt result, independent of the global stored status.
+  - The **Consecutive correct** value is persisted per user+exam in `localStorage` and, for authenticated users, also synced to Firebase for cross-device consistency.
 
 For more details on the overall tech stack and directory structure, see [TEMPLATE.md](./TEMPLATE.md).

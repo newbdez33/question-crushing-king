@@ -1,9 +1,10 @@
 import { db } from '@/lib/firebase'
-import { ref, onValue, update, get } from 'firebase/database'
-import type { UserProgress, ExamProgress, QuestionProgress } from './progress-service'
+import { get, onValue, ref, update } from 'firebase/database'
+import type { ExamProgress, ExamSettings, QuestionProgress, UserProgress } from './progress-service'
 import { toast } from 'sonner'
 
 const BASE = 'examtopics_progress'
+const SETTINGS_PATH = '_settings'
 
 export function subscribeExamProgress(
   userId: string,
@@ -31,13 +32,21 @@ export async function saveAnswer(
   questionId: string,
   status: 'correct' | 'incorrect' | 'skipped',
   userSelection?: number[],
-  prev?: QuestionProgress
+  prev?: QuestionProgress,
+  isCorrectAttempt?: boolean,
+  options?: { resetTimesWrong?: boolean }
 ) {
   const now = Date.now()
+  const isCorrect = typeof isCorrectAttempt === 'boolean'
+    ? isCorrectAttempt
+    : status === 'correct'
   const consecutiveCorrect =
-    status === 'correct' ? ((prev?.consecutiveCorrect || 0) + 1) : 0
-  const timesWrong =
-    status === 'incorrect' ? ((prev?.timesWrong || 0) + 1) : (prev?.timesWrong || 0)
+    isCorrect ? ((prev?.consecutiveCorrect || 0) + 1) : 0
+  let timesWrong =
+    isCorrect ? (prev?.timesWrong || 0) : ((prev?.timesWrong || 0) + 1)
+  if (isCorrect && options?.resetTimesWrong) {
+    timesWrong = 0
+  }
 
   try {
     await update(ref(db, `${BASE}/${userId}/${examId}/${questionId}`), {
@@ -109,4 +118,26 @@ export async function mergeLocalIntoRemote(
       toast.error('Failed to push merged progress to cloud')
     }
   }
+}
+
+export async function saveExamSettings(
+  userId: string,
+  examId: string,
+  settings: ExamSettings
+) {
+  try {
+    await update(ref(db, `${BASE}/${userId}/${SETTINGS_PATH}/${examId}`), settings)
+  } catch {
+    toast.error('Failed to sync settings to cloud')
+  }
+}
+
+export async function getExamSettings(
+  userId: string,
+  examId: string
+): Promise<ExamSettings> {
+  const r = ref(db, `${BASE}/${userId}/${SETTINGS_PATH}/${examId}`)
+  const snap = await get(r)
+  const val = snap.val() as ExamSettings | null
+  return val || {}
 }

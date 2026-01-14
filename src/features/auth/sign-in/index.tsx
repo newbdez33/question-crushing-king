@@ -1,4 +1,4 @@
-import { useSearch } from '@tanstack/react-router'
+import { Link, useSearch } from '@tanstack/react-router'
 import {
   Card,
   CardContent,
@@ -28,20 +28,13 @@ export function SignIn() {
         </CardContent>
         <CardFooter>
           <p className='px-8 text-center text-sm text-muted-foreground'>
-            By clicking sign in, you agree to our{' '}
-            <a
-              href='/terms'
+            Don&apos;t have an account?{' '}
+            <Link
+              to='/sign-up'
               className='underline underline-offset-4 hover:text-primary'
             >
-              Terms of Service
-            </a>{' '}
-            and{' '}
-            <a
-              href='/privacy'
-              className='underline underline-offset-4 hover:text-primary'
-            >
-              Privacy Policy
-            </a>
+              Sign up
+            </Link>
             .
           </p>
         </CardFooter>

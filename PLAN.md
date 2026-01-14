@@ -62,7 +62,11 @@ Exam Topics is a web-based application designed to help users practice for certi
 - **Entry**: Accessible via "My Mistakes" card on Exam Details.
 - **Logic**:
   - Filters the question list to include only questions marked as "incorrect" or "timesWrong > 0".
-  - Respects the "Consecutive correct" setting to graduate questions out of this mode.
+  - Uses the per-exam **Consecutive correct** threshold to determine when a question graduates out of the mistakes pool:
+    - Each correct attempt increases `consecutiveCorrect` for that question.
+    - Any incorrect attempt resets `consecutiveCorrect` to `0` and increments `timesWrong`.
+    - Once `consecutiveCorrect` reaches the configured threshold, the question is considered mastered and is removed from My Mistakes on the next session/load.
+  - In My Mistakes mode the answer sheet reflects only the current session’s answers (initially all unanswered; tiles change to green/red after answering), while the underlying global status is still used for filtering across sessions.
 
 ### 4.6 Progress Tracking
 - **Persistence**: All data is stored in browser `localStorage`.
