@@ -77,7 +77,7 @@ Exam Topics is a web-based application designed to help users practice for certi
     - Each correct attempt increases `consecutiveCorrect` for that question.
     - Any incorrect attempt resets `consecutiveCorrect` to `0` and increments `timesWrong`.
     - Once `consecutiveCorrect` reaches the configured threshold, the question is considered mastered and is removed from My Mistakes on the next session/load.
-  - In My Mistakes mode the answer sheet reflects only the current session’s answers (initially all unanswered; tiles change to green/red after answering), while the underlying global status is still used for filtering across sessions.
+      - In My Mistakes mode the answer sheet reflects only the current session’s answers (initially all unanswered; tiles change to green/red after answering), while the underlying global status is still used for filtering across sessions.
 
 ### 4.6 Progress Tracking
 - **Persistence**: All data is stored in browser `localStorage`.
@@ -89,6 +89,10 @@ Exam Topics is a web-based application designed to help users practice for certi
   - Consecutive Correct Count.
   - Times Wrong Count.
 - **Bookmark System**: Users can toggle bookmarks on any question for later review.
+
+### 4.7 Exam Mode
+- **Purpose**: Simulated exam with random question selection by count.
+- **Docs**: See [EXAM_MODE_PLAN.md](./EXAM_MODE_PLAN.md) for user-facing design and [EXAM_MODE_TECH.md](./EXAM_MODE_TECH.md) for technical details.
 
 ## 5. Data Specifications
 - **Source**: JSON files located in `public/data/`.
