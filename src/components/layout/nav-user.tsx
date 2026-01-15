@@ -1,11 +1,5 @@
 import { Link, useNavigate } from '@tanstack/react-router'
-import {
-  BadgeCheck,
-  Bell,
-  ChevronsUpDown,
-  LogIn,
-  LogOut,
-} from 'lucide-react'
+import { BadgeCheck, ChevronsUpDown, LogIn, LogOut } from 'lucide-react'
 import useDialogState from '@/hooks/use-dialog-state'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import {
@@ -104,12 +98,7 @@ export function NavUser({ user, isGuest = false }: NavUserProps) {
                         Account
                       </Link>
                     </DropdownMenuItem>
-                    <DropdownMenuItem asChild>
-                      <Link to='/settings/notifications'>
-                        <Bell />
-                        Notifications
-                      </Link>
-                    </DropdownMenuItem>
+                    
                   </DropdownMenuGroup>
                   <DropdownMenuSeparator />
                 </>
@@ -130,4 +119,3 @@ export function NavUser({ user, isGuest = false }: NavUserProps) {
     </>
   )
 }
-

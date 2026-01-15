@@ -73,6 +73,83 @@
 - My Mistakes：按错题池过滤；连对毕业阈值控制错题移出规则。
 - Exam Mode：模拟考试（题数输入、随机抽题、会话统计与复盘）。
 - 仪表盘（Dashboard）：近况与数据概览（可在后续扩展）。
+- Settings：保留 Profile/Account/Appearance；移除 Notifications 与 Display。Layout 设置通过全局 Config Drawer 与 Header 快捷控件统一入口。
+
+## Settings 变更与 Layout 要素
+- 目标
+  - 去除 Settings 的 Notifications 与 Display 分区与相关路由、表单与保存逻辑。
+  - Settings 与全局布局能力对齐：主题/侧栏形态/展开模式/方向统一由 Layout 要素驱动。
+- 范围
+  - 导航与路由：移除侧边导航与路由注册中的 Notifications 与 Display。
+  - 表单与交互：删除通知偏好与侧栏显示项的表单。
+  - Layout 要素说明与接入：统一通过 Layout Provider 与 Config Drawer 控制。
+- Profile 与 Firebase 关联：Profile 页读取与编辑须与 Firebase 同步（详见下节）。
+- 设计与实现要点
+  - 导航与路由
+    - 移除侧边导航条目 Notifications、Display 与其对应页面容器：
+      - Settings 主页与侧边导航：[index.tsx](file:///c:/Users/newbd/projects/dev/examtopics/src/features/settings/index.tsx#L1-L74)
+      - Notifications 容器与表单：[notifications/index.tsx](file:///c:/Users/newbd/projects/dev/examtopics/src/features/settings/notifications/index.tsx#L1-L13)、[notifications-form.tsx](file:///c:/Users/newbd/projects/dev/examtopics/src/features/settings/notifications/notifications-form.tsx#L1-L220)
+      - Display 容器与表单：[display/index.tsx](file:///c:/Users/newbd/projects/dev/examtopics/src/features/settings/display/index.tsx#L1-L13)、[display-form.tsx](file:///c:/Users/newbd/projects/dev/examtopics/src/features/settings/display/display-form.tsx#L1-L121)
+    - 移除路由生成树中的注册项：[routeTree.gen.ts](file:///c:/Users/newbd/projects/dev/examtopics/src/routeTree.gen.ts#L235-L283) 与 [routeTree.gen.ts:L507-L515](file:///c:/Users/newbd/projects/dev/examtopics/src/routeTree.gen.ts#L507-L515)
+  - Layout 要素（统一配置入口）
+    - Theme：系统/明亮/暗黑，入口位于 Config Drawer 与 Header 的 ThemeSwitch
+      - 参考：[config-drawer.tsx](file:///c:/Users/newbd/projects/dev/examtopics/src/components/config-drawer.tsx#L1-L354)、[settings/index.tsx:ThemeSwitch](file:///c:/Users/newbd/projects/dev/examtopics/src/features/settings/index.tsx#L14-L21)
+    - Sidebar Variant：inset/floating/sidebar，作用于 AppSidebar
+      - 参考：[app-sidebar.tsx](file:///c:/Users/newbd/projects/dev/examtopics/src/components/layout/app-sidebar.tsx#L1-L62)
+    - Collapsible 展开模式：default/icon/offcanvas，支持移动端 Sheet 与 cookie 持久化
+      - 参考：[layout-provider.tsx](file:///c:/Users/newbd/projects/dev/examtopics/src/context/layout-provider.tsx#L1-L85)、[ui/sidebar.tsx](file:///c:/Users/newbd/projects/dev/examtopics/src/components/ui/sidebar.tsx#L1-L728)
+    - Direction：LTR/RTL，通过 DirConfig 控制
+      - 参考：[config-drawer.tsx](file:///c:/Users/newbd/projects/dev/examtopics/src/components/config-drawer.tsx#L230-L290)
+    - Reset Layout：一键重置 Theme/Dir/Layout 并打开侧栏
+      - 参考：[config-drawer.tsx](file:///c:/Users/newbd/projects/dev/examtopics/src/components/config-drawer.tsx#L300-L340)
+    - 侧栏开合快捷键：Ctrl/Cmd + B
+      - 参考：[ui/sidebar.tsx](file:///c:/Users/newbd/projects/dev/examtopics/src/components/ui/sidebar.tsx#L74-L106)
+  - Settings 页面改造
+    - 页面布局继续使用固定布局容器以保证两列结构与内部滚动：
+      - 主容器：[main.tsx](file:///c:/Users/newbd/projects/dev/examtopics/src/components/layout/main.tsx#L1-L27)（`fixed`）
+      - 适配固定高度：[authenticated-layout.tsx](file:///c:/Users/newbd/projects/dev/examtopics/src/components/layout/authenticated-layout.tsx#L20-L34)
+    - 保留分区：Profile、Account、Appearance
+      - Appearance 聚焦主题设置；集成或复用 Header 的 ThemeSwitch，不在 Settings 内重复布局项
+    - 移除分区：Notifications、Display（连同其表单与“Update”按钮）
+  - 数据与持久化
+    - 通知偏好不再由 Settings 管理；如后续需要采用独立通知中心/服务再行设计
+    - 侧栏显示项（Display）不再可配；统一由 AppSidebar 导航源决定
+    - Layout 状态通过 cookie/local 持久化（详见 Sidebar 与 LayoutProvider）
+  - 回归与影响范围
+    - 受影响页面：Settings 主页与其侧边导航、两处子页与对应路由
+    - 不影响 Exam/Practice/Study/Mistakes 的功能与路由
+
+## Profile 与 Firebase 关联
+- 现状
+  - 用户基础资料（displayName、photoURL、email）来源于 Firebase Auth 的 User 对象，通过 AuthContext 提供。
+    - 参考：[auth-context.tsx](file:///c:/Users/newbd/projects/dev/examtopics/src/context/auth-context.tsx#L12-L50)、[auth-ctx.ts](file:///c:/Users/newbd/projects/dev/examtopics/src/context/auth-ctx.ts#L11-L19)
+  - Settings › Profile 当前为演示表单（username、bio、urls），提交不与 Firebase 交互。
+    - 参考：[profile-form.tsx](file:///c:/Users/newbd/projects/dev/examtopics/src/features/settings/profile/profile-form.tsx#L59-L177)、[profile/index.tsx](file:///c:/Users/newbd/projects/dev/examtopics/src/features/settings/profile/index.tsx#L4-L13)
+- 目标
+  - Profile 页需与 Firebase 关联：读取与展示 Auth User 基础资料；支持编辑后更新至 Firebase。
+  - 自定义资料字段（bio、urls、username 等）采用数据库持久化（建议 Realtime DB 的 `users/{uid}/profile`，或 Firestore）。
+- 读写规则
+  - 读取
+    - 基础资料：从 useAuth().user 读取 displayName、photoURL、email。
+    - 自定义字段：从 `db` 读取 `users/{uid}/profile`（若不存在则使用默认空值）。
+    - 参考 Firebase 初始化：[lib/firebase.ts](file:///c:/Users/newbd/projects/dev/examtopics/src/lib/firebase.ts#L1-L20)
+  - 更新
+    - 基础资料：调用 Firebase Auth API 更新
+      - displayName/photoURL：`updateProfile(user, { displayName, photoURL })`
+      - email：`updateEmail(user, email)`（需重新登录/近期登录校验）
+    - 自定义字段：写入 `users/{uid}/profile`（bio、urls、username），采用幂等更新。
+  - 容错与安全
+    - 未登录用户：Profile 仅展示只读状态；不允许更新。
+    - 匿名用户：允许填写自定义字段本地暂存，但不写入云端。
+    - 权限：数据库规则应限制 `users/{uid}/profile` 仅允许该 uid 读写。
+- UI/交互
+  - 表单初始化：合并 Auth 基础资料与 DB 自定义字段为初始值。
+  - 提交流程：先调用 Auth 更新（如需），再写入 DB 自定义字段；统一成功/失败提示。
+  - 同步显示：提交成功后刷新 AuthContext 或本地状态，保证头部/侧边栏资料即时更新。
+- 影响范围
+  - 新增用户资料服务模块（如 `services/user-profile.ts`）供 Profile 表单复用。
+  - 侧边栏与头像下拉显示名称与头像来源不变，但提交后需立即反映最新值：
+    - 参考显示位置：[app-sidebar.tsx](file:///c:/Users/newbd/projects/dev/examtopics/src/components/layout/app-sidebar.tsx#L21-L31)、[profile-dropdown.tsx](file:///c:/Users/newbd/projects/dev/examtopics/src/components/profile-dropdown.tsx#L18-L30)
 
 ## Practice Mode
 - 路由：`/exams/$examId/practice`；支持 `?q=`（题号）与 `?mode=mistakes`。
