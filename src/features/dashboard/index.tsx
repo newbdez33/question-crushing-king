@@ -1,7 +1,9 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link } from '@tanstack/react-router'
-import { Activity, BookOpen, CheckCircle, FileText, TrendingUp } from 'lucide-react'
+import { Activity, BookOpen, CheckCircle, FileText, TrendingUp, Cloud } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
+import { Button } from '@/components/ui/button'
 import { ConfigDrawer } from '@/components/config-drawer'
 import { Header } from '@/components/layout/header'
 import { Main } from '@/components/layout/main'
@@ -136,6 +138,23 @@ export function Dashboard() {
         <div className='flex items-center justify-between space-y-2 mb-6'>
           <h1 className='text-3xl font-bold tracking-tight'>Dashboard</h1>
         </div>
+
+        {!user && (
+          <Alert className='mb-6'>
+            <Cloud />
+            <AlertTitle>Sign in to sync your learning progress</AlertTitle>
+            <AlertDescription>
+              <div className='flex flex-wrap items-center gap-3'>
+                <span>Sign in to automatically sync practice progress across your devices.</span>
+                <Button asChild size='sm'>
+                  <Link from='/' to='/sign-in' search={{ redirect: '/' }}>
+                    Sign in
+                  </Link>
+                </Button>
+              </div>
+            </AlertDescription>
+          </Alert>
+        )}
 
         <div className='grid gap-4 md:grid-cols-2 lg:grid-cols-4 mb-8'>
           <Card>
