@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link } from '@tanstack/react-router'
-import { FileText, Plus } from 'lucide-react'
-import { Button } from '@/components/ui/button'
+import { FileText } from 'lucide-react'
 import {
   Card,
   CardContent,
@@ -91,13 +90,7 @@ export function ExamsList() {
 
       <Main>
         <div className='mb-2 flex items-center justify-between space-y-2'>
-          <h1 className='text-2xl font-bold tracking-tight'>My Question Banks</h1>
-          <div className='flex items-center space-x-2'>
-            <Button>
-              <Plus className='mr-2 h-4 w-4' />
-              Import Exam
-            </Button>
-          </div>
+          <h1 className='text-2xl font-bold tracking-tight'>My Exams</h1>
         </div>
 
         <div className='grid gap-4 sm:grid-cols-2 lg:grid-cols-3'>
