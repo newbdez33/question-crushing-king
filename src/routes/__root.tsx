@@ -13,12 +13,13 @@ export const Route = createRootRouteWithContext<{
   queryClient: QueryClient
 }>()({
   component: () => {
+    const showDevtools = import.meta.env.VITE_SHOW_DEVTOOLS === '1'
     return (
       <AuthProvider>
         <NavigationProgress />
         <Outlet />
         <Toaster duration={5000} />
-        {import.meta.env.MODE === 'development' && (
+        {import.meta.env.MODE === 'development' && showDevtools && (
           <>
             <ReactQueryDevtools buttonPosition='bottom-left' />
             <TanStackRouterDevtools position='bottom-right' />

@@ -758,11 +758,10 @@ export function PracticeMode({ examId, initialMode, initialQuestionIndex }: Prac
     )
   }
 
-  // Determine font size class
-  const fontSizeClass = {
-    'small': 'text-sm',
-    'normal': 'text-base',
-    'large': 'text-lg',
+  const fontSizeSmClass = {
+    'small': 'sm:text-sm',
+    'normal': 'sm:text-base',
+    'large': 'sm:text-lg',
   }[settings.fontSize]
 
   return (
@@ -783,38 +782,36 @@ export function PracticeMode({ examId, initialMode, initialQuestionIndex }: Prac
         </div>
       </Header>
 
-      <div className='flex flex-1 pt-0 items-start justify-center gap-4'>
-        <div className='w-full max-w-3xl'>
-          <Main className={cn('w-full pb-24 lg:pr-0', fontSizeClass)}>
-            <Card>
-              <CardHeader>
-                <div className='flex items-start justify-between gap-4'>
-                  <CardTitle className='font-medium leading-normal'>
-                    <Badge variant='outline' className='mb-2 me-2'>
-                      Question {currentQuestionIndex + 1} of {questions.length}
-                    </Badge>
-                    <Badge variant='secondary' className='mb-2'>
-                      {formatQuestionType(question.type)}
-                    </Badge>
-                    <div className='mt-2'>
-                      {question.contentHtml ? (
-                        renderExamHtml(question.contentHtml)
-                      ) : (
-                        <p>{question.text}</p>
-                      )}
-                    </div>
-                  </CardTitle>
-                  <Button
-                    variant='ghost'
-                    size='sm'
-                    className={cn('gap-2', isBookmarked && 'text-yellow-500 hover:text-yellow-600')}
-                    onClick={toggleBookmark}
-                  >
-                    <Bookmark className={cn('h-4 w-4', isBookmarked && 'fill-current')} />
-                  </Button>
-                </div>
+      <div className='flex flex-1 pt-0 items-start justify-center gap-2 sm:gap-4'>
+        <div className='w-full max-w-3xl px-2 sm:px-4'>
+          <Main className={cn('w-full pb-[calc(var(--mobile-bar-height,0px)+env(safe-area-inset-bottom))] lg:pr-0 text-xs sm:py-6 py-2 px-0', fontSizeSmClass)}>
+            <Card className='py-3 sm:py-6 gap-3 sm:gap-6'>
+              <CardHeader className='relative px-2 sm:px-6'>
+                <CardTitle className='font-medium leading-normal'>
+                  <Badge variant='outline' className='mb-2 me-2'>
+                    Question {currentQuestionIndex + 1} of {questions.length}
+                  </Badge>
+                  <Badge variant='secondary' className='mb-2'>
+                    {formatQuestionType(question.type)}
+                  </Badge>
+                  <div className='mt-2'>
+                    {question.contentHtml ? (
+                      renderExamHtml(question.contentHtml)
+                    ) : (
+                      <p>{question.text}</p>
+                    )}
+                  </div>
+                </CardTitle>
+                <Button
+                  variant='ghost'
+                  size='sm'
+                  className={cn('gap-2 absolute right-2 sm:right-6 top-0', isBookmarked && 'text-yellow-500 hover:text-yellow-600')}
+                  onClick={toggleBookmark}
+                >
+                  <Bookmark className={cn('h-4 w-4 self-start', isBookmarked && 'fill-current')} />
+                </Button>
               </CardHeader>
-              <CardContent className='space-y-6'>
+              <CardContent className='space-y-3 sm:space-y-6 px-2 sm:px-6'>
                 {question.type === 'single' ? (
                   <RadioGroup
                     key={question.id}
@@ -828,7 +825,7 @@ export function PracticeMode({ examId, initialMode, initialQuestionIndex }: Prac
                         <div
                           key={idx}
                           className={cn(
-                            'flex items-center space-x-3 rounded-lg border p-4 transition-colors cursor-pointer',
+                            'flex items-center space-x-2 sm:space-x-3 rounded-lg border p-2 sm:p-4 transition-colors cursor-pointer',
                             isSubmitted && question.correctAnswers.includes(idx) && 'border-green-500 bg-green-50 dark:bg-green-950/20',
                             isSubmitted && isSelected && !question.correctAnswers.includes(idx) && 'border-red-500 bg-red-50 dark:bg-red-950/20',
                             !isSubmitted && 'hover:bg-muted/50',
@@ -847,7 +844,7 @@ export function PracticeMode({ examId, initialMode, initialQuestionIndex }: Prac
                           </div>
                           <Label
                             htmlFor={`option-${idx}`}
-                            className={cn('flex-1 cursor-pointer font-normal leading-relaxed', fontSizeClass)}
+                            className={cn('flex-1 cursor-pointer font-normal leading-relaxed text-xs', fontSizeSmClass)}
                           >
                             {option.html ? renderExamHtml(option.html) : option.text}
                           </Label>
@@ -869,7 +866,7 @@ export function PracticeMode({ examId, initialMode, initialQuestionIndex }: Prac
                         <div
                           key={idx}
                           className={cn(
-                            'flex items-center space-x-3 rounded-lg border p-4 transition-colors cursor-pointer',
+                            'flex items-center space-x-2 sm:space-x-3 rounded-lg border p-2 sm:p-4 transition-colors cursor-pointer',
                             isSubmitted && question.correctAnswers.includes(idx) && 'border-green-500 bg-green-50 dark:bg-green-950/20',
                             isSubmitted && isSelected && !question.correctAnswers.includes(idx) && 'border-red-500 bg-red-50 dark:bg-red-950/20',
                             !isSubmitted && 'hover:bg-muted/50',
@@ -894,7 +891,7 @@ export function PracticeMode({ examId, initialMode, initialQuestionIndex }: Prac
                           </div>
                           <Label
                             htmlFor={`option-${idx}`}
-                            className={cn('flex-1 cursor-pointer font-normal leading-relaxed', fontSizeClass)}
+                            className={cn('flex-1 cursor-pointer font-normal leading-relaxed text-xs', fontSizeSmClass)}
                           >
                             {option.html ? renderExamHtml(option.html) : option.text}
                           </Label>
@@ -912,13 +909,13 @@ export function PracticeMode({ examId, initialMode, initialQuestionIndex }: Prac
 
                 {isSubmitted && (
                   <div className={cn(
-                    'rounded-lg p-4',
+                    'rounded-lg p-3 sm:p-4',
                     isCorrect ? 'bg-green-100 text-green-900 dark:bg-green-900/30 dark:text-green-100' : 'bg-red-100 text-red-900 dark:bg-red-900/30 dark:text-red-100'
                   )}>
                     <p className='font-semibold'>
                       {isCorrect ? 'Correct Answer!' : 'Incorrect Answer'}
                     </p>
-                    <div className='mt-2 flex gap-6 text-sm'>
+                    <div className='mt-2 flex gap-4 sm:gap-6 text-xs sm:text-sm'>
                       <p>
                         <span className='font-semibold'>Correct Answer: </span>
                         {question.correctAnswers.map(i => String.fromCharCode(65 + i)).join(', ')}
@@ -937,7 +934,7 @@ export function PracticeMode({ examId, initialMode, initialQuestionIndex }: Prac
                   </div>
                 )}
               </CardContent>
-              <CardFooter className='relative flex items-center justify-between border-t bg-muted/50 p-6'>
+              <CardFooter className='relative flex items-center justify-between border-t p-3 sm:p-6'>
                 <Button
                   variant='outline'
                   size='icon'
@@ -951,6 +948,7 @@ export function PracticeMode({ examId, initialMode, initialQuestionIndex }: Prac
                 {!isSubmitted && (
                   <div className="absolute left-1/2 -translate-x-1/2">
                     <Button onClick={handleSubmit} disabled={!canSubmit} className="min-w-[120px]">
+                      <CheckCircle className="h-4 w-4" />
                       Submit Answer
                     </Button>
                   </div>
@@ -968,10 +966,11 @@ export function PracticeMode({ examId, initialMode, initialQuestionIndex }: Prac
               </CardFooter>
             </Card>
           </Main>
+          <div className='h-[calc(var(--mobile-bar-height,0px)+env(safe-area-inset-bottom)+0.5rem)] lg:hidden' />
         </div>
 
         {/* Right Sidebar */}
-        <div className="hidden lg:block py-6 pr-4">
+        <div className="hidden lg:block py-6 pl-4">
           <PracticeSidebar 
             questions={questions}
             progress={examProgress}

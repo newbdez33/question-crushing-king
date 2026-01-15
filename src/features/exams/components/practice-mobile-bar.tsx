@@ -3,6 +3,7 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/co
 import { cn } from '@/lib/utils'
 import type { ExamProgress } from '@/services/progress-service'
 import { Bookmark, List, CheckCircle, XCircle } from 'lucide-react'
+import { useEffect, useRef } from 'react'
 
 interface PracticeMobileBarProps {
   questions: { id: string }[]
@@ -27,6 +28,7 @@ export function PracticeMobileBar({
 }: PracticeMobileBarProps) {
   let correct = 0
   let incorrect = 0
+  const barRef = useRef<HTMLDivElement | null>(null)
 
   if (mistakesMode) {
     const statuses = questions
@@ -40,36 +42,52 @@ export function PracticeMobileBar({
     incorrect = relevant.filter((p) => p?.status === 'incorrect').length
   }
 
+  useEffect(() => {
+    const el = barRef.current
+    if (!el) return
+    const setVar = () => {
+      const h = el.offsetHeight
+      document.documentElement.style.setProperty('--mobile-bar-height', `${h}px`)
+    }
+    setVar()
+    const ro = new ResizeObserver(() => setVar())
+    ro.observe(el)
+    const onResize = () => setVar()
+    window.addEventListener('resize', onResize)
+    return () => {
+      ro.disconnect()
+      window.removeEventListener('resize', onResize)
+    }
+  }, [])
+
   return (
-    <div className="fixed bottom-0 inset-x-0 z-40 border-t bg-background lg:hidden">
+    <div ref={barRef} className="fixed bottom-0 inset-x-0 z-40 border-t bg-background lg:hidden">
       <div className="mx-auto max-w-3xl px-4 py-2 grid grid-cols-4 gap-2 items-center text-xs">
         <Button
           variant="ghost"
           size="sm"
-          className={cn('gap-2 justify-start', isBookmarked && 'text-yellow-500 hover:text-yellow-600')}
+          className={cn('gap-1 justify-center', isBookmarked && 'text-yellow-500 hover:text-yellow-600')}
           onClick={onToggleBookmark}
         >
           <Bookmark className={cn('h-4 w-4', isBookmarked && 'fill-current')} />
-          Bookmark
+          <span className="sr-only">Bookmark</span>
         </Button>
 
-        <div className="flex items-center justify-start gap-2">
+        <div className="flex h-8 items-center justify-center gap-1" aria-label="Correct count">
           <CheckCircle className="h-4 w-4 text-green-600" />
           <span className="font-semibold text-green-600">{correct}</span>
-          <span className="text-muted-foreground">Correct</span>
         </div>
 
-        <div className="flex items-center justify-start gap-2">
+        <div className="flex h-8 items-center justify-center gap-1" aria-label="Wrong count">
           <XCircle className="h-4 w-4 text-red-600" />
           <span className="font-semibold text-red-600">{incorrect}</span>
-          <span className="text-muted-foreground">Wrong</span>
         </div>
 
         <Sheet>
           <SheetTrigger asChild>
-            <Button variant="ghost" size="sm" className="gap-2 justify-start">
+            <Button variant="ghost" size="sm" className="gap-1 justify-center">
               <List className="h-4 w-4" />
-              Answer Card
+              <span className="sr-only">Answer Card</span>
             </Button>
           </SheetTrigger>
           <SheetContent side="bottom">

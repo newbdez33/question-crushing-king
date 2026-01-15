@@ -353,47 +353,45 @@ export function StudyMode({ examId }: StudyModeProps) {
         </div>
       </Header>
 
-      <div className='flex flex-1 pt-0 items-start justify-center gap-4'>
-        <div className='w-full max-w-3xl'>
-          <Main className={cn('w-full pb-24 lg:pr-0', {
-            'text-sm': settings.fontSize === 'small',
-            'text-base': settings.fontSize === 'normal',
-            'text-lg': settings.fontSize === 'large',
+      <div className='flex flex-1 pt-0 items-start justify-center gap-2 sm:gap-4'>
+        <div className='w-full max-w-3xl px-2 sm:px-4'>
+          <Main className={cn('w-full pb-[calc(var(--mobile-bar-height,0px)+env(safe-area-inset-bottom))] lg:pr-0 text-xs sm:py-6 py-2 px-0', {
+            'sm:text-sm': settings.fontSize === 'small',
+            'sm:text-base': settings.fontSize === 'normal',
+            'sm:text-lg': settings.fontSize === 'large',
           })}>
-            <Card>
-              <CardHeader>
-                <div className='flex items-start justify-between gap-4'>
-                  <CardTitle className='font-medium leading-normal'>
-                    <Badge variant='outline' className='mb-2 me-2'>
-                      Question {currentQuestionIndex + 1} of {questions.length}
-                    </Badge>
-                    <Badge variant='secondary' className='mb-2'>
-                      {formatQuestionType(question.type)}
-                    </Badge>
-                    <div className='mt-2'>
-                      {question.contentHtml ? (
-                        renderExamHtml(question.contentHtml)
-                      ) : (
-                        <p>{question.text}</p>
-                      )}
-                    </div>
-                  </CardTitle>
-                  <Button
-                    variant='ghost'
-                    size='sm'
-                    className={cn('gap-2', isBookmarked && 'text-yellow-500 hover:text-yellow-600')}
-                    onClick={toggleBookmark}
-                  >
-                    <Bookmark className={cn('h-4 w-4', isBookmarked && 'fill-current')} />
-                  </Button>
-                </div>
+            <Card className='py-3 sm:py-6 gap-3 sm:gap-6'>
+              <CardHeader className='relative px-2 sm:px-6'>
+                <CardTitle className='font-medium leading-normal'>
+                  <Badge variant='outline' className='mb-2 me-2'>
+                    Question {currentQuestionIndex + 1} of {questions.length}
+                  </Badge>
+                  <Badge variant='secondary' className='mb-2'>
+                    {formatQuestionType(question.type)}
+                  </Badge>
+                  <div className='mt-2'>
+                    {question.contentHtml ? (
+                      renderExamHtml(question.contentHtml)
+                    ) : (
+                      <p>{question.text}</p>
+                    )}
+                  </div>
+                </CardTitle>
+                <Button
+                  variant='ghost'
+                  size='sm'
+                  className={cn('gap-2 absolute right-2 sm:right-6 top-0', isBookmarked && 'text-yellow-500 hover:text-yellow-600')}
+                  onClick={toggleBookmark}
+                >
+                  <Bookmark className={cn('h-4 w-4 self-start', isBookmarked && 'fill-current')} />
+                </Button>
               </CardHeader>
-              <CardContent className='space-y-6'>
+              <CardContent className='space-y-3 sm:space-y-6 px-2 sm:px-6'>
                 <div className='space-y-3'>
                   {question.options.map((option, index) => {
                     const isCorrect = question.correctAnswers.includes(index)
                     let itemClass =
-                      'flex items-center space-x-3 rounded-md border p-4'
+                      'flex items-center space-x-2 sm:space-x-3 rounded-md border p-2 sm:p-4'
 
                     if (isCorrect) {
                       itemClass +=
@@ -419,7 +417,7 @@ export function StudyMode({ examId }: StudyModeProps) {
                   })}
                 </div>
 
-                <div className='rounded-md border border-blue-100 bg-blue-50 p-4 dark:border-blue-900 dark:bg-blue-900/10'>
+                <div className='rounded-md border border-blue-100 bg-blue-50 p-3 sm:p-4 dark:border-blue-900 dark:bg-blue-900/10'>
                   <div className='mb-2 flex items-center gap-2 font-semibold text-blue-700 dark:text-blue-300'>
                     <Lightbulb className='h-4 w-4' />
                     <span>Explanation</span>
@@ -430,7 +428,7 @@ export function StudyMode({ examId }: StudyModeProps) {
                 </div>
 
               </CardContent>
-              <CardFooter className='flex justify-between border-t p-6'>
+              <CardFooter className='flex justify-between border-t p-3 sm:p-6'>
                 <Button
                   variant='outline'
                   onClick={handlePrev}
@@ -450,6 +448,7 @@ export function StudyMode({ examId }: StudyModeProps) {
               </CardFooter>
             </Card>
           </Main>
+          <div className='h-[calc(var(--mobile-bar-height,0px)+env(safe-area-inset-bottom)+0.5rem)] lg:hidden' />
         </div>
         <div className='hidden lg:block py-6 pr-4'>
           <StudySidebar

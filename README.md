@@ -186,10 +186,10 @@ Route: `/exams/$examId/practice`
 - **Layout**:
   - **Top**: Question number, type (Single/Multiple Choice)
   - **Middle**: Question stem (HTML/Image), options list
-  - **Bottom**: Navigation bar (Previous/Next icon buttons), Submit Answer button
+  - **Bottom**: Navigation bar (Previous/Next icon buttons), Submit Answer button（含图标）
   - **Responsive**:
     - **Desktop (≥ lg)**: 右侧 Sidebar 显示答题卡与设置面板
-    - **Mobile (< lg)**: 隐藏右侧 Sidebar，显示底部 Tabbar（Bookmark、Correct、Wrong、Answer Card）。点击 Answer Card 打开底部弹层 Sheet 显示答题卡网格，可跳题
+    - **Mobile (< lg)**: 隐藏右侧 Sidebar，显示底部 Tabbar（Bookmark、Correct 数、Wrong 数、Answer Card）。Tabbar 等宽居中分布；点击 Answer Card 打开底部弹层 Sheet 显示答题卡网格，可跳题
 - **Settings Panel**:
   - **Auto next**: Auto-jump on correct answer
   - **Font size**: Font size adjustment
@@ -210,7 +210,7 @@ Route: `/exams/$examId/study`
   - **Header**: 固定头部，返回详情页按钮与标题
   - **Main Card**:
     - 顶部以 Badge 显示题号与题型（Single/Multiple）
-    - 题干支持 HTML/图片；右上角 Bookmark
+    - 题干支持 HTML/图片；右上角 Bookmark（绝对定位于卡片右上角，与题号顶部对齐）
     - 选项列表中自动高亮正确选项
     - Explanation 区块默认展开
   - **Footer**: Previous/Next 图标按钮
@@ -242,6 +242,20 @@ Route: `/exams/$examId/practice?mode=mistakes`
   - The **Consecutive correct** value is persisted per user+exam in `localStorage` and, for authenticated users, also synced to Firebase for cross-device consistency.
 
 For more details on the overall tech stack and directory structure, see [TEMPLATE.md](./TEMPLATE.md).
+
+## Recent UI Updates
+
+- **Mobile Tabbar**
+  - 等宽居中分布的四项：Bookmark、Correct 数、Wrong 数、Answer Card
+  - 移除“Correct/Wrong”文案，仅保留图标与数字，提升空间利用与辨识度
+  - 实时测量底栏高度并写入 `--mobile-bar-height`，主内容通过 `pb-[calc(var(--mobile-bar-height,0px)+env(safe-area-inset-bottom))]` 与底部占位块组合，彻底避免遮挡
+- **Study/Practice 内容区**
+  - 题干与选项在小屏使用更紧凑的内外边距，提升信息密度
+  - Bookmark 图标绝对定位到卡片右上角，并与题号行顶边对齐
+  - Practice 模式的 Submit Answer 按钮加入图标
+  - Practice 模式卡片底部背景改为透明
+- **安全区适配**
+  - 小屏在 iOS 安全区使用 `env(safe-area-inset-bottom)` 自动适配
 
 ## Deployment Notes (Cloudflare Workers)
 
