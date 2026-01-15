@@ -43,7 +43,12 @@ const profileFormSchema = z.object({
 
 type ProfileFormValues = z.infer<typeof profileFormSchema>
 
-const defaultValues: Partial<ProfileFormValues> = {}
+const defaultValues: ProfileFormValues = {
+  username: '',
+  email: '',
+  bio: '',
+  urls: [],
+}
 
 export function ProfileForm() {
   const { user } = useAuth()
@@ -79,7 +84,6 @@ export function ProfileForm() {
         }
         form.reset(initial)
       } catch {
-        toast.error('Failed to load profile')
         form.reset({
           username: user.displayName || '',
           email: user.email || '',
