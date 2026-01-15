@@ -32,6 +32,7 @@ import { Route as AuthenticatedErrorsErrorRouteImport } from './routes/_authenti
 import { Route as AuthenticatedExamsExamIdIndexRouteImport } from './routes/_authenticated/exams/$examId/index'
 import { Route as AuthenticatedExamsExamIdStudyRouteImport } from './routes/_authenticated/exams/$examId/study'
 import { Route as AuthenticatedExamsExamIdPracticeRouteImport } from './routes/_authenticated/exams/$examId/practice'
+import { Route as AuthenticatedExamsExamIdExamRouteImport } from './routes/_authenticated/exams/$examId/exam'
 
 const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
   id: '/_authenticated',
@@ -158,6 +159,12 @@ const AuthenticatedExamsExamIdPracticeRoute =
     path: '/exams/$examId/practice',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedExamsExamIdExamRoute =
+  AuthenticatedExamsExamIdExamRouteImport.update({
+    id: '/exams/$examId/exam',
+    path: '/exams/$examId/exam',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/settings': typeof AuthenticatedSettingsRouteRouteWithChildren
@@ -179,6 +186,7 @@ export interface FileRoutesByFullPath {
   '/exams': typeof AuthenticatedExamsIndexRoute
   '/help-center': typeof AuthenticatedHelpCenterIndexRoute
   '/settings/': typeof AuthenticatedSettingsIndexRoute
+  '/exams/$examId/exam': typeof AuthenticatedExamsExamIdExamRoute
   '/exams/$examId/practice': typeof AuthenticatedExamsExamIdPracticeRoute
   '/exams/$examId/study': typeof AuthenticatedExamsExamIdStudyRoute
   '/exams/$examId': typeof AuthenticatedExamsExamIdIndexRoute
@@ -202,6 +210,7 @@ export interface FileRoutesByTo {
   '/exams': typeof AuthenticatedExamsIndexRoute
   '/help-center': typeof AuthenticatedHelpCenterIndexRoute
   '/settings': typeof AuthenticatedSettingsIndexRoute
+  '/exams/$examId/exam': typeof AuthenticatedExamsExamIdExamRoute
   '/exams/$examId/practice': typeof AuthenticatedExamsExamIdPracticeRoute
   '/exams/$examId/study': typeof AuthenticatedExamsExamIdStudyRoute
   '/exams/$examId': typeof AuthenticatedExamsExamIdIndexRoute
@@ -228,6 +237,7 @@ export interface FileRoutesById {
   '/_authenticated/exams/': typeof AuthenticatedExamsIndexRoute
   '/_authenticated/help-center/': typeof AuthenticatedHelpCenterIndexRoute
   '/_authenticated/settings/': typeof AuthenticatedSettingsIndexRoute
+  '/_authenticated/exams/$examId/exam': typeof AuthenticatedExamsExamIdExamRoute
   '/_authenticated/exams/$examId/practice': typeof AuthenticatedExamsExamIdPracticeRoute
   '/_authenticated/exams/$examId/study': typeof AuthenticatedExamsExamIdStudyRoute
   '/_authenticated/exams/$examId/': typeof AuthenticatedExamsExamIdIndexRoute
@@ -254,6 +264,7 @@ export interface FileRouteTypes {
     | '/exams'
     | '/help-center'
     | '/settings/'
+    | '/exams/$examId/exam'
     | '/exams/$examId/practice'
     | '/exams/$examId/study'
     | '/exams/$examId'
@@ -277,6 +288,7 @@ export interface FileRouteTypes {
     | '/exams'
     | '/help-center'
     | '/settings'
+    | '/exams/$examId/exam'
     | '/exams/$examId/practice'
     | '/exams/$examId/study'
     | '/exams/$examId'
@@ -302,6 +314,7 @@ export interface FileRouteTypes {
     | '/_authenticated/exams/'
     | '/_authenticated/help-center/'
     | '/_authenticated/settings/'
+    | '/_authenticated/exams/$examId/exam'
     | '/_authenticated/exams/$examId/practice'
     | '/_authenticated/exams/$examId/study'
     | '/_authenticated/exams/$examId/'
@@ -483,6 +496,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedExamsExamIdPracticeRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/exams/$examId/exam': {
+      id: '/_authenticated/exams/$examId/exam'
+      path: '/exams/$examId/exam'
+      fullPath: '/exams/$examId/exam'
+      preLoaderRoute: typeof AuthenticatedExamsExamIdExamRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
@@ -515,6 +535,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedErrorsErrorRoute: typeof AuthenticatedErrorsErrorRoute
   AuthenticatedExamsIndexRoute: typeof AuthenticatedExamsIndexRoute
   AuthenticatedHelpCenterIndexRoute: typeof AuthenticatedHelpCenterIndexRoute
+  AuthenticatedExamsExamIdExamRoute: typeof AuthenticatedExamsExamIdExamRoute
   AuthenticatedExamsExamIdPracticeRoute: typeof AuthenticatedExamsExamIdPracticeRoute
   AuthenticatedExamsExamIdStudyRoute: typeof AuthenticatedExamsExamIdStudyRoute
   AuthenticatedExamsExamIdIndexRoute: typeof AuthenticatedExamsExamIdIndexRoute
@@ -526,6 +547,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedErrorsErrorRoute: AuthenticatedErrorsErrorRoute,
   AuthenticatedExamsIndexRoute: AuthenticatedExamsIndexRoute,
   AuthenticatedHelpCenterIndexRoute: AuthenticatedHelpCenterIndexRoute,
+  AuthenticatedExamsExamIdExamRoute: AuthenticatedExamsExamIdExamRoute,
   AuthenticatedExamsExamIdPracticeRoute: AuthenticatedExamsExamIdPracticeRoute,
   AuthenticatedExamsExamIdStudyRoute: AuthenticatedExamsExamIdStudyRoute,
   AuthenticatedExamsExamIdIndexRoute: AuthenticatedExamsExamIdIndexRoute,

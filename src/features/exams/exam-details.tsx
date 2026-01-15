@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import { Link } from '@tanstack/react-router'
+import { Link, useNavigate } from '@tanstack/react-router'
 import { ArrowLeft, BookOpen, CheckCircle, RotateCcw, AlertCircle, Brain } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import {
@@ -8,6 +8,9 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
 import { Header } from '@/components/layout/header'
 import { Main } from '@/components/layout/main'
 import { ProfileDropdown } from '@/components/profile-dropdown'
@@ -22,12 +25,16 @@ interface ExamDetailsProps {
 }
 
 export function ExamDetails({ examId }: ExamDetailsProps) {
+  const navigate = useNavigate()
   const { user, guestId } = useAuth()
   const userId = user?.uid || guestId
   const fallbackExam = mockExams.find((e) => e.id === examId)
   const [demoQuestionCount, setDemoQuestionCount] = useState<number | null>(null)
   const [isLoading, setIsLoading] = useState(!fallbackExam)
   const [progress, setProgress] = useState<ExamProgress>({})
+  const [examDialogOpen, setExamDialogOpen] = useState(false)
+  const [examCount, setExamCount] = useState<number>(fallbackExam?.questionCount ?? 10)
+  const [examSeed, setExamSeed] = useState<string>('')
 
   useEffect(() => {
     if (userId && examId) {
@@ -242,19 +249,81 @@ export function ExamDetails({ examId }: ExamDetailsProps) {
               </Card>
             </Link>
             
-            <Card className='opacity-50 h-full'>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Brain className="h-5 w-5" />
-                  Exam Mode
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className='text-sm text-muted-foreground'>
-                  Simulate the real exam environment with a timer and no immediate answers. (Coming Soon)
-                </p>
-              </CardContent>
-            </Card>
+            <Dialog open={examDialogOpen} onOpenChange={setExamDialogOpen}>
+              <DialogTrigger asChild>
+                <Card className='cursor-pointer transition-colors hover:bg-muted/50 h-full'>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <Brain className="h-5 w-5" />
+                      Exam Mode
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className='text-sm text-muted-foreground'>
+                      Randomly select questions to simulate an exam session.
+                    </p>
+                  </CardContent>
+                </Card>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Start Exam Mode</DialogTitle>
+                  <DialogDescription>
+                    Enter the number of questions to include. Optional: provide a seed to reproduce selection.
+                  </DialogDescription>
+                </DialogHeader>
+                <div className='space-y-4'>
+                  <div className='grid grid-cols-4 items-center gap-3'>
+                    <Label htmlFor='exam-count' className='col-span-1'>Question count</Label>
+                    <Input
+                      id='exam-count'
+                      type='number'
+                      min={1}
+                      max={exam.questionCount || 1}
+                      value={examCount}
+                      onChange={(e) => setExamCount(Math.max(1, Number(e.target.value) || 1))}
+                      className='col-span-3'
+                    />
+                  </div>
+                  <div className='grid grid-cols-4 items-center gap-3'>
+                    <Label htmlFor='exam-seed' className='col-span-1'>Seed</Label>
+                    <Input
+                      id='exam-seed'
+                      type='text'
+                      value={examSeed}
+                      onChange={(e) => setExamSeed(e.target.value)}
+                      placeholder='Optional'
+                      className='col-span-3'
+                    />
+                  </div>
+                  <p className='text-xs text-muted-foreground'>
+                    Available questions: {exam.questionCount}. Count will be clamped to this maximum.
+                  </p>
+                </div>
+                <DialogFooter>
+                  <Button variant='outline' onClick={() => setExamDialogOpen(false)}>
+                    Cancel
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      const finalCount = Math.min(Math.max(1, examCount || 1), exam.questionCount || 1)
+                      setExamDialogOpen(false)
+                      navigate({
+                        to: '/exams/$examId/exam',
+                        params: { examId },
+                        search: (prev) => ({
+                          ...prev,
+                          count: finalCount,
+                          seed: examSeed || undefined,
+                        }),
+                      })
+                    }}
+                  >
+                    Start
+                  </Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
           </div>
         </div>
       </Main>
