@@ -72,6 +72,17 @@ Value (JSON Object):
   - `VITE_FIREBASE_APP_ID`
   - `VITE_FIREBASE_MEASUREMENT_ID`
   - `VITE_FIREBASE_DATABASE_URL` (Realtime DB)
+- **Analytics in Development**:
+  - To avoid certificate issues when loading Google Tag Manager (`gtag.js`) locally, Firebase Analytics is disabled in development.
+  - Production-only initialization conditions: `import.meta.env.PROD` + browser environment + non-empty `measurementId`.
+  - Implementation: [firebase.ts](file:///c:/Users/newbd/projects/dev/examtopics/src/lib/firebase.ts#L17-L22)
+- **ENV Guidance**:
+  - Development: No need to set `VITE_FIREBASE_MEASUREMENT_ID` (even if set, Analytics won’t initialize).
+  - Production: Set `VITE_FIREBASE_MEASUREMENT_ID` to enable Analytics; leave empty to disable.
+- **Troubleshooting (Local)**:
+  - Error: `net::ERR_CERT_AUTHORITY_INVALID` from `https://www.googletagmanager.com/gtag/js?...`
+  - Causes: corporate proxy MITM/self-signed certs, incorrect system time, security software/network filtering.
+  - Fixes: use dev-time Analytics disable (already implemented), import corporate root CA into trust store, correct system clock, verify filters aren’t blocking `*.google*`.
 - **Database Rules** (example):
 ```json
 {

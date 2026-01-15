@@ -16,5 +16,8 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig)
 export const auth = getAuth(app)
-export const analytics = typeof window !== 'undefined' ? getAnalytics(app) : null
+export const analytics =
+  import.meta.env.PROD && typeof window !== 'undefined' && !!firebaseConfig.measurementId
+    ? getAnalytics(app)
+    : null
 export const db = getDatabase(app)
