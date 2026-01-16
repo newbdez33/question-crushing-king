@@ -1,0 +1,30 @@
+name: ci-validate
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+    paths:
+      - package.json
+      - pnpm-lock.yaml
+      - src/**
+      - vite.config.ts
+      - tsconfig*.json
+      - eslint.config.js
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 25.x
+          cache: pnpm
+      - run: corepack enable
+      - run: pnpm --version
+      - run: node -v
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm typecheck
+      - run: pnpm lint
+      - run: pnpm build
+      - run: pnpm test
