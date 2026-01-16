@@ -16,6 +16,7 @@ Question bank practice application based on Shadcn Admin Dashboard, designed to 
 ## Auth & Persistence (Firebase + LocalStorage + Realtime DB)
 
 ### Authentication
+
 - **Firebase Auth**:
   - Email + password Sign Up / Sign In flows.
   - Google Sign-In available on both Sign In and Sign Up screens.
@@ -23,6 +24,7 @@ Question bank practice application based on Shadcn Admin Dashboard, designed to 
 - **Data Merging & Sync**: When a guest signs up or logs in, their local progress is merged into their account and then pushed to Firebase Realtime Database for cross-device sync.
 
 ### Local Storage Structure
+
 The application uses `localStorage` to persist user progress and settings. The key structure is designed to be compatible with Firebase Realtime Database paths.
 
 Key: `examtopics_progress`
@@ -42,6 +44,7 @@ Value (JSON Object):
 ```
 
 ### Realtime Sync (Authenticated Users)
+
 - **Path**: `examtopics_progress/{uid}/{examId}/{questionId}`
 - **Fields**:
   - `status`: `"correct" | "incorrect" | "skipped"`
@@ -64,6 +67,7 @@ Value (JSON Object):
   - After merge, push the User’s local progress to Firebase for cross-device availability.
 
 ### Firebase Setup
+
 - **Environment Variables**:
   - `VITE_FIREBASE_API_KEY`
   - `VITE_FIREBASE_AUTH_DOMAIN`

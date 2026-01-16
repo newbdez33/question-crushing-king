@@ -80,6 +80,7 @@ interface QuestionProgress {
 ## Logic & Behavior
 
 ### Guest vs. Authenticated User
+
 - **Guest User**:
   - Automatically assigned a persistent random UUID (v4) upon first visit.
   - ID is stored in `localStorage` key `examtopics_guest_id`.
@@ -92,6 +93,7 @@ interface QuestionProgress {
   - Screens subscribe to `examtopics_progress/{uid}/{examId}` and reflect remote changes in real-time.
 
 ### Guest Data Merge Process (On Login)
+
 When a guest user logs in or signs up:
 1. **Trigger**: The application detects an authentication state change (via `onAuthStateChanged`).
 2. **Action**: The system invokes `ProgressService.mergeProgress(guestId, userId)` to merge Guest data into the User’s local progress, then pushes the merged result to Firebase.
@@ -120,9 +122,11 @@ When a guest user logs in or signs up:
 ## Firebase Realtime Database
 
 ### Base Path
+
 - `examtopics_progress/{uid}/{examId}/{questionId}`
 
 ### Fields
+
 - `status`: `"correct" | "incorrect" | "skipped"`
 - `lastAnswered`: number (timestamp ms)
 - `userSelection`: number[]
@@ -131,9 +135,11 @@ When a guest user logs in or signs up:
 - `bookmarked`: boolean
 
 ### Subscriptions
+
 - UI subscribes to `examtopics_progress/{uid}/{examId}` via Firebase listeners and updates local UI state when remote data changes.
 
 ### Rules (Example)
+
 - Only the authenticated user can read/write their subtree:
 ```
 {

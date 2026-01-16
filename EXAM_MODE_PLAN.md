@@ -1,16 +1,19 @@
 # 功能设计总览
 
 ## 概述
+
 - 在现有 Practice Mode 基础上提供“模拟考试”体验：用户先输入考试题数，系统随机抽取指定数量进入作答。
 - 界面与交互沿用 Practice Mode，但会话内所有题以“未作答”起始；提交后仍更新全局错题库与连对计数。
 - 完成后展示本次考试的成绩统计与复盘入口。
 
 ## 目标与范围
+
 - 目标：提供快速、沉浸的考试模拟，兼顾练习积累（错题库持续生效）。
 - 范围：题目抽取、考试会话、答题提交与错题库更新、结果统计与复盘。
 - 不含：计时器、暂停/续考、分卷结构等进阶功能（后续迭代）。
 
 ## 用户流程
+
 - 入口：在考试详情页选择“Exam Mode”→输入题数（如 50）。
 - 抽题：从该考试的全题库随机抽取 50 题生成会话并进入答题界面。
 - 作答：逐题答题；题卡跳转、书签等沿用 Practice Mode。
@@ -18,6 +21,7 @@
 - 复盘：查看本次错题清单或重新开启新的 Exam Mode。
 
 ## 路由与入口
+
 - 建议路由：`/exams/$examId/exam`
 - 查询参数：
   - `count`：题数
@@ -27,6 +31,7 @@
 - 路由与题号同步参考：[practice.tsx](file:///c:/Users/newbd/projects/dev/examtopics/src/routes/_authenticated/exams/$examId/practice.tsx) 与题号同步逻辑 [practice-mode.tsx:L236-L251](file:///c:/Users/newbd/projects/dev/examtopics/src/features/exams/practice-mode.tsx#L236-L251)。
 
 ## 题目选择
+
 - 来源：该考试的 `allQuestions`（与 Practice Mode 相同加载流程 [practice-mode.tsx:L446-L509](file:///c:/Users/newbd/projects/dev/examtopics/src/features/exams/practice-mode.tsx#L446-L509)）。
 - 抽样规则：
   - `count >= allQuestions.length`：选取全部；
@@ -35,6 +40,7 @@
 - Exam Mode 不做错题过滤；会话内初始状态全部未作答。
 
 ## UI/UX
+
 - 复用 Practice Mode 布局与组件：
   - 桌面侧边栏题卡与设置：[practice-sidebar.tsx](file:///c:/Users/newbd/projects/dev/examtopics/src/features/exams/components/practice-sidebar.tsx)
   - 移动端底栏：[practice-mobile-bar.tsx](file:///c:/Users/newbd/projects/dev/examtopics/src/features/exams/components/practice-mobile-bar.tsx)
@@ -45,6 +51,7 @@
 - 题卡仅显示本次会话抽取的题号；标记未作答/已作答/对/错与 Practice Mode 一致。
 
 ## 答题与错题库影响
+
 - 会话内提交：在 `ExamSession` 中记录 `userSelection` 与 `isCorrect`，更新本次会话统计。
 - 全局进度与错题库：
   - 提交后调用现有进度服务，更新 `status`、`consecutiveCorrect`、`timesWrong`；
@@ -57,16 +64,19 @@
   - 过滤/毕业实现参考：[practice-mode.tsx:L260-L336](file:///c:/Users/newbd/projects/dev/examtopics/src/features/exams/practice-mode.tsx#L260-L336)。
 
 ## 结果页与复盘
+
 - 展示：总题数、已作答、正确、错误、正确率。
 - 复盘：本次错题列表入口（会话内错题或跳到 Practice 的错题模式），支持“重新开始一次 Exam Mode”（保留上次 `count` 与可选 `seed`）。
 
 ## 异常与边界
+
 - 题数必须为正整数且 ≥1；若题库少于输入题数，提示并改为最大值。
 - 数据加载失败：回退 `mock-exams` 或提示重试（沿用 Practice Mode 降级策略）。
 - 移动端：底栏安全区与高度处理沿用现有实现（如 `env(safe-area-inset-bottom)`）。
 - 登录态：会话不依赖登录；提交时区分本地/云端。
 
 ## 核心模块
+
 - 考试管理（My Exams）：考试列表、详情与入口（Practice/Study/Mistakes/Exam）。
 - Practice Mode：逐题作答、即时判分、题卡跳转与设置（Auto next、Font size、Consecutive correct）。
 - Study Mode：展示正确答案与解释，题卡跳转与字体设置。
@@ -76,6 +86,7 @@
 - Settings：保留 Profile/Account/Appearance；移除 Notifications 与 Display。Layout 设置通过全局 Config Drawer 与 Header 快捷控件统一入口。
 
 ## Settings 变更与 Layout 要素
+
 - 目标
   - 去除 Settings 的 Notifications 与 Display 分区与相关路由、表单与保存逻辑。
   - Settings 与全局布局能力对齐：主题/侧栏形态/展开模式/方向统一由 Layout 要素驱动。
@@ -120,6 +131,7 @@
     - 不影响 Exam/Practice/Study/Mistakes 的功能与路由
 
 ## Profile 与 Firebase 关联
+
 - 现状
   - 用户基础资料（displayName、photoURL、email）来源于 Firebase Auth 的 User 对象，通过 AuthContext 提供。
     - 参考：[auth-context.tsx](file:///c:/Users/newbd/projects/dev/examtopics/src/context/auth-context.tsx#L12-L50)、[auth-ctx.ts](file:///c:/Users/newbd/projects/dev/examtopics/src/context/auth-ctx.ts#L11-L19)
@@ -152,6 +164,7 @@
     - 参考显示位置：[app-sidebar.tsx](file:///c:/Users/newbd/projects/dev/examtopics/src/components/layout/app-sidebar.tsx#L21-L31)、[profile-dropdown.tsx](file:///c:/Users/newbd/projects/dev/examtopics/src/components/profile-dropdown.tsx#L18-L30)
 
 ## Practice Mode
+
 - 路由：`/exams/$examId/practice`；支持 `?q=`（题号）与 `?mode=mistakes`。
 - 交互：
   - 选择→提交→即时反馈（对/错与解释）。
@@ -160,17 +173,20 @@
 - 进度：提交后写入本地与云端（登录用户），影响错题计数与连对。
 
 ## Study Mode
+
 - 路由：`/exams/$examId/study`
 - 行为：高亮正确选项与解释区域；题卡跳转；字体设置。
 - 不更新错题计数，仅用于内容学习。
 
 ## My Mistakes
+
 - 入口：Exam 详情页“我的错题”；或 `practice?mode=mistakes`。
 - 过滤：`status='incorrect'` 或 `timesWrong>0` 且 `consecutiveCorrect` 未达阈值。
 - 毕业：在错题模式答对累计至阈值后，该题移出错题池并可清零 `timesWrong`。
 - 会话标记：题卡以会话内的“未作答/对/错”标示。
 
 ## Exam Mode
+
 - 入口：在考试详情页选择“Exam Mode”，先输入题数。
 - 抽题：从全题库随机抽指定数量（可复现随机 `seed`），呈现按题号升序。
 - 会话：题卡仅显示会话题号；会话内初始均为未作答。
@@ -178,11 +194,13 @@
 - 结果：展示总题数、已作答、正确、错误、正确率；提供本次错题复盘与重新开始。
 
 ## 题库与渲染
+
 - 优先加载 `public/data/{examId}.json`；无则回退到内置 mock。
 - 题干与选项支持 HTML，图片路径按约定映射至 `/data/images/...`。
 - 题型：单选与多选；多选提交前需满足选项数一致的校验。
 
 ## 进度与书签
+
 - 本地：`localStorage`（按用户/考试/题目层级组织）。
 - 云端：登录用户启用 Realtime DB 同步与订阅。
 - 书签：保留于清空进度操作之外；Guest→User 合并遵循 OR 规则。

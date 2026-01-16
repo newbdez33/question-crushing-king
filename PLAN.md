@@ -1,24 +1,30 @@
 # Exam Topics - Functional Specifications
 
 ## 1. Overview
+
 Exam Topics is a web-based application designed to help users practice for certification exams using local JSON question banks. It provides a robust practice environment with features like immediate feedback, progress tracking, and specialized study modes.
 
 ## 2. User Roles
+
 - **Guest**: Can access all features without registration. Progress is saved locally using a persistent Guest ID.
 - **Registered User**: (Planned) Can sync progress across devices. Currently functions similarly to Guest with authentication UI placeholders.
 
 ## 3. Layout & Navigation
+
 ### 3.1 Sidebar Navigation
+
 - **Dashboard**: The landing page displaying user statistics.
 - **My Exams**: A list of available question banks.
 
 ### 3.2 Responsive Design
+
 - **Desktop**: Full sidebar and multi-column layouts.
 - **Mobile**: Collapsible sidebar, stacked layouts, optimized touch targets.
 
 ## 4. Functional Modules
 
 ### 4.1 Dashboard
+
 - **User Statistics**:
   - **Total Questions Answered**: Cumulative count of answered questions.
   - **Correct Answers**: Cumulative count of correct answers.
@@ -27,6 +33,7 @@ Exam Topics is a web-based application designed to help users practice for certi
 - **Recent Activity**: A list of recently accessed exams with progress bars and "Last Active" timestamps.
 
 ### 4.2 Exam Management (My Exams)
+
 - **Exam List**: Displays cards for each available exam (e.g., AWS, SOA).
 - **Exam Details**:
   - **Stats**: Total Questions, Last Studied Date, Progress Bar.
@@ -37,6 +44,7 @@ Exam Topics is a web-based application designed to help users practice for certi
     - **Exam Mode**: (Coming Soon) Timed simulation.
 
 ### 4.3 Practice Mode
+
 - **Interface**:
   - **Question Area**: Displays Question Text (supports HTML/Images), Options (Radio/Checkbox), and Type Tag (Single/Multiple Choice).
   - **Footer Navigation**: "Previous" (Icon), "Next" (Icon), "Submit Answer" (Text).
@@ -52,6 +60,7 @@ Exam Topics is a web-based application designed to help users practice for certi
     - Progress saved to Local Storage.
 
 ### 4.4 Study Mode
+
 - **Purpose**: Review content without testing.
 - **Layout**: 与 Practice Mode 对齐
   - **Header**: 固定头部，返回详情页按钮与考试标题
@@ -70,6 +79,7 @@ Exam Topics is a web-based application designed to help users practice for certi
   - Settings：Font size（small/normal/large）
 
 ### 4.5 My Mistakes Mode
+
 - **Entry**: Accessible via "My Mistakes" card on Exam Details.
 - **Logic**:
   - Filters the question list to include only questions marked as "incorrect" or "timesWrong > 0".
@@ -80,6 +90,7 @@ Exam Topics is a web-based application designed to help users practice for certi
       - In My Mistakes mode the answer sheet reflects only the current session’s answers (initially all unanswered; tiles change to green/red after answering), while the underlying global status is still used for filtering across sessions.
 
 ### 4.6 Progress Tracking
+
 - **Persistence**: All data is stored in browser `localStorage`.
 - **Data Points**:
   - Status (correct/incorrect).
@@ -91,10 +102,12 @@ Exam Topics is a web-based application designed to help users practice for certi
 - **Bookmark System**: Users can toggle bookmarks on any question for later review.
 
 ### 4.7 Exam Mode
+
 - **Purpose**: Simulated exam with random question selection by count.
 - **Docs**: See [EXAM_MODE_PLAN.md](./EXAM_MODE_PLAN.md) for user-facing design and [EXAM_MODE_TECH.md](./EXAM_MODE_TECH.md) for technical details.
 
 ## 5. Data Specifications
+
 - **Source**: JSON files located in `public/data/`.
 - **Format**:
   - `id`: Unique identifier.

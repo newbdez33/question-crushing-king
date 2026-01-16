@@ -1,6 +1,7 @@
 # Project Template Analysis
 
 ## Tech Stack
+
 - **Framework:** React 19
 - **Language:** TypeScript
 - **Build Tool:** Vite 6
@@ -15,6 +16,7 @@
 - **Auth:** Clerk / Custom Auth
 
 ## Project Structure
+
 - **`src/features`**: Feature-based architecture. Each feature folder (e.g., `auth`, `dashboard`, `tasks`) contains its own components, data, and logic.
 - **`src/routes`**: File-based routing configuration used by TanStack Router.
 - **`src/components`**: Shared components.
@@ -25,6 +27,7 @@
 - **`src/lib`**: Utility functions and configurations.
 
 ## Key Features in Template
+
 - **Authentication**: Pre-built Login/Signup forms (Custom & Clerk).
 - **Dashboard**: Analytics charts and overview cards.
 - **Data Tables**: Advanced tables with filtering, sorting, pagination (Tasks, Users).
