@@ -18,12 +18,13 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 25.x
+          node-version: 22.x
           cache: pnpm
       - run: corepack enable
+      - run: corepack prepare pnpm@10.28.0 --activate
       - run: pnpm --version
       - run: node -v
-      - run: pnpm install --frozen-lockfile
+      - run: pnpm install --frozen-lockfile --dangerously-allow-all-builds
       - run: pnpm typecheck
       - run: pnpm lint
       - run: pnpm build
