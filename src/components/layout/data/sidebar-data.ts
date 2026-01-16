@@ -1,8 +1,4 @@
-import {
-  LayoutDashboard,
-  HelpCircle,
-  FileText,
-} from 'lucide-react'
+import { LayoutDashboard, HelpCircle, FileText } from 'lucide-react'
 import { type SidebarData } from '../types'
 
 export const sidebarData: SidebarData = {

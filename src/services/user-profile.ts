@@ -1,5 +1,5 @@
-import { db } from '@/lib/firebase'
 import { get, ref, update } from 'firebase/database'
+import { db } from '@/lib/firebase'
 
 export type UserProfileData = {
   username?: string

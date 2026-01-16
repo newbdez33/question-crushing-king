@@ -1,9 +1,9 @@
-import { Skeleton } from '@/components/ui/skeleton'
+import { ArrowLeft } from 'lucide-react'
+import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
+import { Skeleton } from '@/components/ui/skeleton'
 import { Header } from '@/components/layout/header'
 import { Main } from '@/components/layout/main'
-import { Button } from '@/components/ui/button'
-import { ArrowLeft } from 'lucide-react'
 
 export function PracticeSkeleton() {
   return (
@@ -20,7 +20,7 @@ export function PracticeSkeleton() {
         </div>
       </Header>
 
-      <div className='flex flex-1 pt-0 items-start justify-center gap-4'>
+      <div className='flex flex-1 items-start justify-center gap-4 pt-0'>
         <div className='w-full max-w-3xl'>
           <Main className='w-full pb-24 lg:pr-0'>
             <Card>
@@ -52,7 +52,7 @@ export function PracticeSkeleton() {
             </Card>
 
             {/* Navigation Skeleton */}
-            <div className='fixed bottom-0 left-0 right-0 border-t bg-background p-4 lg:sticky lg:bottom-auto lg:mt-6 lg:border-none lg:bg-transparent lg:p-0'>
+            <div className='fixed right-0 bottom-0 left-0 border-t bg-background p-4 lg:sticky lg:bottom-auto lg:mt-6 lg:border-none lg:bg-transparent lg:p-0'>
               <div className='mx-auto flex max-w-3xl items-center justify-between gap-4'>
                 <Skeleton className='h-10 w-24' />
                 <Skeleton className='h-10 w-32' />

@@ -24,8 +24,9 @@ export interface ExamSettings {
 ### 1. Shared Exam Data Hook (`src/hooks/use-exams.ts`)
 
 We will centralize the logic for fetching demo exam counts and merging them with mock exams.
+
 - **Input**: None
-- **Output**: 
+- **Output**:
   - `exams`: Array of all available exams (Mock + Demo).
   - `loading`: Boolean.
 

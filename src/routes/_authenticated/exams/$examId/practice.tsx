@@ -21,6 +21,12 @@ export const Route = createFileRoute('/_authenticated/exams/$examId/practice')({
     const { mode, q } = route.useSearch()
     // Convert 1-based q to 0-based index
     const initialIndex = q ? q - 1 : undefined
-    return <PracticeMode examId={examId} initialMode={mode} initialQuestionIndex={initialIndex} />
+    return (
+      <PracticeMode
+        examId={examId}
+        initialMode={mode}
+        initialQuestionIndex={initialIndex}
+      />
+    )
   },
 })

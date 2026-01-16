@@ -23,6 +23,13 @@ export const Route = createFileRoute('/_authenticated/exams/$examId/exam')({
     const { examId } = route.useParams()
     const { q, count, seed } = route.useSearch()
     const initialIndex = q ? q - 1 : undefined
-    return <ExamMode examId={examId} count={count} seed={seed} initialQuestionIndex={initialIndex} />
+    return (
+      <ExamMode
+        examId={examId}
+        count={count}
+        seed={seed}
+        initialQuestionIndex={initialIndex}
+      />
+    )
   },
 })

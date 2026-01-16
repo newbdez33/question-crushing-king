@@ -1,7 +1,12 @@
-import { db } from '@/lib/firebase'
 import { get, onValue, ref, update } from 'firebase/database'
-import type { ExamProgress, ExamSettings, QuestionProgress, UserProgress } from './progress-service'
 import { toast } from 'sonner'
+import { db } from '@/lib/firebase'
+import type {
+  ExamProgress,
+  ExamSettings,
+  QuestionProgress,
+  UserProgress,
+} from './progress-service'
 
 const BASE = 'examtopics_progress'
 const SETTINGS_PATH = '_settings'
@@ -37,13 +42,14 @@ export async function saveAnswer(
   options?: { resetTimesWrong?: boolean }
 ) {
   const now = Date.now()
-  const isCorrect = typeof isCorrectAttempt === 'boolean'
-    ? isCorrectAttempt
-    : status === 'correct'
-  const consecutiveCorrect =
-    isCorrect ? ((prev?.consecutiveCorrect || 0) + 1) : 0
-  let timesWrong =
-    isCorrect ? (prev?.timesWrong || 0) : ((prev?.timesWrong || 0) + 1)
+  const isCorrect =
+    typeof isCorrectAttempt === 'boolean'
+      ? isCorrectAttempt
+      : status === 'correct'
+  const consecutiveCorrect = isCorrect ? (prev?.consecutiveCorrect || 0) + 1 : 0
+  let timesWrong = isCorrect
+    ? prev?.timesWrong || 0
+    : (prev?.timesWrong || 0) + 1
   if (isCorrect && options?.resetTimesWrong) {
     timesWrong = 0
   }
@@ -126,7 +132,10 @@ export async function saveExamSettings(
   settings: ExamSettings
 ) {
   try {
-    await update(ref(db, `${BASE}/${userId}/${SETTINGS_PATH}/${examId}`), settings)
+    await update(
+      ref(db, `${BASE}/${userId}/${SETTINGS_PATH}/${examId}`),
+      settings
+    )
   } catch {
     toast.error('Failed to sync settings to cloud')
   }

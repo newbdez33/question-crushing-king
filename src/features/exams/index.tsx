@@ -1,6 +1,10 @@
 import { useMemo } from 'react'
 import { Link } from '@tanstack/react-router'
+import { ProgressService } from '@/services/progress-service'
 import { FileText, PlusCircle } from 'lucide-react'
+import { useAuth } from '@/context/auth-ctx'
+import { useExams } from '@/hooks/use-exams'
+import { Button } from '@/components/ui/button'
 import {
   Card,
   CardContent,
@@ -13,10 +17,6 @@ import { Main } from '@/components/layout/main'
 import { ProfileDropdown } from '@/components/profile-dropdown'
 import { Search } from '@/components/search'
 import { ThemeSwitch } from '@/components/theme-switch'
-import { useExams } from '@/hooks/use-exams'
-import { useAuth } from '@/context/auth-ctx'
-import { ProgressService } from '@/services/progress-service'
-import { Button } from '@/components/ui/button'
 
 export function ExamsList() {
   const { user, guestId } = useAuth()
@@ -25,7 +25,7 @@ export function ExamsList() {
 
   const myExams = useMemo(() => {
     if (!userId) return []
-    return allExams.filter(exam => {
+    return allExams.filter((exam) => {
       const settings = ProgressService.getExamSettings(userId, exam.id)
       return settings.owned === true
     })
@@ -47,7 +47,9 @@ export function ExamsList() {
         </div>
 
         {loading ? (
-          <div className="text-center py-10 text-muted-foreground">Loading exams...</div>
+          <div className='py-10 text-center text-muted-foreground'>
+            Loading exams...
+          </div>
         ) : myExams.length === 0 ? (
           <div className='flex flex-col items-center justify-center py-20 text-center'>
             <div className='mb-4 rounded-full bg-muted p-6'>
@@ -55,7 +57,8 @@ export function ExamsList() {
             </div>
             <h3 className='text-xl font-semibold'>No exams yet</h3>
             <p className='mt-2 max-w-sm text-muted-foreground'>
-              You haven't joined any exams yet. Go to the dashboard to explore and join exams.
+              You haven't joined any exams yet. Go to the dashboard to explore
+              and join exams.
             </p>
             <Button asChild className='mt-6'>
               <Link to='/'>
@@ -90,7 +93,8 @@ export function ExamsList() {
                       </span>
                       {exam.lastStudied && (
                         <span>
-                          Last studied: {new Date(exam.lastStudied).toLocaleDateString()}
+                          Last studied:{' '}
+                          {new Date(exam.lastStudied).toLocaleDateString()}
                         </span>
                       )}
                     </div>

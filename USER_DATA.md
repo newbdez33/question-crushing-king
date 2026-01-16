@@ -95,11 +95,12 @@ interface QuestionProgress {
 ### Guest Data Merge Process (On Login)
 
 When a guest user logs in or signs up:
+
 1. **Trigger**: The application detects an authentication state change (via `onAuthStateChanged`).
 2. **Action**: The system invokes `ProgressService.mergeProgress(guestId, userId)` to merge Guest data into the User’s local progress, then pushes the merged result to Firebase.
 3. **Merge Strategy (Local)**:
    - The system iterates through all exam progress stored under the `guestId`.
-   - **Data Preservation**: 
+   - **Data Preservation**:
      - If the User account (Target) already has data for a specific question, the **User's existing data is preserved** (Target overwrites Source).
      - If the User account has no data for a question, the **Guest's data is copied over**.
    - **Bookmarks**: Special logic applies. A question is marked as bookmarked if it was bookmarked in **either** the Guest session OR the User account (Logical OR).
@@ -109,7 +110,7 @@ When a guest user logs in or signs up:
 
 - **Progress Tracking**:
   - `status`: Updated immediately upon submitting an answer.
-  - `consecutiveCorrect`: 
+  - `consecutiveCorrect`:
     - Increments when `status` becomes `'correct'`.
     - Resets to `0` when `status` becomes `'incorrect'`.
   - `timesWrong`: Increments when `status` becomes `'incorrect'`.
@@ -141,7 +142,8 @@ When a guest user logs in or signs up:
 ### Rules (Example)
 
 - Only the authenticated user can read/write their subtree:
-```
+
+```json
 {
   "rules": {
     "examtopics_progress": {

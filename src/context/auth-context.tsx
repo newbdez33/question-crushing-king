@@ -1,11 +1,13 @@
 import { useEffect, useState, type ReactNode } from 'react'
-import { onAuthStateChanged, signOut as firebaseSignOut, type User } from 'firebase/auth'
-import { auth } from '@/lib/firebase'
-import { ProgressService } from '@/services/progress-service'
 import { mergeLocalIntoRemote } from '@/services/firebase-progress'
+import { ProgressService } from '@/services/progress-service'
+import {
+  onAuthStateChanged,
+  signOut as firebaseSignOut,
+  type User,
+} from 'firebase/auth'
+import { auth } from '@/lib/firebase'
 import { AuthContext } from './auth-ctx'
-
- 
 
 const GUEST_ID_KEY = 'examtopics_guest_id'
 

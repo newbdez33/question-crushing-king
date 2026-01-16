@@ -1,12 +1,19 @@
 import { useEffect, useState, type ReactNode } from 'react'
 import { Link } from '@tanstack/react-router'
-import { ArrowLeft, ChevronLeft, ChevronRight, Lightbulb, Bookmark } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-import { useAuth } from '@/context/auth-ctx'
-import { ProgressService } from '@/services/progress-service'
 import * as RemoteProgress from '@/services/firebase-progress'
+import { ProgressService } from '@/services/progress-service'
+import {
+  ArrowLeft,
+  ChevronLeft,
+  ChevronRight,
+  Lightbulb,
+  Bookmark,
+} from 'lucide-react'
 import { toast } from 'sonner'
+import { cn } from '@/lib/utils'
+import { useAuth } from '@/context/auth-ctx'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
 import {
   Card,
   CardContent,
@@ -17,10 +24,9 @@ import {
 import { Header } from '@/components/layout/header'
 import { Main } from '@/components/layout/main'
 import { ThemeSwitch } from '@/components/theme-switch'
-import { mockExams } from './data/mock-exams'
-import { cn } from '@/lib/utils'
-import { StudySidebar, type StudySettings } from './components/study-sidebar'
 import { StudyMobileBar } from './components/study-mobile-bar'
+import { StudySidebar, type StudySettings } from './components/study-sidebar'
+import { mockExams } from './data/mock-exams'
 
 interface StudyModeProps {
   examId: string
@@ -86,14 +92,22 @@ function renderExamHtml(html: string) {
   const doc = new DOMParser().parseFromString(html, 'text/html')
   const nodes = Array.from(doc.body.childNodes)
 
-  const renderNode = (node: ChildNode, key: string | number, parentTag?: string): ReactNode => {
+  const renderNode = (
+    node: ChildNode,
+    key: string | number,
+    parentTag?: string
+  ): ReactNode => {
     if (node.nodeType === Node.TEXT_NODE) {
       const text = (node.textContent ?? '').trim()
       if (!text) return null
       if (parentTag === 'p' || parentTag === 'li') {
         return text
       }
-      return <span key={key} className='leading-relaxed'>{text}</span>
+      return (
+        <span key={key} className='leading-relaxed'>
+          {text}
+        </span>
+      )
     }
 
     if (node.nodeType !== Node.ELEMENT_NODE) return null
@@ -118,8 +132,18 @@ function renderExamHtml(html: string) {
     if (tag === 'em') return <em key={key}>{children}</em>
     if (tag === 'code') return <code key={key}>{children}</code>
 
-    if (tag === 'ul') return <ul key={key} className='list-disc pl-6'>{children}</ul>
-    if (tag === 'ol') return <ol key={key} className='list-decimal pl-6'>{children}</ol>
+    if (tag === 'ul')
+      return (
+        <ul key={key} className='list-disc pl-6'>
+          {children}
+        </ul>
+      )
+    if (tag === 'ol')
+      return (
+        <ol key={key} className='list-decimal pl-6'>
+          {children}
+        </ol>
+      )
     if (tag === 'li') return <li key={key}>{children}</li>
 
     if (tag === 'img') {
@@ -146,7 +170,11 @@ function renderExamHtml(html: string) {
     )
   }
 
-  return <div className='space-y-3'>{nodes.map((n, i) => renderNode(n, i, 'body'))}</div>
+  return (
+    <div className='space-y-3'>
+      {nodes.map((n, i) => renderNode(n, i, 'body'))}
+    </div>
+  )
 }
 
 export function StudyMode({ examId }: StudyModeProps) {
@@ -168,7 +196,9 @@ export function StudyMode({ examId }: StudyModeProps) {
   const [isLoading, setIsLoading] = useState(true)
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
   const [isBookmarked, setIsBookmarked] = useState(false)
-  const [settings, setSettings] = useState<StudySettings>({ fontSize: 'normal' })
+  const [settings, setSettings] = useState<StudySettings>({
+    fontSize: 'normal',
+  })
 
   useEffect(() => {
     if (questions && questions[currentQuestionIndex] && userId) {
@@ -180,12 +210,16 @@ export function StudyMode({ examId }: StudyModeProps) {
 
   useEffect(() => {
     if (!user?.uid) return
-    const unsub = RemoteProgress.subscribeExamProgress(user.uid, examId, (exam) => {
-      const qId = questions?.[currentQuestionIndex]?.id
-      if (qId) {
-        setIsBookmarked(exam[qId]?.bookmarked || false)
+    const unsub = RemoteProgress.subscribeExamProgress(
+      user.uid,
+      examId,
+      (exam) => {
+        const qId = questions?.[currentQuestionIndex]?.id
+        if (qId) {
+          setIsBookmarked(exam[qId]?.bookmarked || false)
+        }
       }
-    })
+    )
     return () => unsub()
   }, [user?.uid, examId, questions, currentQuestionIndex])
 
@@ -222,12 +256,16 @@ export function StudyMode({ examId }: StudyModeProps) {
 
             return {
               id: q.id,
-              type: (q.type === 'multiple' ? 'multiple' : 'single') as StudyQuestion['type'],
+              type: (q.type === 'multiple'
+                ? 'multiple'
+                : 'single') as StudyQuestion['type'],
               text: htmlToText(q.content),
               contentHtml: q.content,
               options: options.map((o) => htmlToText(o.content)),
               correctAnswers:
-                correctAnswers.length > 0 ? correctAnswers : [Math.max(correctIndex, 0)],
+                correctAnswers.length > 0
+                  ? correctAnswers
+                  : [Math.max(correctIndex, 0)],
               explanation: (q.explanation ?? '').trim(),
             }
           })
@@ -269,7 +307,9 @@ export function StudyMode({ examId }: StudyModeProps) {
         </Header>
 
         <Main className='mx-auto w-full max-w-3xl'>
-          <div className='text-sm text-muted-foreground'>Loading questions…</div>
+          <div className='text-sm text-muted-foreground'>
+            Loading questions…
+          </div>
         </Main>
       </>
     )
@@ -331,7 +371,12 @@ export function StudyMode({ examId }: StudyModeProps) {
     setIsBookmarked(newState)
     ProgressService.toggleBookmark(userId, examId, question.id)
     if (user?.uid) {
-      void RemoteProgress.toggleBookmark(user.uid, examId, question.id, newState)
+      void RemoteProgress.toggleBookmark(
+        user.uid,
+        examId,
+        question.id,
+        newState
+      )
     } else {
       toast.message('Bookmark saved locally. Sign in to sync to cloud')
     }
@@ -353,17 +398,22 @@ export function StudyMode({ examId }: StudyModeProps) {
         </div>
       </Header>
 
-      <div className='flex flex-1 pt-0 items-start justify-center gap-2 sm:gap-4'>
+      <div className='flex flex-1 items-start justify-center gap-2 pt-0 sm:gap-4'>
         <div className='w-full max-w-3xl px-2 sm:px-4'>
-          <Main className={cn('w-full pb-[calc(var(--mobile-bar-height,0px)+env(safe-area-inset-bottom))] lg:pr-0 text-xs sm:py-6 py-2 px-0', {
-            'sm:text-sm': settings.fontSize === 'small',
-            'sm:text-base': settings.fontSize === 'normal',
-            'sm:text-lg': settings.fontSize === 'large',
-          })}>
-            <Card className='py-3 sm:py-6 gap-3 sm:gap-6'>
+          <Main
+            className={cn(
+              'w-full px-0 py-2 pb-[calc(var(--mobile-bar-height,0px)+env(safe-area-inset-bottom))] text-xs sm:py-6 lg:pr-0',
+              {
+                'sm:text-sm': settings.fontSize === 'small',
+                'sm:text-base': settings.fontSize === 'normal',
+                'sm:text-lg': settings.fontSize === 'large',
+              }
+            )}
+          >
+            <Card className='gap-3 py-3 sm:gap-6 sm:py-6'>
               <CardHeader className='relative px-2 sm:px-6'>
-                <CardTitle className='font-medium leading-normal'>
-                  <Badge variant='outline' className='mb-2 me-2'>
+                <CardTitle className='leading-normal font-medium'>
+                  <Badge variant='outline' className='me-2 mb-2'>
                     Question {currentQuestionIndex + 1} of {questions.length}
                   </Badge>
                   <Badge variant='secondary' className='mb-2'>
@@ -380,13 +430,21 @@ export function StudyMode({ examId }: StudyModeProps) {
                 <Button
                   variant='ghost'
                   size='sm'
-                  className={cn('gap-2 absolute right-2 sm:right-6 top-0', isBookmarked && 'text-yellow-500 hover:text-yellow-600')}
+                  className={cn(
+                    'absolute top-0 right-2 gap-2 sm:right-6',
+                    isBookmarked && 'text-yellow-500 hover:text-yellow-600'
+                  )}
                   onClick={toggleBookmark}
                 >
-                  <Bookmark className={cn('h-4 w-4 self-start', isBookmarked && 'fill-current')} />
+                  <Bookmark
+                    className={cn(
+                      'h-4 w-4 self-start',
+                      isBookmarked && 'fill-current'
+                    )}
+                  />
                 </Button>
               </CardHeader>
-              <CardContent className='space-y-3 sm:space-y-6 px-2 sm:px-6'>
+              <CardContent className='space-y-3 px-2 sm:space-y-6 sm:px-6'>
                 <div className='space-y-3'>
                   {question.options.map((option, index) => {
                     const isCorrect = question.correctAnswers.includes(index)
@@ -403,11 +461,13 @@ export function StudyMode({ examId }: StudyModeProps) {
                         <div
                           className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full border text-xs ${isCorrect ? 'border-green-600 bg-green-600 text-white' : 'border-muted-foreground'}`}
                         >
-                            {String.fromCharCode(65 + index)}
+                          {String.fromCharCode(65 + index)}
                         </div>
                         <span
                           className={
-                            isCorrect ? 'font-medium text-green-900 dark:text-green-100' : ''
+                            isCorrect
+                              ? 'font-medium text-green-900 dark:text-green-100'
+                              : ''
                           }
                         >
                           {option}
@@ -426,7 +486,6 @@ export function StudyMode({ examId }: StudyModeProps) {
                     {question.explanation || 'No explanation provided.'}
                   </p>
                 </div>
-
               </CardContent>
               <CardFooter className='flex justify-between border-t p-3 sm:p-6'>
                 <Button
@@ -450,7 +509,7 @@ export function StudyMode({ examId }: StudyModeProps) {
           </Main>
           <div className='h-[calc(var(--mobile-bar-height,0px)+env(safe-area-inset-bottom)+0.5rem)] lg:hidden' />
         </div>
-        <div className='hidden lg:block py-6 pr-4'>
+        <div className='hidden py-6 pr-4 lg:block'>
           <StudySidebar
             questions={questions}
             currentQuestionIndex={currentQuestionIndex}

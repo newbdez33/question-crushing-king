@@ -40,7 +40,9 @@ export function useExams() {
             const res = await fetch(`/data/${exam.id}.json`)
             if (!res.ok) return
             const data = (await res.json()) as { questions?: unknown[] }
-            const count = Array.isArray(data.questions) ? data.questions.length : 0
+            const count = Array.isArray(data.questions)
+              ? data.questions.length
+              : 0
             next[exam.id] = count
           } catch {
             // ignore

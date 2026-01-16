@@ -98,7 +98,6 @@ export function NavUser({ user, isGuest = false }: NavUserProps) {
                         Account
                       </Link>
                     </DropdownMenuItem>
-                    
                   </DropdownMenuGroup>
                   <DropdownMenuSeparator />
                 </>

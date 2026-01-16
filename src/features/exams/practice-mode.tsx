@@ -1,19 +1,18 @@
 import { useEffect, useState, useRef, type ReactNode } from 'react'
 import { Link, useNavigate } from '@tanstack/react-router'
-import { ArrowLeft, CheckCircle, XCircle, ChevronLeft, ChevronRight, Bookmark } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-import { useAuth } from '@/context/auth-ctx'
-import { ProgressService, type ExamProgress } from '@/services/progress-service'
 import * as RemoteProgress from '@/services/firebase-progress'
-import { toast } from 'sonner'
+import { ProgressService, type ExamProgress } from '@/services/progress-service'
 import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
+  ArrowLeft,
+  CheckCircle,
+  XCircle,
+  ChevronLeft,
+  ChevronRight,
+  Bookmark,
+} from 'lucide-react'
+import { toast } from 'sonner'
+import { cn } from '@/lib/utils'
+import { useAuth } from '@/context/auth-ctx'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -23,18 +22,29 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/components/ui/alert-dialog"
+} from '@/components/ui/alert-dialog'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
+import { Checkbox } from '@/components/ui/checkbox'
 import { Label } from '@/components/ui/label'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
-import { Checkbox } from '@/components/ui/checkbox'
 import { Header } from '@/components/layout/header'
 import { Main } from '@/components/layout/main'
 import { ThemeSwitch } from '@/components/theme-switch'
-import { mockExams } from './data/mock-exams'
-import { cn } from '@/lib/utils'
-import { PracticeSidebar, type PracticeSettings } from './components/practice-sidebar'
 import { PracticeMobileBar } from './components/practice-mobile-bar'
+import {
+  PracticeSidebar,
+  type PracticeSettings,
+} from './components/practice-sidebar'
 import { PracticeSkeleton } from './components/practice-skeleton'
+import { mockExams } from './data/mock-exams'
 
 interface PracticeModeProps {
   examId: string
@@ -114,14 +124,22 @@ function renderExamHtml(html: string) {
   const doc = new DOMParser().parseFromString(html, 'text/html')
   const nodes = Array.from(doc.body.childNodes)
 
-  const renderNode = (node: ChildNode, key: string | number, parentTag?: string): ReactNode => {
+  const renderNode = (
+    node: ChildNode,
+    key: string | number,
+    parentTag?: string
+  ): ReactNode => {
     if (node.nodeType === Node.TEXT_NODE) {
       const text = (node.textContent ?? '').trim()
       if (!text) return null
       if (parentTag === 'p' || parentTag === 'li') {
         return text
       }
-      return <span key={key} className='leading-relaxed'>{text}</span>
+      return (
+        <span key={key} className='leading-relaxed'>
+          {text}
+        </span>
+      )
     }
 
     if (node.nodeType !== Node.ELEMENT_NODE) return null
@@ -146,8 +164,18 @@ function renderExamHtml(html: string) {
     if (tag === 'em') return <em key={key}>{children}</em>
     if (tag === 'code') return <code key={key}>{children}</code>
 
-    if (tag === 'ul') return <ul key={key} className='list-disc pl-6'>{children}</ul>
-    if (tag === 'ol') return <ol key={key} className='list-decimal pl-6'>{children}</ol>
+    if (tag === 'ul')
+      return (
+        <ul key={key} className='list-disc pl-6'>
+          {children}
+        </ul>
+      )
+    if (tag === 'ol')
+      return (
+        <ol key={key} className='list-decimal pl-6'>
+          {children}
+        </ol>
+      )
     if (tag === 'li') return <li key={key}>{children}</li>
 
     if (tag === 'img') {
@@ -174,7 +202,11 @@ function renderExamHtml(html: string) {
     )
   }
 
-  return <div className='space-y-3'>{nodes.map((n, i) => renderNode(n, i, 'body'))}</div>
+  return (
+    <div className='space-y-3'>
+      {nodes.map((n, i) => renderNode(n, i, 'body'))}
+    </div>
+  )
 }
 
 function mergeProgress(local: ExamProgress, remote: ExamProgress) {
@@ -188,7 +220,11 @@ function mergeProgress(local: ExamProgress, remote: ExamProgress) {
   return merged
 }
 
-export function PracticeMode({ examId, initialMode, initialQuestionIndex }: PracticeModeProps) {
+export function PracticeMode({
+  examId,
+  initialMode,
+  initialQuestionIndex,
+}: PracticeModeProps) {
   const navigate = useNavigate()
   const { user, guestId, loading: authLoading } = useAuth()
   const userId = user?.uid || guestId
@@ -210,7 +246,9 @@ export function PracticeMode({ examId, initialMode, initialQuestionIndex }: Prac
   const [title, setTitle] = useState(exam?.title ?? examId)
   const [isLoading, setIsLoading] = useState(true)
   const [loadError, setLoadError] = useState<string | null>(null)
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(initialQuestionIndex ?? 0)
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(
+    initialQuestionIndex ?? 0
+  )
   const [selectedAnswers, setSelectedAnswers] = useState<number[]>([])
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [isBookmarked, setIsBookmarked] = useState(false)
@@ -243,8 +281,12 @@ export function PracticeMode({ examId, initialMode, initialQuestionIndex }: Prac
   const examIdRef = useRef(examId)
 
   // Filter questions for "My Mistakes" mode
-  const [mistakeQuestions, setMistakeQuestions] = useState<PracticeQuestion[] | null>(null)
-  const [mistakesSessionStatus, setMistakesSessionStatus] = useState<Record<string, 'correct' | 'incorrect'>>({})
+  const [mistakeQuestions, setMistakeQuestions] = useState<
+    PracticeQuestion[] | null
+  >(null)
+  const [mistakesSessionStatus, setMistakesSessionStatus] = useState<
+    Record<string, 'correct' | 'incorrect'>
+  >({})
   const prevMistakesMode = useRef(settings.mistakesMode)
   const settingsLoadedRef = useRef(false)
 
@@ -332,7 +374,7 @@ export function PracticeMode({ examId, initialMode, initialQuestionIndex }: Prac
         return false
       })
       setMistakeQuestions(filtered)
-      
+
       if (settings.mistakesMode !== wasMistakesMode) {
         setMistakesSessionStatus({})
         setCurrentQuestionIndex(0)
@@ -344,9 +386,14 @@ export function PracticeMode({ examId, initialMode, initialQuestionIndex }: Prac
         })
       }
     } else {
-        setMistakeQuestions(null)
-      }
-  }, [settings.mistakesMode, settings.consecutiveCorrect, allQuestions, isRemoteSynced]) // Re-run when remote data syncs, but avoid examProgress to prevent shifting while practicing
+      setMistakeQuestions(null)
+    }
+  }, [
+    settings.mistakesMode,
+    settings.consecutiveCorrect,
+    allQuestions,
+    isRemoteSynced,
+  ]) // Re-run when remote data syncs, but avoid examProgress to prevent shifting while practicing
 
   const questions = settings.mistakesMode ? mistakeQuestions : allQuestions
 
@@ -369,10 +416,14 @@ export function PracticeMode({ examId, initialMode, initialQuestionIndex }: Prac
     }
 
     setIsRemoteSynced(false)
-    const unsub = RemoteProgress.subscribeExamProgress(user.uid, examId, (p) => {
-      setExamProgress(prev => mergeProgress(prev, p || {}))
-      setIsRemoteSynced(true)
-    })
+    const unsub = RemoteProgress.subscribeExamProgress(
+      user.uid,
+      examId,
+      (p) => {
+        setExamProgress((prev) => mergeProgress(prev, p || {}))
+        setIsRemoteSynced(true)
+      }
+    )
     return () => unsub()
   }, [user?.uid, examId])
 
@@ -381,20 +432,28 @@ export function PracticeMode({ examId, initialMode, initialQuestionIndex }: Prac
     if (settingsLoadedRef.current) return
 
     const localSettings = ProgressService.getExamSettings(userId, examId)
-    if (localSettings.mistakesConsecutiveCorrect && localSettings.mistakesConsecutiveCorrect > 0) {
-      setSettings(prev => ({
+    if (
+      localSettings.mistakesConsecutiveCorrect &&
+      localSettings.mistakesConsecutiveCorrect > 0
+    ) {
+      setSettings((prev) => ({
         ...prev,
-        consecutiveCorrect: localSettings.mistakesConsecutiveCorrect || prev.consecutiveCorrect,
+        consecutiveCorrect:
+          localSettings.mistakesConsecutiveCorrect || prev.consecutiveCorrect,
       }))
     }
 
     if (user?.uid) {
       RemoteProgress.getExamSettings(user.uid, examId)
-        .then(remote => {
-          if (remote.mistakesConsecutiveCorrect && remote.mistakesConsecutiveCorrect > 0) {
-            setSettings(prev => ({
+        .then((remote) => {
+          if (
+            remote.mistakesConsecutiveCorrect &&
+            remote.mistakesConsecutiveCorrect > 0
+          ) {
+            setSettings((prev) => ({
               ...prev,
-              consecutiveCorrect: remote.mistakesConsecutiveCorrect || prev.consecutiveCorrect,
+              consecutiveCorrect:
+                remote.mistakesConsecutiveCorrect || prev.consecutiveCorrect,
             }))
           }
         })
@@ -415,7 +474,8 @@ export function PracticeMode({ examId, initialMode, initialQuestionIndex }: Prac
     if (!isProgressLoaded && userId) return
 
     // Wait for remote sync if logged in, UNLESS we already have local data to show
-    if (user?.uid && !isRemoteSynced && Object.keys(examProgress).length === 0) return
+    if (user?.uid && !isRemoteSynced && Object.keys(examProgress).length === 0)
+      return
 
     if (questions && questions[currentQuestionIndex] && userId) {
       const qId = questions[currentQuestionIndex].id
@@ -438,7 +498,17 @@ export function PracticeMode({ examId, initialMode, initialQuestionIndex }: Prac
       // Mark as ready once we've synced the first time
       setIsReady(true)
     }
-  }, [questions, currentQuestionIndex, userId, examProgress, isProgressLoaded, authLoading, isRemoteSynced, user?.uid, settings.mistakesMode])
+  }, [
+    questions,
+    currentQuestionIndex,
+    userId,
+    examProgress,
+    isProgressLoaded,
+    authLoading,
+    isRemoteSynced,
+    user?.uid,
+    settings.mistakesMode,
+  ])
 
   useEffect(() => {
     let cancelled = false
@@ -471,13 +541,13 @@ export function PracticeMode({ examId, initialMode, initialQuestionIndex }: Prac
               .map((label) => options.findIndex((o) => o.label === label))
               .filter((idx) => idx >= 0)
             const requiredSelections =
-              q.type === 'multiple'
-                ? Math.max(correctLabels.length, 1)
-                : 1
+              q.type === 'multiple' ? Math.max(correctLabels.length, 1) : 1
 
             return {
               id: q.id,
-              type: (q.type === 'multiple' ? 'multiple' : 'single') as PracticeQuestion['type'],
+              type: (q.type === 'multiple'
+                ? 'multiple'
+                : 'single') as PracticeQuestion['type'],
               text: htmlToText(q.content),
               contentHtml: q.content,
               options: options.map((o) => {
@@ -487,7 +557,9 @@ export function PracticeMode({ examId, initialMode, initialQuestionIndex }: Prac
                 return { text, html }
               }),
               correctAnswers:
-                correctAnswers.length > 0 ? correctAnswers : [Math.max(correctIndex, 0)],
+                correctAnswers.length > 0
+                  ? correctAnswers
+                  : [Math.max(correctIndex, 0)],
               requiredSelections,
               explanation: (q.explanation ?? '').trim(),
             }
@@ -514,7 +586,10 @@ export function PracticeMode({ examId, initialMode, initialQuestionIndex }: Prac
 
   const question = questions?.[currentQuestionIndex]
   const canSubmit = !isSubmitted && selectedAnswers.length > 0
-  const isCorrect = isSubmitted && question && sameSelections(selectedAnswers, question.correctAnswers)
+  const isCorrect =
+    isSubmitted &&
+    question &&
+    sameSelections(selectedAnswers, question.correctAnswers)
 
   const didAutoNavigate = useRef(initialQuestionIndex !== undefined)
   useEffect(() => {
@@ -522,9 +597,11 @@ export function PracticeMode({ examId, initialMode, initialQuestionIndex }: Prac
     if (isLoading) return
     if (settings.mistakesMode) return
     if (!questions || questions.length === 0) return
-    const entries = Object.entries(examProgress).filter(([, p]) => p?.lastAnswered)
+    const entries = Object.entries(examProgress).filter(
+      ([, p]) => p?.lastAnswered
+    )
     if (entries.length === 0) return
-    
+
     // Find max index among answered questions
     let maxIndex = -1
     // Optimize: Iterate backwards through questions to find the highest index that has progress
@@ -574,23 +651,26 @@ export function PracticeMode({ examId, initialMode, initialQuestionIndex }: Prac
 
   const handleSubmit = () => {
     if (!canSubmit || !question || !userId) return
-    
+
     const correct = sameSelections(selectedAnswers, question.correctAnswers)
     const prevProgress = examProgress[question.id]
     const prevConsecutive = prevProgress?.consecutiveCorrect || 0
     const newConsecutive = correct ? prevConsecutive + 1 : 0
-    
+
     let persistedStatus: 'correct' | 'incorrect'
     if (correct) {
       if (settings.mistakesMode) {
-        persistedStatus = newConsecutive >= settings.consecutiveCorrect ? 'correct' : 'incorrect'
+        persistedStatus =
+          newConsecutive >= settings.consecutiveCorrect
+            ? 'correct'
+            : 'incorrect'
       } else {
         persistedStatus = 'correct'
       }
     } else {
       persistedStatus = 'incorrect'
     }
-    
+
     const graduatedNow =
       settings.mistakesMode &&
       correct &&
@@ -620,16 +700,16 @@ export function PracticeMode({ examId, initialMode, initialQuestionIndex }: Prac
     } else {
       toast.message('Saved locally. Sign in to sync to cloud')
     }
-    
+
     // Update local state
     setIsSubmitted(true)
     if (settings.mistakesMode) {
-      setMistakesSessionStatus(prev => ({
+      setMistakesSessionStatus((prev) => ({
         ...prev,
         [question.id]: correct ? 'correct' : 'incorrect',
       }))
     }
-    setExamProgress(prev => {
+    setExamProgress((prev) => {
       const prevEntry = prev[question.id] || {}
       const prevTimesWrong = prevEntry.timesWrong || 0
       let nextTimesWrong = prevTimesWrong
@@ -652,9 +732,12 @@ export function PracticeMode({ examId, initialMode, initialQuestionIndex }: Prac
     })
 
     if (graduatedNow) {
-      toast.success('Great job! This question has been removed from My Mistakes.', {
-        description: `You answered it correctly ${settings.consecutiveCorrect} times in a row.`,
-      })
+      toast.success(
+        'Great job! This question has been removed from My Mistakes.',
+        {
+          description: `You answered it correctly ${settings.consecutiveCorrect} times in a row.`,
+        }
+      )
       setShowFireworks(true)
     }
 
@@ -707,18 +790,23 @@ export function PracticeMode({ examId, initialMode, initialQuestionIndex }: Prac
     setIsBookmarked(newState)
     ProgressService.toggleBookmark(userId, examId, question.id)
     if (user?.uid) {
-      void RemoteProgress.toggleBookmark(user.uid, examId, question.id, newState)
+      void RemoteProgress.toggleBookmark(
+        user.uid,
+        examId,
+        question.id,
+        newState
+      )
     } else {
       toast.message('Bookmark saved locally. Sign in to sync to cloud')
     }
-    
+
     // Update local progress
-    setExamProgress(prev => ({
+    setExamProgress((prev) => ({
       ...prev,
       [question.id]: {
         ...prev[question.id],
-        bookmarked: newState
-      }
+        bookmarked: newState,
+      },
     }))
   }
 
@@ -749,7 +837,9 @@ export function PracticeMode({ examId, initialMode, initialQuestionIndex }: Prac
     return (
       <Main className='mx-auto w-full max-w-3xl pt-8'>
         <div className='flex flex-col items-center gap-4 text-center'>
-          <p className='text-destructive'>{loadError ?? 'Question not found'}</p>
+          <p className='text-destructive'>
+            {loadError ?? 'Question not found'}
+          </p>
           <Link to='/exams'>
             <Button>Back to Exams</Button>
           </Link>
@@ -759,9 +849,9 @@ export function PracticeMode({ examId, initialMode, initialQuestionIndex }: Prac
   }
 
   const fontSizeSmClass = {
-    'small': 'sm:text-sm',
-    'normal': 'sm:text-base',
-    'large': 'sm:text-lg',
+    small: 'sm:text-sm',
+    normal: 'sm:text-base',
+    large: 'sm:text-lg',
   }[settings.fontSize]
 
   return (
@@ -782,13 +872,18 @@ export function PracticeMode({ examId, initialMode, initialQuestionIndex }: Prac
         </div>
       </Header>
 
-      <div className='flex flex-1 pt-0 items-start justify-center gap-2 sm:gap-4'>
+      <div className='flex flex-1 items-start justify-center gap-2 pt-0 sm:gap-4'>
         <div className='w-full max-w-3xl px-2 sm:px-4'>
-          <Main className={cn('w-full pb-[calc(var(--mobile-bar-height,0px)+env(safe-area-inset-bottom))] lg:pr-0 text-xs sm:py-6 py-2 px-0', fontSizeSmClass)}>
-            <Card className='py-3 sm:py-6 gap-3 sm:gap-6'>
+          <Main
+            className={cn(
+              'w-full px-0 py-2 pb-[calc(var(--mobile-bar-height,0px)+env(safe-area-inset-bottom))] text-xs sm:py-6 lg:pr-0',
+              fontSizeSmClass
+            )}
+          >
+            <Card className='gap-3 py-3 sm:gap-6 sm:py-6'>
               <CardHeader className='relative px-2 sm:px-6'>
-                <CardTitle className='font-medium leading-normal'>
-                  <Badge variant='outline' className='mb-2 me-2'>
+                <CardTitle className='leading-normal font-medium'>
+                  <Badge variant='outline' className='me-2 mb-2'>
                     Question {currentQuestionIndex + 1} of {questions.length}
                   </Badge>
                   <Badge variant='secondary' className='mb-2'>
@@ -805,13 +900,21 @@ export function PracticeMode({ examId, initialMode, initialQuestionIndex }: Prac
                 <Button
                   variant='ghost'
                   size='sm'
-                  className={cn('gap-2 absolute right-2 sm:right-6 top-0', isBookmarked && 'text-yellow-500 hover:text-yellow-600')}
+                  className={cn(
+                    'absolute top-0 right-2 gap-2 sm:right-6',
+                    isBookmarked && 'text-yellow-500 hover:text-yellow-600'
+                  )}
                   onClick={toggleBookmark}
                 >
-                  <Bookmark className={cn('h-4 w-4 self-start', isBookmarked && 'fill-current')} />
+                  <Bookmark
+                    className={cn(
+                      'h-4 w-4 self-start',
+                      isBookmarked && 'fill-current'
+                    )}
+                  />
                 </Button>
               </CardHeader>
-              <CardContent className='space-y-3 sm:space-y-6 px-2 sm:px-6'>
+              <CardContent className='space-y-3 px-2 sm:space-y-6 sm:px-6'>
                 {question.type === 'single' ? (
                   <RadioGroup
                     key={question.id}
@@ -825,38 +928,61 @@ export function PracticeMode({ examId, initialMode, initialQuestionIndex }: Prac
                         <div
                           key={idx}
                           className={cn(
-                            'flex items-center space-x-2 sm:space-x-3 rounded-lg border p-2 sm:p-4 transition-colors cursor-pointer',
-                            isSubmitted && question.correctAnswers.includes(idx) && 'border-green-500 bg-green-50 dark:bg-green-950/20',
-                            isSubmitted && isSelected && !question.correctAnswers.includes(idx) && 'border-red-500 bg-red-50 dark:bg-red-950/20',
+                            'flex cursor-pointer items-center space-x-2 rounded-lg border p-2 transition-colors sm:space-x-3 sm:p-4',
+                            isSubmitted &&
+                              question.correctAnswers.includes(idx) &&
+                              'border-green-500 bg-green-50 dark:bg-green-950/20',
+                            isSubmitted &&
+                              isSelected &&
+                              !question.correctAnswers.includes(idx) &&
+                              'border-red-500 bg-red-50 dark:bg-red-950/20',
                             !isSubmitted && 'hover:bg-muted/50',
-                            isSelected && !isSubmitted && 'border-primary bg-accent'
+                            isSelected &&
+                              !isSubmitted &&
+                              'border-primary bg-accent'
                           )}
-                          onClick={() => !isSubmitted && handleSelectAnswer(idx)}
+                          onClick={() =>
+                            !isSubmitted && handleSelectAnswer(idx)
+                          }
                         >
-                          <RadioGroupItem value={idx.toString()} id={`option-${idx}`} className="sr-only" />
-                          <div className={cn(
-                            "flex h-6 w-6 shrink-0 items-center justify-center rounded-full border text-xs font-medium transition-colors",
-                            isSelected 
-                              ? "border-primary bg-primary text-primary-foreground" 
-                              : "border-muted-foreground"
-                          )}>
+                          <RadioGroupItem
+                            value={idx.toString()}
+                            id={`option-${idx}`}
+                            className='sr-only'
+                          />
+                          <div
+                            className={cn(
+                              'flex h-6 w-6 shrink-0 items-center justify-center rounded-full border text-xs font-medium transition-colors',
+                              isSelected
+                                ? 'border-primary bg-primary text-primary-foreground'
+                                : 'border-muted-foreground'
+                            )}
+                          >
                             {String.fromCharCode(65 + idx)}
                           </div>
                           <Label
                             htmlFor={`option-${idx}`}
-                            className={cn('flex-1 cursor-pointer font-normal leading-relaxed text-xs', fontSizeSmClass)}
+                            className={cn(
+                              'flex-1 cursor-pointer text-xs leading-relaxed font-normal',
+                              fontSizeSmClass
+                            )}
                           >
-                            {option.html ? renderExamHtml(option.html) : option.text}
+                            {option.html
+                              ? renderExamHtml(option.html)
+                              : option.text}
                           </Label>
-                        {isSubmitted && question.correctAnswers.includes(idx) && (
-                          <CheckCircle className='h-5 w-5 text-green-500' />
-                        )}
-                        {isSubmitted && selectedAnswers.includes(idx) && !question.correctAnswers.includes(idx) && (
-                          <XCircle className='h-5 w-5 text-red-500' />
-                        )}
-                      </div>
-                    )
-                  })}
+                          {isSubmitted &&
+                            question.correctAnswers.includes(idx) && (
+                              <CheckCircle className='h-5 w-5 text-green-500' />
+                            )}
+                          {isSubmitted &&
+                            selectedAnswers.includes(idx) &&
+                            !question.correctAnswers.includes(idx) && (
+                              <XCircle className='h-5 w-5 text-red-500' />
+                            )}
+                        </div>
+                      )
+                    })}
                   </RadioGroup>
                 ) : (
                   <div className='grid gap-3' key={question.id}>
@@ -866,41 +992,62 @@ export function PracticeMode({ examId, initialMode, initialQuestionIndex }: Prac
                         <div
                           key={idx}
                           className={cn(
-                            'flex items-center space-x-2 sm:space-x-3 rounded-lg border p-2 sm:p-4 transition-colors cursor-pointer',
-                            isSubmitted && question.correctAnswers.includes(idx) && 'border-green-500 bg-green-50 dark:bg-green-950/20',
-                            isSubmitted && isSelected && !question.correctAnswers.includes(idx) && 'border-red-500 bg-red-50 dark:bg-red-950/20',
+                            'flex cursor-pointer items-center space-x-2 rounded-lg border p-2 transition-colors sm:space-x-3 sm:p-4',
+                            isSubmitted &&
+                              question.correctAnswers.includes(idx) &&
+                              'border-green-500 bg-green-50 dark:bg-green-950/20',
+                            isSubmitted &&
+                              isSelected &&
+                              !question.correctAnswers.includes(idx) &&
+                              'border-red-500 bg-red-50 dark:bg-red-950/20',
                             !isSubmitted && 'hover:bg-muted/50',
-                            isSelected && !isSubmitted && 'border-primary bg-accent'
+                            isSelected &&
+                              !isSubmitted &&
+                              'border-primary bg-accent'
                           )}
-                          onClick={() => !isSubmitted && handleSelectAnswer(idx)}
+                          onClick={() =>
+                            !isSubmitted && handleSelectAnswer(idx)
+                          }
                         >
                           <Checkbox
                             id={`option-${idx}`}
                             checked={isSelected}
-                            onCheckedChange={() => !isSubmitted && handleSelectAnswer(idx)}
+                            onCheckedChange={() =>
+                              !isSubmitted && handleSelectAnswer(idx)
+                            }
                             disabled={isSubmitted}
-                            className="sr-only"
+                            className='sr-only'
                           />
-                          <div className={cn(
-                            "flex h-6 w-6 shrink-0 items-center justify-center rounded-full border text-xs font-medium transition-colors",
-                            isSelected 
-                              ? "border-primary bg-primary text-primary-foreground" 
-                              : "border-muted-foreground"
-                          )}>
+                          <div
+                            className={cn(
+                              'flex h-6 w-6 shrink-0 items-center justify-center rounded-full border text-xs font-medium transition-colors',
+                              isSelected
+                                ? 'border-primary bg-primary text-primary-foreground'
+                                : 'border-muted-foreground'
+                            )}
+                          >
                             {String.fromCharCode(65 + idx)}
                           </div>
                           <Label
                             htmlFor={`option-${idx}`}
-                            className={cn('flex-1 cursor-pointer font-normal leading-relaxed text-xs', fontSizeSmClass)}
+                            className={cn(
+                              'flex-1 cursor-pointer text-xs leading-relaxed font-normal',
+                              fontSizeSmClass
+                            )}
                           >
-                            {option.html ? renderExamHtml(option.html) : option.text}
+                            {option.html
+                              ? renderExamHtml(option.html)
+                              : option.text}
                           </Label>
-                          {isSubmitted && question.correctAnswers.includes(idx) && (
-                            <CheckCircle className='h-5 w-5 text-green-500' />
-                          )}
-                          {isSubmitted && isSelected && !question.correctAnswers.includes(idx) && (
-                            <XCircle className='h-5 w-5 text-red-500' />
-                          )}
+                          {isSubmitted &&
+                            question.correctAnswers.includes(idx) && (
+                              <CheckCircle className='h-5 w-5 text-green-500' />
+                            )}
+                          {isSubmitted &&
+                            isSelected &&
+                            !question.correctAnswers.includes(idx) && (
+                              <XCircle className='h-5 w-5 text-red-500' />
+                            )}
                         </div>
                       )
                     })}
@@ -908,21 +1055,31 @@ export function PracticeMode({ examId, initialMode, initialQuestionIndex }: Prac
                 )}
 
                 {isSubmitted && (
-                  <div className={cn(
-                    'rounded-lg p-3 sm:p-4',
-                    isCorrect ? 'bg-green-100 text-green-900 dark:bg-green-900/30 dark:text-green-100' : 'bg-red-100 text-red-900 dark:bg-red-900/30 dark:text-red-100'
-                  )}>
+                  <div
+                    className={cn(
+                      'rounded-lg p-3 sm:p-4',
+                      isCorrect
+                        ? 'bg-green-100 text-green-900 dark:bg-green-900/30 dark:text-green-100'
+                        : 'bg-red-100 text-red-900 dark:bg-red-900/30 dark:text-red-100'
+                    )}
+                  >
                     <p className='font-semibold'>
                       {isCorrect ? 'Correct Answer!' : 'Incorrect Answer'}
                     </p>
-                    <div className='mt-2 flex gap-4 sm:gap-6 text-xs sm:text-sm'>
+                    <div className='mt-2 flex gap-4 text-xs sm:gap-6 sm:text-sm'>
                       <p>
                         <span className='font-semibold'>Correct Answer: </span>
-                        {question.correctAnswers.map(i => String.fromCharCode(65 + i)).join(', ')}
+                        {question.correctAnswers
+                          .map((i) => String.fromCharCode(65 + i))
+                          .join(', ')}
                       </p>
                       <p>
                         <span className='font-semibold'>Your Answer: </span>
-                        {selectedAnswers.slice().sort((a, b) => a - b).map(i => String.fromCharCode(65 + i)).join(', ')}
+                        {selectedAnswers
+                          .slice()
+                          .sort((a, b) => a - b)
+                          .map((i) => String.fromCharCode(65 + i))
+                          .join(', ')}
                       </p>
                     </div>
                     {question.explanation && (
@@ -940,26 +1097,30 @@ export function PracticeMode({ examId, initialMode, initialQuestionIndex }: Prac
                   size='icon'
                   onClick={handlePrev}
                   disabled={currentQuestionIndex === 0}
-                  title="Previous Question"
+                  title='Previous Question'
                 >
                   <ChevronLeft className='h-4 w-4' />
                 </Button>
-                
+
                 {!isSubmitted && (
-                  <div className="absolute left-1/2 -translate-x-1/2">
-                    <Button onClick={handleSubmit} disabled={!canSubmit} className="min-w-[120px]">
-                      <CheckCircle className="h-4 w-4" />
+                  <div className='absolute left-1/2 -translate-x-1/2'>
+                    <Button
+                      onClick={handleSubmit}
+                      disabled={!canSubmit}
+                      className='min-w-[120px]'
+                    >
+                      <CheckCircle className='h-4 w-4' />
                       Submit Answer
                     </Button>
                   </div>
                 )}
 
-                <Button 
-                  variant='outline' 
+                <Button
+                  variant='outline'
                   size='icon'
-                  onClick={handleNext} 
+                  onClick={handleNext}
                   disabled={currentQuestionIndex === questions.length - 1}
-                  title="Next Question"
+                  title='Next Question'
                 >
                   <ChevronRight className='h-4 w-4' />
                 </Button>
@@ -970,8 +1131,8 @@ export function PracticeMode({ examId, initialMode, initialQuestionIndex }: Prac
         </div>
 
         {/* Right Sidebar */}
-        <div className="hidden lg:block py-6 pl-4">
-          <PracticeSidebar 
+        <div className='hidden py-6 pl-4 lg:block'>
+          <PracticeSidebar
             questions={questions}
             progress={examProgress}
             currentQuestionIndex={currentQuestionIndex}
@@ -1002,12 +1163,16 @@ export function PracticeMode({ examId, initialMode, initialQuestionIndex }: Prac
           <AlertDialogHeader>
             <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
             <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete your progress for this exam.
+              This action cannot be undone. This will permanently delete your
+              progress for this exam.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={confirmClearProgress} className="bg-red-600 hover:bg-red-700">
+            <AlertDialogAction
+              onClick={confirmClearProgress}
+              className='bg-red-600 hover:bg-red-700'
+            >
               Continue
             </AlertDialogAction>
           </AlertDialogFooter>
@@ -1035,7 +1200,14 @@ function FireworksOverlay({ onDone }: { onDone: () => void }) {
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
     }
     resize()
-    const colors: string[] = ['#f97316', '#22c55e', '#3b82f6', '#eab308', '#ef4444', '#a855f7']
+    const colors: string[] = [
+      '#f97316',
+      '#22c55e',
+      '#3b82f6',
+      '#eab308',
+      '#ef4444',
+      '#a855f7',
+    ]
     type Particle = {
       x: number
       y: number
@@ -1048,8 +1220,10 @@ function FireworksOverlay({ onDone }: { onDone: () => void }) {
     }
     const bursts: Particle[][] = []
     for (let i = 0; i < 3; i++) {
-      const cx = Math.random() * window.innerWidth * 0.8 + window.innerWidth * 0.1
-      const cy = Math.random() * window.innerHeight * 0.5 + window.innerHeight * 0.2
+      const cx =
+        Math.random() * window.innerWidth * 0.8 + window.innerWidth * 0.1
+      const cy =
+        Math.random() * window.innerHeight * 0.5 + window.innerHeight * 0.2
       const particles: Particle[] = []
       const count = 60
       const base = Math.random() * 2 + 2
@@ -1110,8 +1284,8 @@ function FireworksOverlay({ onDone }: { onDone: () => void }) {
     }
   }, [onDone])
   return (
-    <div className="pointer-events-none fixed inset-0 z-50">
-      <canvas ref={canvasRef} className="h-full w-full" />
+    <div className='pointer-events-none fixed inset-0 z-50'>
+      <canvas ref={canvasRef} className='h-full w-full' />
     </div>
   )
 }

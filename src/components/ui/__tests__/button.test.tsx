@@ -1,6 +1,6 @@
-import { describe, it, expect, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import { describe, it, expect, vi } from 'vitest'
 import { Button } from '../button'
 
 describe('Button', () => {
@@ -14,7 +14,7 @@ describe('Button', () => {
 
   it('merges custom className', () => {
     render(
-      <Button className="custom-class" aria-label="custom">
+      <Button className='custom-class' aria-label='custom'>
         Custom
       </Button>
     )

@@ -3,11 +3,15 @@ import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useNavigate } from '@tanstack/react-router'
-import { createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from 'firebase/auth'
-import { toast } from 'sonner'
+import {
+  createUserWithEmailAndPassword,
+  GoogleAuthProvider,
+  signInWithPopup,
+} from 'firebase/auth'
 import { Loader2 } from 'lucide-react'
-import { auth } from '@/lib/firebase'
+import { toast } from 'sonner'
 import { IconGoogle } from '@/assets/brand-icons'
+import { auth } from '@/lib/firebase'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import {
@@ -56,7 +60,7 @@ export function SignUpForm({
 
   async function onSubmit(data: z.infer<typeof formSchema>) {
     setIsLoading(true)
-    
+
     try {
       await createUserWithEmailAndPassword(auth, data.email, data.password)
       toast.success('Account created successfully!')
@@ -79,9 +83,7 @@ export function SignUpForm({
       navigate({ to: '/' })
     } catch (error) {
       const message =
-        error instanceof Error
-          ? error.message
-          : 'Failed to sign in with Google'
+        error instanceof Error ? error.message : 'Failed to sign in with Google'
       toast.error(message)
     } finally {
       setIsLoading(false)

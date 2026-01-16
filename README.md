@@ -29,7 +29,8 @@ The application uses `localStorage` to persist user progress and settings. The k
 
 Key: `examtopics_progress`
 Value (JSON Object):
-```
+
+```json
 {
   "userId_or_guestId": {
     "examId": {
@@ -89,6 +90,7 @@ Value (JSON Object):
   - Causes: corporate proxy MITM/self-signed certs, incorrect system time, security software/network filtering.
   - Fixes: use dev-time Analytics disable (already implemented), import corporate root CA into trust store, correct system clock, verify filters aren’t blocking `*.google*`.
 - **Database Rules** (example):
+
 ```json
 {
   "rules": {
@@ -283,7 +285,7 @@ For more details on the overall tech stack and directory structure, see [TEMPLAT
 - Routing
   - Use union paths with params for TanStack Router:
     - `to="/exams/$examId/practice"` with `params={{ examId }}`
-    - Avoid template strings like ``/exams/${id}/practice`` which are not part of the generated unions.
+    - Avoid template strings like `/exams/${id}/practice` which are not part of the generated unions.
 - Types
   - Keep UI types in sync with data (e.g., SidebarData requires `teams: Team[]`).
   - Avoid implicit `any[]`; annotate arrays like fireworks `Particle[][]`.

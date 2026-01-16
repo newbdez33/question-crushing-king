@@ -1,6 +1,6 @@
 import { Link, useNavigate } from '@tanstack/react-router'
-import useDialogState from '@/hooks/use-dialog-state'
 import { useAuth } from '@/context/auth-ctx'
+import useDialogState from '@/hooks/use-dialog-state'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import {
@@ -58,7 +58,9 @@ export function ProfileDropdown() {
         <DropdownMenuContent className='w-56' align='end' forceMount>
           <DropdownMenuLabel className='font-normal'>
             <div className='flex flex-col gap-1.5'>
-              <p className='text-sm leading-none font-medium'>{userData.name}</p>
+              <p className='text-sm leading-none font-medium'>
+                {userData.name}
+              </p>
               {!isGuest && (
                 <p className='text-xs leading-none text-muted-foreground'>
                   {userData.email}

@@ -3,15 +3,15 @@ import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Link, useNavigate } from '@tanstack/react-router'
-import { Loader2 } from 'lucide-react'
-import { toast } from 'sonner'
 import {
   signInWithEmailAndPassword,
   GoogleAuthProvider,
   signInWithPopup,
 } from 'firebase/auth'
-import { auth } from '@/lib/firebase'
+import { Loader2 } from 'lucide-react'
+import { toast } from 'sonner'
 import { IconGoogle } from '@/assets/brand-icons'
+import { auth } from '@/lib/firebase'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import {
@@ -84,9 +84,7 @@ export function UserAuthForm({
       navigate({ to: targetPath, replace: true })
     } catch (error) {
       const message =
-        error instanceof Error
-          ? error.message
-          : 'Failed to sign in with Google'
+        error instanceof Error ? error.message : 'Failed to sign in with Google'
       toast.error(message)
     } finally {
       setIsLoading(false)

@@ -1,9 +1,15 @@
-import { Button } from '@/components/ui/button'
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
-import { cn } from '@/lib/utils'
+import { useEffect, useRef } from 'react'
 import type { ExamProgress } from '@/services/progress-service'
 import { Bookmark, List, CheckCircle, XCircle } from 'lucide-react'
-import { useEffect, useRef } from 'react'
+import { cn } from '@/lib/utils'
+import { Button } from '@/components/ui/button'
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from '@/components/ui/sheet'
 
 interface PracticeMobileBarProps {
   questions: { id: string }[]
@@ -37,7 +43,9 @@ export function PracticeMobileBar({
     correct = statuses.filter((s) => s === 'correct').length
     incorrect = statuses.filter((s) => s === 'incorrect').length
   } else {
-    const relevant = questions.map((q) => progress[q.id]).filter((p) => p && p.status)
+    const relevant = questions
+      .map((q) => progress[q.id])
+      .filter((p) => p && p.status)
     correct = relevant.filter((p) => p?.status === 'correct').length
     incorrect = relevant.filter((p) => p?.status === 'incorrect').length
   }
@@ -47,7 +55,10 @@ export function PracticeMobileBar({
     if (!el) return
     const setVar = () => {
       const h = el.offsetHeight
-      document.documentElement.style.setProperty('--mobile-bar-height', `${h}px`)
+      document.documentElement.style.setProperty(
+        '--mobile-bar-height',
+        `${h}px`
+      )
     }
     setVar()
     const ro = new ResizeObserver(() => setVar())
@@ -61,41 +72,53 @@ export function PracticeMobileBar({
   }, [])
 
   return (
-    <div ref={barRef} className="fixed bottom-0 inset-x-0 z-40 border-t bg-background lg:hidden">
-      <div className="mx-auto max-w-3xl px-4 py-2 grid grid-cols-4 gap-2 items-center text-xs">
+    <div
+      ref={barRef}
+      className='fixed inset-x-0 bottom-0 z-40 border-t bg-background lg:hidden'
+    >
+      <div className='mx-auto grid max-w-3xl grid-cols-4 items-center gap-2 px-4 py-2 text-xs'>
         <Button
-          variant="ghost"
-          size="sm"
-          className={cn('gap-1 justify-center', isBookmarked && 'text-yellow-500 hover:text-yellow-600')}
+          variant='ghost'
+          size='sm'
+          className={cn(
+            'justify-center gap-1',
+            isBookmarked && 'text-yellow-500 hover:text-yellow-600'
+          )}
           onClick={onToggleBookmark}
         >
           <Bookmark className={cn('h-4 w-4', isBookmarked && 'fill-current')} />
-          <span className="sr-only">Bookmark</span>
+          <span className='sr-only'>Bookmark</span>
         </Button>
 
-        <div className="flex h-8 items-center justify-center gap-1" aria-label="Correct count">
-          <CheckCircle className="h-4 w-4 text-green-600" />
-          <span className="font-semibold text-green-600">{correct}</span>
+        <div
+          className='flex h-8 items-center justify-center gap-1'
+          aria-label='Correct count'
+        >
+          <CheckCircle className='h-4 w-4 text-green-600' />
+          <span className='font-semibold text-green-600'>{correct}</span>
         </div>
 
-        <div className="flex h-8 items-center justify-center gap-1" aria-label="Wrong count">
-          <XCircle className="h-4 w-4 text-red-600" />
-          <span className="font-semibold text-red-600">{incorrect}</span>
+        <div
+          className='flex h-8 items-center justify-center gap-1'
+          aria-label='Wrong count'
+        >
+          <XCircle className='h-4 w-4 text-red-600' />
+          <span className='font-semibold text-red-600'>{incorrect}</span>
         </div>
 
         <Sheet>
           <SheetTrigger asChild>
-            <Button variant="ghost" size="sm" className="gap-1 justify-center">
-              <List className="h-4 w-4" />
-              <span className="sr-only">Answer Card</span>
+            <Button variant='ghost' size='sm' className='justify-center gap-1'>
+              <List className='h-4 w-4' />
+              <span className='sr-only'>Answer Card</span>
             </Button>
           </SheetTrigger>
-          <SheetContent side="bottom">
+          <SheetContent side='bottom'>
             <SheetHeader>
               <SheetTitle>Answer Sheet</SheetTitle>
             </SheetHeader>
-            <div className="mx-auto w-full max-w-3xl px-4 py-4">
-              <div className="grid grid-cols-6 gap-2">
+            <div className='mx-auto w-full max-w-3xl px-4 py-4'>
+              <div className='grid grid-cols-6 gap-2'>
                 {questions.map((q, idx) => {
                   const status = mistakesMode
                     ? mistakesSessionStatus[q.id]
@@ -106,8 +129,10 @@ export function PracticeMobileBar({
                       key={q.id}
                       className={cn(
                         'flex h-9 items-center justify-center rounded-md border text-xs transition-colors',
-                        status === 'correct' && 'border-green-500 bg-green-50 dark:bg-green-950/20 text-green-700 dark:text-green-200',
-                        status === 'incorrect' && 'border-red-500 bg-red-50 dark:bg-red-950/20 text-red-700 dark:text-red-200',
+                        status === 'correct' &&
+                          'border-green-500 bg-green-50 text-green-700 dark:bg-green-950/20 dark:text-green-200',
+                        status === 'incorrect' &&
+                          'border-red-500 bg-red-50 text-red-700 dark:bg-red-950/20 dark:text-red-200',
                         !status && 'hover:bg-muted/50',
                         isCurrent && 'ring-2 ring-blue-500'
                       )}

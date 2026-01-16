@@ -1,12 +1,12 @@
+import { useEffect } from 'react'
 import { z } from 'zod'
 import { useFieldArray, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useEffect } from 'react'
+import { getUserProfile, saveUserProfile } from '@/services/user-profile'
 import { updateEmail, updateProfile } from 'firebase/auth'
 import { toast } from 'sonner'
-import { useAuth } from '@/context/auth-ctx'
-import { getUserProfile, saveUserProfile } from '@/services/user-profile'
 import { cn } from '@/lib/utils'
+import { useAuth } from '@/context/auth-ctx'
 import { Button } from '@/components/ui/button'
 import {
   Form,
@@ -202,7 +202,9 @@ export function ProfileForm() {
             Add URL
           </Button>
         </div>
-        <Button type='submit' disabled={!user}>Update profile</Button>
+        <Button type='submit' disabled={!user}>
+          Update profile
+        </Button>
       </form>
     </Form>
   )
