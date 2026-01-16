@@ -7,12 +7,21 @@ import { Toaster } from '@/components/ui/sonner'
 import { NavigationProgress } from '@/components/navigation-progress'
 import { GeneralError } from '@/features/errors/general-error'
 import { NotFoundError } from '@/features/errors/not-found-error'
+import { EnvError } from '@/features/errors/env-error'
 
 export const Route = createRootRouteWithContext<{
   queryClient: QueryClient
 }>()({
   component: () => {
     const showDevtools = import.meta.env.VITE_SHOW_DEVTOOLS === '1'
+    const isEnvValid =
+      !!import.meta.env.VITE_CLERK_PUBLISHABLE_KEY &&
+      !!import.meta.env.VITE_FIREBASE_API_KEY
+
+    if (!isEnvValid) {
+      return <EnvError />
+    }
+
     return (
       <AuthProvider>
         <NavigationProgress />

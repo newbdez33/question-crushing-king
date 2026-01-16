@@ -12,7 +12,11 @@
     "format:check": "prettier --check .",
     "format": "prettier --write .",
     "knip": "knip",
-    "typecheck": "tsc -b --noEmit --pretty"
+    "typecheck": "tsc -b --noEmit --pretty",
+    "test": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui"
   },
   "dependencies": {
     "@clerk/clerk-react": "^5.58.1",
@@ -63,6 +67,7 @@
   "devDependencies": {
     "@eslint/js": "^9.39.2",
     "@faker-js/faker": "^10.1.0",
+    "@playwright/test": "^1.57.0",
     "@tanstack/eslint-plugin-query": "^5.91.2",
     "@tanstack/react-query-devtools": "^5.91.1",
     "@tanstack/react-router-devtools": "^1.141.2",
@@ -82,6 +87,7 @@
     "globals": "^16.5.0",
     "jsdom": "^27.4.0",
     "knip": "^5.73.4",
+    "playwright": "^1.57.0",
     "prettier": "^3.7.4",
     "prettier-plugin-tailwindcss": "^0.7.2",
     "typescript": "~5.9.3",
