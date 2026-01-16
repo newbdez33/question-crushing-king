@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link, useNavigate } from '@tanstack/react-router'
 import { ArrowLeft, BookOpen, CheckCircle, RotateCcw, AlertCircle, Brain } from 'lucide-react'
+import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -28,20 +29,29 @@ export function ExamDetails({ examId }: ExamDetailsProps) {
   const navigate = useNavigate()
   const { user, guestId } = useAuth()
   const userId = user?.uid || guestId
-  const fallbackExam = mockExams.find((e) => e.id === examId)
+  const fallbackExam = (Array.isArray(mockExams) ? mockExams : []).find((e) => e.id === examId) || undefined
   const [demoQuestionCount, setDemoQuestionCount] = useState<number | null>(null)
   const [isLoading, setIsLoading] = useState(!fallbackExam)
   const [progress, setProgress] = useState<ExamProgress>({})
   const [examDialogOpen, setExamDialogOpen] = useState(false)
   const [examCount, setExamCount] = useState<number>(fallbackExam?.questionCount ?? 10)
   const [examSeed, setExamSeed] = useState<string>('')
+  const [isOwned, setIsOwned] = useState(false)
 
   useEffect(() => {
     if (userId && examId) {
       const local = ProgressService.getExamProgress(userId, examId)
+      const settings = ProgressService.getExamSettings(userId, examId)
       setProgress(local)
+      setIsOwned(!!settings.owned)
     }
   }, [userId, examId])
+
+  const handleJoin = () => {
+    ProgressService.saveExamSettings(userId, examId, { owned: true })
+    setIsOwned(true)
+    toast.success('Exam added to My Exams')
+  }
 
   useEffect(() => {
     if (!user?.uid) return
@@ -153,6 +163,11 @@ export function ExamDetails({ examId }: ExamDetailsProps) {
               <h1 className='text-3xl font-bold tracking-tight'>{exam.title}</h1>
               <p className='mt-2 text-muted-foreground'>{exam.description}</p>
             </div>
+            {!isOwned && (
+              <Button onClick={handleJoin}>
+                Join My Exams
+              </Button>
+            )}
           </div>
         </div>
 

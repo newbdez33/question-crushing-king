@@ -1,7 +1,7 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import { Link } from '@tanstack/react-router'
 import { Activity, BookOpen, CheckCircle, FileText, TrendingUp, Cloud } from 'lucide-react'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { ConfigDrawer } from '@/components/config-drawer'
@@ -11,66 +11,29 @@ import { ProfileDropdown } from '@/components/profile-dropdown'
 import { Search } from '@/components/search'
 import { ThemeSwitch } from '@/components/theme-switch'
 import { useAuth } from '@/context/auth-ctx'
-import { mockExams } from '@/features/exams/data/mock-exams'
 import { ProgressService } from '@/services/progress-service'
-
-// Define demo exams locally as they are in the exams feature
-const demoExams = [
-  {
-    id: 'SOA-C03',
-    title: 'SOA-C03 (Demo)',
-    description: 'Demo from /public/data/SOA-C03.json',
-  },
-]
+import { useExams } from '@/hooks/use-exams'
 
 export function Dashboard() {
   const { user, guestId } = useAuth()
   const userId = user?.uid || guestId
 
-  const [demoCounts, setDemoCounts] = useState<Record<string, number>>({})
+  const { exams: allExams, loading: examsLoading } = useExams()
   
-  // Load demo exam counts to get accurate total questions
-  useEffect(() => {
-    let cancelled = false
-    async function loadCounts() {
-      const next: Record<string, number> = {}
-      await Promise.all(
-        demoExams.map(async (exam) => {
-          try {
-            const res = await fetch(`/data/${exam.id}.json`)
-            if (!res.ok) return
-            const data = (await res.json()) as { questions?: unknown[] }
-            const count = Array.isArray(data.questions) ? data.questions.length : 0
-            next[exam.id] = count
-          } catch {
-            // ignore
-          }
-        })
-      )
-      if (!cancelled) setDemoCounts(next)
-    }
-    void loadCounts()
-    return () => { cancelled = true }
-  }, [])
+  const safeExams = useMemo(() => Array.isArray(allExams) ? allExams : [], [allExams])
 
   const allExamsMap = useMemo(() => {
     const map = new Map<string, { title: string; totalQuestions: number }>()
     
-    // Add mock exams
-    mockExams.forEach(e => {
-      map.set(e.id, { title: e.title, totalQuestions: e.questionCount })
-    })
-
-    // Add demo exams
-    demoExams.forEach(e => {
+    safeExams.forEach(e => {
       map.set(e.id, { 
         title: e.title, 
-        totalQuestions: demoCounts[e.id] || 0 
+        totalQuestions: e.questionCount || 0 
       })
     })
     
     return map
-  }, [demoCounts])
+  }, [safeExams])
 
   // Calculate stats
   const stats = useMemo(() => {
@@ -236,6 +199,43 @@ export function Dashboard() {
                             {exam.accuracy}%
                           </span>
                         </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </Link>
+              ))}
+            </div>
+          )}
+        </div>
+
+        <div className='mt-8 space-y-4'>
+          <h2 className='text-xl font-semibold'>All Available Exams</h2>
+          {examsLoading ? (
+            <div className="text-center py-10 text-muted-foreground">Loading exams...</div>
+          ) : (
+            <div className='grid gap-4 md:grid-cols-2 lg:grid-cols-3'>
+              {safeExams.map((exam) => (
+                <Link
+                  key={exam.id}
+                  to='/exams/$examId'
+                  params={{ examId: exam.id }}
+                  className='block'
+                >
+                  <Card className='h-full transition-colors hover:bg-muted/50'>
+                    <CardHeader>
+                      <div className='flex items-center justify-between'>
+                        <CardTitle className='text-lg'>{exam.title}</CardTitle>
+                        <FileText className='h-5 w-5 text-muted-foreground' />
+                      </div>
+                      <CardDescription>{exam.description}</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <div className='flex justify-between text-sm text-muted-foreground'>
+                        <span>
+                          {typeof exam.questionCount === 'number'
+                            ? `${exam.questionCount} Questions`
+                            : 'Questions: —'}
+                        </span>
                       </div>
                     </CardContent>
                   </Card>

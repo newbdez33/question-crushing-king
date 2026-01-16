@@ -24,6 +24,7 @@ const SETTINGS_KEY = 'examtopics_settings'
 
 export interface ExamSettings {
   mistakesConsecutiveCorrect?: number
+  owned?: boolean
 }
 
 export interface UserSettings {
