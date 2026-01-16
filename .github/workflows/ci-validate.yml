@@ -20,8 +20,9 @@ jobs:
         with:
           node-version: 22.x
           cache: pnpm
-      - run: corepack enable
-      - run: corepack prepare pnpm@10.28.0 --activate
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.28.0
       - run: pnpm --version
       - run: node -v
       - run: pnpm install --frozen-lockfile --dangerously-allow-all-builds
