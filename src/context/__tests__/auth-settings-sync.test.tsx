@@ -6,6 +6,12 @@ vi.stubGlobal('crypto', {
   randomUUID: () => 'guest-uuid',
 } as any)
 
+vi.mock('@/lib/firebase', () => {
+  return {
+    auth: {},
+  }
+})
+
 const memoryStorage = new Map<string, string>()
 vi.stubGlobal('localStorage', {
   getItem: (k: string) => (memoryStorage.has(k) ? memoryStorage.get(k)! : null),
