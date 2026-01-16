@@ -1,5 +1,9 @@
 import { useEffect, useState, type ReactNode } from 'react'
-import { mergeLocalIntoRemote } from '@/services/firebase-progress'
+import {
+  mergeLocalIntoRemote,
+  mergeLocalSettingsIntoRemote,
+  getUserSettings as getRemoteUserSettings,
+} from '@/services/firebase-progress'
 import { ProgressService } from '@/services/progress-service'
 import {
   onAuthStateChanged,
@@ -31,6 +35,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           ProgressService.mergeProgress(guestId, currentUser.uid)
           const merged = ProgressService.getUserProgress(currentUser.uid)
           void mergeLocalIntoRemote(currentUser.uid, merged)
+          ProgressService.mergeSettings(guestId, currentUser.uid)
+          const localSettings = ProgressService.getUserSettings(currentUser.uid)
+          void mergeLocalSettingsIntoRemote(currentUser.uid, localSettings)
+          void getRemoteUserSettings(currentUser.uid).then((remote) => {
+            ProgressService.saveUserSettings(currentUser.uid, remote)
+          })
         }
       }
       setUser(currentUser)

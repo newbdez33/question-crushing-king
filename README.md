@@ -67,6 +67,17 @@ Value (JSON Object):
     - `bookmarked` uses logical OR.
   - After merge, push the User’s local progress to Firebase for cross-device availability.
 
+#### Joined Exams Sync (owned)
+
+- **Path**: `examtopics_progress/{uid}/_settings/{examId}`
+- **Field**: `owned: true` when user clicks “Join My Exams”
+- **Behavior**:
+  - Guest users: write to localStorage only
+  - Authenticated users: write both localStorage and Firebase settings
+  - On login: merge Guest settings into User, push merged settings to Firebase, then hydrate local settings from Firebase for consistency
+- **Display**:
+  - “My Exams” list uses Firebase settings when logged in; uses localStorage when not logged in
+
 ### Firebase Setup
 
 - **Environment Variables**:
@@ -149,6 +160,22 @@ Start the server (pre-check runs automatically)
 ```bash
   pnpm dev
 ```
+
+## Testing
+
+- Unit Tests (Vitest):
+  - `pnpm test`
+  - Coverage: `pnpm test:coverage`
+- E2E Tests (Playwright):
+  - `pnpm test:e2e`
+  - UI mode: `pnpm test:e2e:ui`
+
+### Regression: Joined Exam Sync
+
+- Covers:
+  - Join action writes `owned: true` to Firebase settings for authenticated users
+  - Auth login merges Guest settings → User and pushes to Firebase, then hydrates local settings from Firebase
+  - “My Exams” list uses remote settings when authenticated
 
 ## Question Bank JSON & DEMO Data
 

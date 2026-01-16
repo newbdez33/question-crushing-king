@@ -1,6 +1,7 @@
-import { useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Link } from '@tanstack/react-router'
 import { ProgressService } from '@/services/progress-service'
+import * as RemoteProgress from '@/services/firebase-progress'
 import { FileText, PlusCircle } from 'lucide-react'
 import { useAuth } from '@/context/auth-ctx'
 import { useExams } from '@/hooks/use-exams'
@@ -22,14 +23,39 @@ export function ExamsList() {
   const { user, guestId } = useAuth()
   const userId = user?.uid || guestId
   const { exams: allExams, loading } = useExams()
+  const [remoteOwned, setRemoteOwned] = useState<Record<string, boolean>>({})
+
+  useEffect(() => {
+    let cancelled = false
+    async function load() {
+      if (!user?.uid) {
+        setRemoteOwned({})
+        return
+      }
+      const settings = await RemoteProgress.getUserSettings(user.uid)
+      if (cancelled) return
+      const owned: Record<string, boolean> = {}
+      Object.entries(settings).forEach(([examId, s]) => {
+        if (s.owned === true) owned[examId] = true
+      })
+      setRemoteOwned(owned)
+    }
+    void load()
+    return () => {
+      cancelled = true
+    }
+  }, [user?.uid])
 
   const myExams = useMemo(() => {
     if (!userId) return []
     return allExams.filter((exam) => {
+      if (user?.uid) {
+        return remoteOwned[exam.id] === true
+      }
       const settings = ProgressService.getExamSettings(userId, exam.id)
       return settings.owned === true
     })
-  }, [allExams, userId])
+  }, [allExams, userId, user?.uid, remoteOwned])
 
   return (
     <>

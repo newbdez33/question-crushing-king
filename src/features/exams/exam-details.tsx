@@ -65,6 +65,9 @@ export function ExamDetails({ examId }: ExamDetailsProps) {
 
   const handleJoin = () => {
     ProgressService.saveExamSettings(userId, examId, { owned: true })
+    if (user?.uid) {
+      void RemoteProgress.saveExamSettings(user.uid, examId, { owned: true })
+    }
     setIsOwned(true)
     toast.success('Exam added to My Exams')
   }
