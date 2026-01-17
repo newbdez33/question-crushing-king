@@ -23,7 +23,8 @@
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
     "install:ci": "pnpm install --frozen-lockfile",
-    "lockfile:regen": "pnpm install --lockfile-only"
+    "lockfile:regen": "pnpm install --lockfile-only",
+    "prepare": "husky"
   },
   "dependencies": {
     "@clerk/clerk-react": "^5.58.1",
@@ -92,6 +93,7 @@
     "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-react-refresh": "^0.4.25",
     "globals": "^16.5.0",
+    "husky": "^9.1.7",
     "jsdom": "^27.4.0",
     "knip": "^5.73.4",
     "playwright": "^1.57.0",

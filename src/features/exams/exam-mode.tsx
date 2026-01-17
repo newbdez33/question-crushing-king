@@ -213,7 +213,7 @@ export function ExamMode({
         explanation: q.explanation,
       }))
     : null
-  const [allQuestions, setAllQuestions] = useState<PracticeQuestion[] | null>(
+  const [_allQuestions, setAllQuestions] = useState<PracticeQuestion[] | null>(
     fallbackQuestions
   )
   const [questions, setQuestions] = useState<PracticeQuestion[] | null>(null)
@@ -345,8 +345,8 @@ export function ExamMode({
           selected = Array.from(indices)
             .map((i) => available[i])
             .sort((a, b) => {
-              const na = allQuestions?.findIndex((q) => q.id === a.id) ?? 0
-              const nb = allQuestions?.findIndex((q) => q.id === b.id) ?? 0
+              const na = available.findIndex((q) => q.id === a.id)
+              const nb = available.findIndex((q) => q.id === b.id)
               return na - nb
             })
         }

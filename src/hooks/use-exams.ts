@@ -13,12 +13,6 @@ type IndexFile = {
   exams?: Array<{ id: string; title?: string; description?: string }>
 }
 
-type ExamMeta = {
-  id: string
-  title: string
-  description: string
-}
-
 export function useExams() {
   const [examsFromIndex, setExamsFromIndex] = useState<Exam[]>([])
   const [loading, setLoading] = useState(true)
@@ -57,10 +51,15 @@ export function useExams() {
                 lastStudied: undefined,
               })
             } catch {
+              return
             }
           })
         )
       } catch {
+        if (!cancelled) {
+          setExamsFromIndex([])
+          setLoading(false)
+        }
       }
 
       if (!cancelled) {
