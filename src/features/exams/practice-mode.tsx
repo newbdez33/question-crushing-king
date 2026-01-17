@@ -52,23 +52,23 @@ interface PracticeModeProps {
   initialQuestionIndex?: number
 }
 
-type DemoOption = {
+type ExamOption = {
   label: string
   content: string
 }
 
-type DemoQuestion = {
+type ExamQuestion = {
   id: string
   questionNumber: number
   type: string
   content: string
-  options: DemoOption[]
+  options: ExamOption[]
   correctAnswer: string
   explanation?: string
 }
 
-type DemoFile = {
-  questions: DemoQuestion[]
+type ExamFile = {
+  questions: ExamQuestion[]
 }
 
 type PracticeOption = {
@@ -525,7 +525,7 @@ export function PracticeMode({
           throw new Error(`HTTP ${response.status}`)
         }
 
-        const data = (await response.json()) as DemoFile
+        const data = (await response.json()) as ExamFile
         const mapped = (data.questions ?? [])
           .slice()
           .sort((a, b) => a.questionNumber - b.questionNumber)
@@ -571,7 +571,7 @@ export function PracticeMode({
         }
       } catch {
         if (!cancelled && !exam) {
-          setLoadError(`Demo data /data/${examId}.json not found.`)
+          setLoadError(`Exam data /data/${examId}.json not found.`)
         }
       } finally {
         if (!cancelled) setIsLoading(false)

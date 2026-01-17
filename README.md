@@ -177,9 +177,9 @@ Start the server (pre-check runs automatically)
   - Auth login merges Guest settings → User and pushes to Firebase, then hydrates local settings from Firebase
   - “My Exams” list uses remote settings when authenticated
 
-## Exam Registry & Data
+## Exams Library
 
-Exams are registry-driven via `public/data/index.json`. Each exam’s questions live in `public/data/{examId}.json`.
+Exams library is registry-driven via `public/data/index.json`. Each exam’s questions live in `public/data/{examId}.json`.
 
 - Routing
   - Exams list and details use dynamic routes: `/exams`, `/exams/$examId`
@@ -194,8 +194,8 @@ Exams are registry-driven via `public/data/index.json`. Each exam’s questions 
 
 - File Path: `public/data/SOA-C03.json`
 - Top-level Fields:
-  - `questions`: DemoQuestion[]
-- DemoQuestion Structure:
+  - `questions`: Question[]
+- Question object structure:
   - `id`: string
   - `questionNumber`: number
   - `type`: string
@@ -208,13 +208,13 @@ Exams are registry-driven via `public/data/index.json`. Each exam’s questions 
 
 - File Path: `public/data/index.json`
 - Structure:
-  - `exams`: Array of objects: `{ id: string; title: string; description: string }`
+  - `exams`: Array of objects: `{ id: string; title: string; description: string; questionCount: number }`
 - Example:
   ```json
   {
     "exams": [
-      { "id": "SOA-C03", "title": "SOA-C03", "description": "Validates ability to deploy, manage, and operate workloads on AWS, including monitoring, incident response, automation, and cost control." },
-      { "id": "SAA-C03", "title": "SAA-C03", "description": "Validates ability to design resilient, high-performing, secure, and cost-optimized architectures on AWS." }
+      { "id": "SOA-C03", "title": "SOA-C03", "description": "Validates ability to deploy, manage, and operate workloads on AWS, including monitoring, incident response, automation, and cost control.", "questionCount": 65 },
+      { "id": "SAA-C03", "title": "SAA-C03", "description": "Validates ability to design resilient, high-performing, secure, and cost-optimized architectures on AWS.", "questionCount": 1019 }
     ]
   }
   ```

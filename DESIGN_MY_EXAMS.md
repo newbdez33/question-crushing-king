@@ -23,11 +23,11 @@ export interface ExamSettings {
 
 ### 1. Shared Exam Data Hook (`src/hooks/use-exams.ts`)
 
-Centralizes reading the exam registry (`public/data/index.json`) and merging with mock exams. For each exam in the registry, it loads `/data/{examId}.json` to compute `questionCount`.
+Centralizes reading the exams library (`public/data/index.json`) and merging with mock exams. Uses registry-provided `questionCount` without downloading question banks; question banks are downloaded only when the user clicks “Join My Exams”.
 
 - **Input**: None
 - **Output**:
-  - `exams`: Array of all available exams (Mock + Demo).
+  - `exams`: Array of all available exams (Library + Mock).
   - `loading`: Boolean.
 
 ### 2. Dashboard (`src/features/dashboard/index.tsx`)
