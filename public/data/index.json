@@ -1,7 +1,7 @@
 {
   "exams": [
-    { "id": "SOA-C03", "title": "SOA-C03", "description": "Validates ability to deploy, manage, and operate workloads on AWS, including monitoring, incident response, automation, and cost control." },
-    { "id": "SAA-C03", "title": "SAA-C03", "description": "Validates ability to design resilient, high-performing, secure, and cost-optimized architectures on AWS." },
-    { "id": "SAP-C02", "title": "SAP-C02", "description": "Validates advanced skills to design and implement scalable, reliable, secure, and cost-optimized solutions for complex distributed systems on AWS." }
+    { "id": "SOA-C03", "title": "SOA-C03", "description": "Validates ability to deploy, manage, and operate workloads on AWS, including monitoring, incident response, automation, and cost control.", "questionCount": 65 },
+    { "id": "SAA-C03", "title": "SAA-C03", "description": "Validates ability to design resilient, high-performing, secure, and cost-optimized architectures on AWS.", "questionCount": 1019 },
+    { "id": "SAP-C02", "title": "SAP-C02", "description": "Validates advanced skills to design and implement scalable, reliable, secure, and cost-optimized solutions for complex distributed systems on AWS.", "questionCount": 529 }
   ]
 }

@@ -177,16 +177,18 @@ Start the server (pre-check runs automatically)
   - Auth login merges Guest settings → User and pushes to Firebase, then hydrates local settings from Firebase
   - “My Exams” list uses remote settings when authenticated
 
-## Question Bank JSON & DEMO Data
+## Exam Registry & Data
 
-The application attempts to load DEMO question banks from `public/data/{examId}.json`:
+Exams are registry-driven via `public/data/index.json`. Each exam’s questions live in `public/data/{examId}.json`.
 
-- In the "My Question Banks" list, `examId` appears as a route parameter at `/exams/$examId`
-- After entering an exam details page, you can click:
+- Routing
+  - Exams list and details use dynamic routes: `/exams`, `/exams/$examId`
   - Practice Mode: `/exams/$examId/practice`
   - Study Mode: `/exams/$examId/study`
-- Both pages prioritize reading DEMO data from `/public/data/{examId}.json`;
-  - If the corresponding JSON does not exist, it falls back to the built-in mock question bank (`src/features/exams/data/mock-exams.ts`)
+- Loading
+  - The app first reads `public/data/index.json` to get the list of available exams and their metadata (title, description).
+  - For each exam, the app loads `public/data/{examId}.json` and derives `questionCount` from `questions.length`.
+  - If `{examId}.json` does not exist, the app falls back to built-in mock data (`src/features/exams/data/mock-exams.ts`).
 
 ### JSON Structure (using `SOA-C03.json` as an example)
 
@@ -201,6 +203,21 @@ The application attempts to load DEMO question banks from `public/data/{examId}.
   - `options`: { `label`: string; `content`: string }[]
   - `correctAnswer`: string (Corresponds to `label`)
   - `explanation?`: string (Explanation, supports HTML)
+
+### Exam Registry (`index.json`)
+
+- File Path: `public/data/index.json`
+- Structure:
+  - `exams`: Array of objects: `{ id: string; title: string; description: string }`
+- Example:
+  ```json
+  {
+    "exams": [
+      { "id": "SOA-C03", "title": "SOA-C03", "description": "Validates ability to deploy, manage, and operate workloads on AWS, including monitoring, incident response, automation, and cost control." },
+      { "id": "SAA-C03", "title": "SAA-C03", "description": "Validates ability to design resilient, high-performing, secure, and cost-optimized architectures on AWS." }
+    ]
+  }
+  ```
 
 ### Image Reference Convention
 

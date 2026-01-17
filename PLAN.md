@@ -108,11 +108,15 @@ Exam Topics is a web-based application designed to help users practice for certi
 
 ## 5. Data Specifications
 
-- **Source**: JSON files located in `public/data/`.
-- **Format**:
+- **Sources**:
+  - `public/data/index.json`: Exam registry containing `{ id, title, description }` entries.
+  - `public/data/{examId}.json`: Question bank for each exam; contains only `questions` array.
+- **Question Format** (`questions[]`):
   - `id`: Unique identifier.
+  - `questionNumber`: number.
+  - `type`: `"single"` | `"multiple"`.
   - `content`: HTML string for the question.
-  - `options`: Array of objects with `label` and `content`.
-  - `correctAnswer`: Label(s) of the correct option.
-  - `explanation`: HTML string for the answer explanation.
-- **Images**: Stored in `public/data/images/` and referenced relatively in JSON.
+  - `options`: Array of objects `{ label: string; content: string }`.
+  - `correctAnswer`: Label(s) of the correct option, e.g. `"A"` or `"BD"`.
+  - `explanation?`: Optional HTML explanation.
+- **Images**: Stored in `public/data/images/` and referenced relatively (e.g. `images/...`) in JSON.

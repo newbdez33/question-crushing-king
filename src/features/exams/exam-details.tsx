@@ -30,6 +30,7 @@ import { Main } from '@/components/layout/main'
 import { ProfileDropdown } from '@/components/profile-dropdown'
 import { ThemeSwitch } from '@/components/theme-switch'
 import { mockExams } from './data/mock-exams'
+import { useExams } from '@/hooks/use-exams'
 
 interface ExamDetailsProps {
   examId: string
@@ -42,10 +43,8 @@ export function ExamDetails({ examId }: ExamDetailsProps) {
   const fallbackExam =
     (Array.isArray(mockExams) ? mockExams : []).find((e) => e.id === examId) ||
     undefined
-  const [demoQuestionCount, setDemoQuestionCount] = useState<number | null>(
-    null
-  )
-  const [isLoading, setIsLoading] = useState(!fallbackExam)
+  const { exams, loading: examsLoading } = useExams()
+  const [joinLoading, setJoinLoading] = useState(false)
   const [progress, setProgress] = useState<ExamProgress>({})
   const [examDialogOpen, setExamDialogOpen] = useState(false)
   const [examCount, setExamCount] = useState<number>(
@@ -63,13 +62,23 @@ export function ExamDetails({ examId }: ExamDetailsProps) {
     }
   }, [userId, examId])
 
-  const handleJoin = () => {
-    ProgressService.saveExamSettings(userId, examId, { owned: true })
-    if (user?.uid) {
-      void RemoteProgress.saveExamSettings(user.uid, examId, { owned: true })
+  const handleJoin = async () => {
+    try {
+      setJoinLoading(true)
+      const res = await fetch(`/data/${examId}.json`)
+      if (!res.ok) throw new Error(`HTTP ${res.status}`)
+      await res.json()
+      ProgressService.saveExamSettings(userId, examId, { owned: true })
+      if (user?.uid) {
+        void RemoteProgress.saveExamSettings(user.uid, examId, { owned: true })
+      }
+      setIsOwned(true)
+      toast.success('Exam added to My Exams')
+    } catch {
+      toast.error('Failed to download exam data')
+    } finally {
+      setJoinLoading(false)
     }
-    setIsOwned(true)
-    toast.success('Exam added to My Exams')
   }
 
   useEffect(() => {
@@ -84,35 +93,7 @@ export function ExamDetails({ examId }: ExamDetailsProps) {
     return () => unsub()
   }, [user?.uid, examId])
 
-  useEffect(() => {
-    let cancelled = false
-
-    async function load() {
-      if (fallbackExam) {
-        setIsLoading(false)
-        setDemoQuestionCount(null)
-        return
-      }
-
-      setIsLoading(true)
-      try {
-        const response = await fetch(`/data/${examId}.json`)
-        if (!response.ok) throw new Error(`HTTP ${response.status}`)
-        const data = (await response.json()) as { questions?: unknown[] }
-        const count = Array.isArray(data.questions) ? data.questions.length : 0
-        if (!cancelled) setDemoQuestionCount(count)
-      } catch {
-        if (!cancelled) setDemoQuestionCount(null)
-      } finally {
-        if (!cancelled) setIsLoading(false)
-      }
-    }
-
-    void load()
-    return () => {
-      cancelled = true
-    }
-  }, [examId, fallbackExam])
+  // No heavy load at details: counts come from registry (index.json) via useExams
 
   const stats = useMemo(() => {
     const questions = Object.values(progress)
@@ -132,24 +113,26 @@ export function ExamDetails({ examId }: ExamDetailsProps) {
   }, [progress])
 
   const exam = useMemo(() => {
-    const base = fallbackExam || {
+    const fromIndex = exams.find((e) => e.id === examId)
+    const base = fromIndex || fallbackExam || {
       id: examId,
-      title: `${examId} (Demo)`,
-      description: `Demo from /public/data/${examId}.json`,
-      questionCount: demoQuestionCount ?? 0,
+      title: examId,
+      description: `/public/data/${examId}.json`,
+      questionCount: 0,
       lastStudied: undefined as string | undefined,
     }
+    const count =
+      (fromIndex && typeof fromIndex.questionCount === 'number'
+        ? fromIndex.questionCount
+        : undefined) ??
+      (fallbackExam && typeof fallbackExam.questionCount === 'number'
+        ? fallbackExam.questionCount
+        : undefined) ??
+      0
+    return { ...base, questionCount: count, lastStudied: stats.lastStudied || base.lastStudied }
+  }, [exams, examId, fallbackExam, stats])
 
-    return {
-      ...base,
-      questionCount: fallbackExam
-        ? base.questionCount
-        : (demoQuestionCount ?? 0),
-      lastStudied: stats.lastStudied || base.lastStudied,
-    }
-  }, [demoQuestionCount, examId, fallbackExam, stats])
-
-  if (isLoading && !fallbackExam) {
+  if (examsLoading && !fallbackExam) {
     return (
       <>
         <Header>
@@ -190,7 +173,11 @@ export function ExamDetails({ examId }: ExamDetailsProps) {
               </h1>
               <p className='mt-2 text-muted-foreground'>{exam.description}</p>
             </div>
-            {!isOwned && <Button onClick={handleJoin}>Join My Exams</Button>}
+            {!isOwned && (
+              <Button onClick={handleJoin} disabled={joinLoading}>
+                {joinLoading ? 'Downloading…' : 'Join My Exams'}
+              </Button>
+            )}
           </div>
         </div>
 

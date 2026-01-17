@@ -10,7 +10,7 @@ export type Exam = {
 }
 
 type IndexFile = {
-  exams?: Array<{ id: string; title?: string; description?: string }>
+  exams?: Array<{ id: string; title?: string; description?: string; questionCount?: number }>
 }
 
 export function useExams() {
@@ -34,27 +34,17 @@ export function useExams() {
         }
         const idx = (await res.json()) as IndexFile
         const entries = Array.isArray(idx.exams) ? idx.exams : []
-        await Promise.all(
-          entries.map(async (entry) => {
-            const id = entry.id
-            if (!id) return
-            try {
-              const dr = await fetch(`/data/${id}.json`)
-              if (!dr.ok) return
-              const data = (await dr.json()) as { questions?: unknown[] }
-              const count = Array.isArray(data.questions) ? data.questions.length : 0
-              next.push({
-                id,
-                title: entry.title ?? id,
-                description: entry.description ?? `/public/data/${id}.json`,
-                questionCount: count,
-                lastStudied: undefined,
-              })
-            } catch {
-              return
-            }
+        for (const entry of entries) {
+          const id = entry.id
+          if (!id) continue
+          next.push({
+            id,
+            title: entry.title ?? id,
+            description: entry.description ?? `/public/data/${id}.json`,
+            questionCount: typeof entry.questionCount === 'number' ? entry.questionCount : undefined,
+            lastStudied: undefined,
           })
-        )
+        }
       } catch {
         if (!cancelled) {
           setExamsFromIndex([])

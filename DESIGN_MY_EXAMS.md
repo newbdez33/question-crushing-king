@@ -23,7 +23,7 @@ export interface ExamSettings {
 
 ### 1. Shared Exam Data Hook (`src/hooks/use-exams.ts`)
 
-We will centralize the logic for fetching demo exam counts and merging them with mock exams.
+Centralizes reading the exam registry (`public/data/index.json`) and merging with mock exams. For each exam in the registry, it loads `/data/{examId}.json` to compute `questionCount`.
 
 - **Input**: None
 - **Output**:
@@ -52,7 +52,7 @@ We will centralize the logic for fetching demo exam counts and merging them with
 
 ## User Flow
 
-1. User lands on **Dashboard**. Sees "SOA-C03 (Demo)" and other exams.
+1. User lands on **Dashboard**. Sees "SOA-C03" and other exams.
 2. User clicks "SOA-C03".
 3. User sees **Exam Details**. Clicks "Join My Exams".
 4. User goes to **My Exams**. Sees "SOA-C03".
