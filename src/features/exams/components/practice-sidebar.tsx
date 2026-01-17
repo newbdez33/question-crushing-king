@@ -90,7 +90,7 @@ export function PracticeSidebar({
                     onClick={() => onNavigate(idx)}
                     className={cn(
                       'h-8 w-full rounded border-2 text-xs font-medium transition-colors',
-                      isCurrent ? 'border-primary' : 'border-transparent',
+                      isCurrent ? 'border-transparent ring-1 ring-border' : 'border-transparent',
                       status === 'correct'
                         ? 'bg-green-500 text-white hover:bg-green-600'
                         : status === 'incorrect'

@@ -129,6 +129,10 @@ Value (JSON Object):
 **Type System:** [TypeScript](https://www.typescriptlang.org/)  
 **Forms/State/Etc:** See root directory [TEMPLATE.md](./TEMPLATE.md)
 
+## Theme & Styling
+
+- Theme tokens and customization guide: [docs/THEME.md](./docs/THEME.md)
+
 ## Local Development
 
 Clone the project
