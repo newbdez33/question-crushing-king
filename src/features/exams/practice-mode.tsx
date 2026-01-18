@@ -872,7 +872,7 @@ export function PracticeMode({
         </div>
       </Header>
 
-      <div className='flex flex-1 items-start justify-center gap-2 pt-0 sm:gap-4'>
+      <div className='flex flex-1 items-start justify-center gap-2 pt-0 sm:gap-4 px-2'>
         <div className='w-full max-w-3xl px-0 sm:px-0'>
           <Main
             className={cn(
