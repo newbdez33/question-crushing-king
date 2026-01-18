@@ -183,3 +183,4 @@ pnpm playwright test --grep @smoke
 
 - 每次发布前主干回归通过率 ≥ 99%，Smoke 平均耗时 ≤ 3 分钟。
 - flaky 用例季度降低 ≥ 50%；关键页面首次输入延迟无显著退化。
+

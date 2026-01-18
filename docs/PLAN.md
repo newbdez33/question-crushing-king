@@ -120,3 +120,4 @@ Exam Topics is a web-based application designed to help users practice for certi
   - `correctAnswer`: Label(s) of the correct option, e.g. `"A"` or `"BD"`.
   - `explanation?`: Optional HTML explanation.
 - **Images**: Stored in `public/data/images/` and referenced relatively (e.g. `images/...`) in JSON.
+

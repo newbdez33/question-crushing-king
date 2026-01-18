@@ -57,3 +57,4 @@ Centralizes reading the exams library (`public/data/index.json`) and merging wit
 3. User sees **Exam Details**. Clicks "Join My Exams".
 4. User goes to **My Exams**. Sees "SOA-C03".
 5. User goes back to **Dashboard**. Still sees "SOA-C03" (as it shows all exams).
+

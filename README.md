@@ -10,7 +10,7 @@ Question bank practice application based on Shadcn Admin Dashboard, designed to 
 - **Rich Content**: Question stem and options support HTML content (including images)
 - **Image Mapping**: Image static resources mapped to `public/data/images`
 - **UI/UX**: Retains dark mode, responsive layout, and sidebar capabilities from the original template
-- **Exam Mode**: Simulated exam by randomly selecting a specified number of questions. See functional and technical docs: [EXAM_MODE_PLAN.md](./EXAM_MODE_PLAN.md), [EXAM_MODE_TECH.md](./EXAM_MODE_TECH.md)
+- **Exam Mode**: Simulated exam by randomly selecting a specified number of questions. See functional and technical docs: [EXAM_MODE_PLAN.md](./docs/EXAM_MODE_PLAN.md), [EXAM_MODE_TECH.md](./docs/EXAM_MODE_TECH.md)
 - **My Exams**: Personalized list of joined exams. Users can browse all available exams in the Dashboard and "Join" them from the details page.
 
 ## Auth & Persistence (Firebase + LocalStorage + Realtime DB)
@@ -127,7 +127,7 @@ Value (JSON Object):
 **Build Tool:** [Vite](https://vitejs.dev/)  
 **Routing:** [TanStack Router](https://tanstack.com/router/latest)  
 **Type System:** [TypeScript](https://www.typescriptlang.org/)  
-**Forms/State/Etc:** See root directory [TEMPLATE.md](./TEMPLATE.md)
+**Forms/State/Etc:** See [TEMPLATE.md](./docs/TEMPLATE.md)
 
 ## Theme & Styling
 
@@ -308,7 +308,7 @@ Route: `/exams/$examId/practice?mode=mistakes`
   - After answering in this session, tiles turn green/red based on the current attempt result, independent of the global stored status.
   - The **Consecutive correct** value is persisted per user+exam in `localStorage` and, for authenticated users, also synced to Firebase for cross-device consistency.
 
-For more details on the overall tech stack and directory structure, see [TEMPLATE.md](./TEMPLATE.md).
+For more details on the overall tech stack and directory structure, see [TEMPLATE.md](./docs/TEMPLATE.md).
 
 ## Recent UI Updates
 
@@ -338,3 +338,14 @@ For more details on the overall tech stack and directory structure, see [TEMPLAT
   - Keep UI types in sync with data (e.g., SidebarData requires `teams: Team[]`).
   - Avoid implicit `any[]`; annotate arrays like fireworks `Particle[][]`.
   - For `navigate({ search })`, let the updater infer or match the route’s validated search keys.
+
+## Docs
+
+- Project Overview: [PLAN.md](./docs/PLAN.md)
+- Exam Mode (Design): [EXAM_MODE_PLAN.md](./docs/EXAM_MODE_PLAN.md)
+- Exam Mode (Tech): [EXAM_MODE_TECH.md](./docs/EXAM_MODE_TECH.md)
+- My Exams Design: [DESIGN_MY_EXAMS.md](./docs/DESIGN_MY_EXAMS.md)
+- Testing Strategy: [TEST_AUTOMATION_PLAN.md](./docs/TEST_AUTOMATION_PLAN.md)
+- User Data & Firebase: [USER_DATA.md](./docs/USER_DATA.md)
+- Theme Guide: [THEME.md](./docs/THEME.md)
+- TODOs: [TODO.md](./docs/TODO.md)
