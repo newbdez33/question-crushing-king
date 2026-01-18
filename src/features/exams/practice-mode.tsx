@@ -43,7 +43,6 @@ import {
   PracticeSidebar,
   type PracticeSettings,
 } from './components/practice-sidebar'
-import { PracticeSkeleton } from './components/practice-skeleton'
 import { mockExams } from './data/mock-exams'
 
 interface PracticeModeProps {
@@ -830,7 +829,30 @@ export function PracticeMode({
   }
 
   if ((isLoading && !questions) || !isReady || authLoading) {
-    return <PracticeSkeleton />
+    return (
+      <>
+        <Header fixed>
+          <div className='flex items-center gap-4'>
+            <Link to='/exams/$examId' params={{ examId }}>
+              <Button variant='ghost' size='icon'>
+                <ArrowLeft className='h-4 w-4' />
+              </Button>
+            </Link>
+            <h1 className='text-lg font-semibold'>
+              {title} - {settings.mistakesMode ? 'My Mistakes' : 'Practice'}
+            </h1>
+          </div>
+          <div className='ms-auto flex items-center space-x-4'>
+            <ThemeSwitch />
+          </div>
+        </Header>
+        <div className='flex flex-1 items-start justify-center gap-2 pt-0 sm:gap-4'>
+          <Main className='mx-auto w-full max-w-3xl px-3 sm:px-0 py-4'>
+            <div className='text-sm text-muted-foreground'>Loading questions…</div>
+          </Main>
+        </div>
+      </>
+    )
   }
 
   if (loadError || !questions || !question) {

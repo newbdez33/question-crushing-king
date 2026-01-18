@@ -18,20 +18,24 @@ import { Main } from '@/components/layout/main'
 import { ProfileDropdown } from '@/components/profile-dropdown'
 import { Search } from '@/components/search'
 import { ThemeSwitch } from '@/components/theme-switch'
+import { Skeleton } from '@/components/ui/skeleton'
 
 export function ExamsList() {
-  const { user, guestId } = useAuth()
+  const { user, guestId, loading: authLoading } = useAuth()
   const userId = user?.uid || guestId
   const { exams: allExams, loading } = useExams()
   const [remoteOwned, setRemoteOwned] = useState<Record<string, boolean>>({})
+  const [ownedLoading, setOwnedLoading] = useState(false)
 
   useEffect(() => {
     let cancelled = false
     async function load() {
       if (!user?.uid) {
         setRemoteOwned({})
+        setOwnedLoading(false)
         return
       }
+      setOwnedLoading(true)
       const settings = await RemoteProgress.getUserSettings(user.uid)
       if (cancelled) return
       const owned: Record<string, boolean> = {}
@@ -39,6 +43,7 @@ export function ExamsList() {
         if (s.owned === true) owned[examId] = true
       })
       setRemoteOwned(owned)
+      setOwnedLoading(false)
     }
     void load()
     return () => {
@@ -72,9 +77,25 @@ export function ExamsList() {
           <h1 className='text-2xl font-bold tracking-tight'>My Exams</h1>
         </div>
 
-        {loading ? (
-          <div className='py-10 text-center text-muted-foreground'>
-            Loading exams...
+        {(loading || ownedLoading || authLoading || !userId) ? (
+          <div className='grid gap-4 sm:grid-cols-2 lg:grid-cols-3'>
+            {Array.from({ length: 6 }).map((_, i) => (
+              <Card key={i} className='h-full'>
+                <CardHeader>
+                  <div className='flex items-center justify-between'>
+                    <Skeleton className='h-5 w-40' />
+                    <Skeleton className='h-5 w-5 rounded-md' />
+                  </div>
+                  <Skeleton className='mt-2 h-4 w-3/4' />
+                </CardHeader>
+                <CardContent>
+                  <div className='flex justify-between'>
+                    <Skeleton className='h-4 w-24' />
+                    <Skeleton className='h-4 w-32' />
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
           </div>
         ) : myExams.length === 0 ? (
           <div className='flex flex-col items-center justify-center py-20 text-center'>
