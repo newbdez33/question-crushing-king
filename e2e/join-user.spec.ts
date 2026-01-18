@@ -52,5 +52,16 @@ test.describe('User Join Exam with screenshots', () => {
     await expect(page.getByRole('heading', { name: /My Exams/i })).toBeVisible()
     await expect(page.getByText(/SOA-C03 \(Demo\)/i)).toBeVisible()
     await capture(page, '09-my-exams-after-reload')
+
+    const deleted = await page.evaluate(async () => {
+      const fn = (window as unknown as { __deleteCurrentUser?: () => Promise<void> })
+        .__deleteCurrentUser
+      if (typeof fn === 'function') {
+        await fn()
+        return true
+      }
+      return false
+    })
+    expect(deleted).toBeTruthy()
   })
 })

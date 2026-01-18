@@ -31,10 +31,10 @@ export function StudySidebar({
         </div>
       </CardHeader>
 
-      <CardContent className='space-y-6'>
+      <CardContent className='space-y-4'>
         <div className='space-y-4'>
-          <div className='max-h-[260px] overflow-y-auto pr-2'>
-            <div className='grid grid-cols-5 gap-2'>
+          <div className='max-h-[260px] overflow-y-auto pr-1'>
+            <div className='grid grid-cols-5 gap-1'>
               {questions.map((q, idx) => {
                 const isCurrent = idx === currentQuestionIndex
                 return (
@@ -42,9 +42,9 @@ export function StudySidebar({
                     key={q.id}
                     onClick={() => onNavigate(idx)}
                     className={cn(
-                      'h-8 w-full rounded border-2 text-xs font-medium transition-colors',
+                      'h-7 w-full rounded border text-xs font-medium transition-colors',
                       isCurrent
-                        ? 'border-transparent ring-2 ring-blue-500'
+                        ? 'border-transparent ring-2 ring-blue-500 ring-offset-2 ring-offset-background'
                         : 'border-transparent',
                       'bg-muted text-muted-foreground hover:bg-muted/80'
                     )}
