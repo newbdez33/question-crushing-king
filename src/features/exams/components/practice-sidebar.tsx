@@ -76,7 +76,7 @@ export function PracticeSidebar({
       <CardContent className='space-y-4'>
         {/* Answer Grid */}
           <div className='space-y-4'>
-          <div className='max-h-[260px] overflow-y-auto px-2'>
+          <div className='max-h-[278px] overflow-y-auto px-2'>
             <div className='grid grid-cols-5 gap-2'>
               {questions.map((q, idx) => {
                 const status = settings.mistakesMode
