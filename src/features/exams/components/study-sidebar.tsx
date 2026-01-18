@@ -44,7 +44,7 @@ export function StudySidebar({
                     className={cn(
                       'h-8 w-full rounded border-2 text-xs font-medium transition-colors',
                       isCurrent
-                        ? 'border-transparent ring-1 ring-border'
+                        ? 'border-transparent ring-2 ring-blue-500'
                         : 'border-transparent',
                       'bg-muted text-muted-foreground hover:bg-muted/80'
                     )}
