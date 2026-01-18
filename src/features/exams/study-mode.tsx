@@ -399,7 +399,7 @@ export function StudyMode({ examId }: StudyModeProps) {
       </Header>
 
       <div className='flex flex-1 items-start justify-center gap-2 pt-0 sm:gap-4'>
-        <div className='w-full max-w-3xl px-2 sm:px-4'>
+        <div className='w-full max-w-3xl px-0 sm:px-0'>
           <Main
             className={cn(
               'w-full px-0 py-2 pb-[calc(var(--mobile-bar-height,0px)+env(safe-area-inset-bottom))] text-xs sm:py-6 lg:pr-0',
