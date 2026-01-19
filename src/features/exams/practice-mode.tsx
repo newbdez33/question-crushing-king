@@ -870,10 +870,10 @@ export function PracticeMode({
     )
   }
 
-  const fontSizeSmClass = {
-    small: 'sm:text-sm',
-    normal: 'sm:text-base',
-    large: 'sm:text-lg',
+  const fontSizeClass = {
+    small: 'text-xs sm:text-sm',
+    normal: 'text-sm sm:text-base',
+    large: 'text-base sm:text-lg',
   }[settings.fontSize]
 
   return (
@@ -898,8 +898,8 @@ export function PracticeMode({
         <div className='w-full max-w-3xl px-0 sm:px-0'>
           <Main
             className={cn(
-              'w-full px-0 py-2 pb-[calc(var(--mobile-bar-height,0px)+env(safe-area-inset-bottom))] text-xs sm:py-6 lg:pr-0',
-              fontSizeSmClass
+              'w-full px-0 py-2 pb-[calc(var(--mobile-bar-height,0px)+env(safe-area-inset-bottom))] sm:py-6 lg:pr-0',
+              fontSizeClass
             )}
           >
             <Card className='gap-3 py-3 sm:gap-6 sm:py-6'>
@@ -986,7 +986,7 @@ export function PracticeMode({
                             htmlFor={`option-${idx}`}
                             className={cn(
                               'flex-1 cursor-pointer text-xs leading-relaxed font-normal',
-                              fontSizeSmClass
+                              fontSizeClass
                             )}
                           >
                             {option.html
@@ -1054,7 +1054,7 @@ export function PracticeMode({
                             htmlFor={`option-${idx}`}
                             className={cn(
                               'flex-1 cursor-pointer text-xs leading-relaxed font-normal',
-                              fontSizeSmClass
+                              fontSizeClass
                             )}
                           >
                             {option.html
@@ -1178,6 +1178,8 @@ export function PracticeMode({
         onToggleBookmark={toggleBookmark}
         mistakesMode={settings.mistakesMode}
         mistakesSessionStatus={mistakesSessionStatus}
+        settings={settings}
+        onSettingsChange={handleSettingsChange}
       />
 
       <AlertDialog open={showClearConfirm} onOpenChange={setShowClearConfirm}>

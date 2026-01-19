@@ -580,11 +580,11 @@ export function ExamMode({
         <div className='w-full max-w-3xl px-0 sm:px-0'>
           <Main
             className={cn(
-              'w-full px-0 py-2 pb-[calc(var(--mobile-bar-height,0px)+env(safe-area-inset-bottom))] text-xs sm:py-6 lg:pr-0',
+              'w-full px-0 py-2 pb-[calc(var(--mobile-bar-height,0px)+env(safe-area-inset-bottom))] sm:py-6 lg:pr-0',
               {
-                'sm:text-sm': settings.fontSize === 'small',
-                'sm:text-base': settings.fontSize === 'normal',
-                'sm:text-lg': settings.fontSize === 'large',
+                'text-xs sm:text-sm': settings.fontSize === 'small',
+                'text-sm sm:text-base': settings.fontSize === 'normal',
+                'text-base sm:text-lg': settings.fontSize === 'large',
               }
             )}
           >
@@ -825,6 +825,8 @@ export function ExamMode({
         onToggleBookmark={toggleBookmark}
         mistakesMode={false}
         mistakesSessionStatus={{}}
+        settings={settings}
+        onSettingsChange={handleSettingsChange}
       />
     </div>
   )

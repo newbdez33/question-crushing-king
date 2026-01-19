@@ -50,7 +50,7 @@ Exam Topics is a web-based application designed to help users practice for certi
   - **Footer Navigation**: "Previous" (Icon), "Next" (Icon), "Submit Answer" (Text).
   - **Responsive**:
     - **Desktop (≥ lg)**: 右侧 Sidebar，包含答题卡与设置面板（Auto next、Font size、Consecutive correct）
-    - **Mobile (< lg)**: 隐藏右侧 Sidebar，显示底部 Tabbar（Bookmark、Correct、Wrong、Answer Card）。点击 Answer Card 打开底部弹层 Sheet，展示答题卡网格并支持跳题
+    - **Mobile (< lg)**: 隐藏右侧 Sidebar，显示底部 Tabbar（Bookmark、Correct、Wrong、Answer Card）。点击 Answer Card 打开底部弹层 Sheet，展示答题卡网格、Font size 设置，并支持跳题。Sheet 支持下滑关闭
 - **Interaction**:
   - User selects answer(s) and clicks "Submit".
   - **Immediate Feedback**:
@@ -72,7 +72,7 @@ Exam Topics is a web-based application designed to help users practice for certi
   - **Footer**: Previous/Next 图标按钮
   - **Responsive**:
     - **Desktop (≥ lg)**: 右侧 Sidebar 提供 Answer Sheet（题号跳转）与 Settings（Font size）
-    - **Mobile (< lg)**: 底部栏包含 Answer Card 入口，点击打开 Sheet 显示答题卡网格
+    - **Mobile (< lg)**: 底部栏包含 Answer Card 入口，点击打开 Sheet 显示答题卡网格与 Font size 设置。Sheet 支持下滑关闭
 - **Behavior**:
   - 自动展示正确答案与解释
   - 支持通过答题卡跳题
