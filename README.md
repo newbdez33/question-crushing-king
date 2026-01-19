@@ -11,6 +11,7 @@ Question bank practice application based on Shadcn Admin Dashboard, designed to 
 - **Image Mapping**: Image static resources mapped to `public/data/images`
 - **UI/UX**: Retains dark mode, responsive layout, and sidebar capabilities from the original template
 - **Exam Mode**: Simulated exam by randomly selecting a specified number of questions. See functional and technical docs: [EXAM_MODE_PLAN.md](./docs/EXAM_MODE_PLAN.md), [EXAM_MODE_TECH.md](./docs/EXAM_MODE_TECH.md)
+- **Submission Rules**: Single-choice requires exactly 1 selection; Multiple-choice requires selecting exactly the required number of options (derived from correct answers) to enable the Submit button in both Practice and Exam modes
 - **My Exams**: Personalized list of joined exams. Users can browse all available exams in the Dashboard and "Join" them from the details page.
 
 ## Auth & Persistence (Firebase + LocalStorage + Realtime DB)

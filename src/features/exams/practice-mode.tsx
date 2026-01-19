@@ -584,7 +584,12 @@ export function PracticeMode({
   }, [exam, examId, fallbackQuestions])
 
   const question = questions?.[currentQuestionIndex]
-  const canSubmit = !isSubmitted && selectedAnswers.length > 0
+  const canSubmit =
+    !isSubmitted &&
+    !!question &&
+    (question.type === 'single'
+      ? selectedAnswers.length === 1
+      : selectedAnswers.length === question.requiredSelections)
   const isCorrect =
     isSubmitted &&
     question &&
