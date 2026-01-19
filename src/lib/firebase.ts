@@ -1,6 +1,6 @@
 import { getAnalytics } from 'firebase/analytics'
 import { initializeApp } from 'firebase/app'
-import { getAuth } from 'firebase/auth'
+import { getAuth, deleteUser } from 'firebase/auth'
 import { getDatabase } from 'firebase/database'
 
 const firebaseConfig = {
@@ -23,3 +23,13 @@ export const analytics =
     ? getAnalytics(app)
     : null
 export const db = getDatabase(app)
+export async function deleteCurrentUser() {
+  const u = auth.currentUser
+  if (u) {
+    await deleteUser(u)
+  }
+}
+if (typeof window !== 'undefined') {
+  ;(window as unknown as { __deleteCurrentUser?: () => Promise<void> }).__deleteCurrentUser =
+    deleteCurrentUser
+}

@@ -10,7 +10,7 @@ Question bank practice application based on Shadcn Admin Dashboard, designed to 
 - **Rich Content**: Question stem and options support HTML content (including images)
 - **Image Mapping**: Image static resources mapped to `public/data/images`
 - **UI/UX**: Retains dark mode, responsive layout, and sidebar capabilities from the original template
-- **Exam Mode**: Simulated exam by randomly selecting a specified number of questions. See functional and technical docs: [EXAM_MODE_PLAN.md](./EXAM_MODE_PLAN.md), [EXAM_MODE_TECH.md](./EXAM_MODE_TECH.md)
+- **Exam Mode**: Simulated exam by randomly selecting a specified number of questions. See functional and technical docs: [EXAM_MODE_PLAN.md](./docs/EXAM_MODE_PLAN.md), [EXAM_MODE_TECH.md](./docs/EXAM_MODE_TECH.md)
 - **My Exams**: Personalized list of joined exams. Users can browse all available exams in the Dashboard and "Join" them from the details page.
 
 ## Auth & Persistence (Firebase + LocalStorage + Realtime DB)
@@ -67,6 +67,17 @@ Value (JSON Object):
     - `bookmarked` uses logical OR.
   - After merge, push the User’s local progress to Firebase for cross-device availability.
 
+#### Joined Exams Sync (owned)
+
+- **Path**: `examtopics_progress/{uid}/_settings/{examId}`
+- **Field**: `owned: true` when user clicks “Join My Exams”
+- **Behavior**:
+  - Guest users: write to localStorage only
+  - Authenticated users: write both localStorage and Firebase settings
+  - On login: merge Guest settings into User, push merged settings to Firebase, then hydrate local settings from Firebase for consistency
+- **Display**:
+  - “My Exams” list uses Firebase settings when logged in; uses localStorage when not logged in
+
 ### Firebase Setup
 
 - **Environment Variables**:
@@ -116,7 +127,11 @@ Value (JSON Object):
 **Build Tool:** [Vite](https://vitejs.dev/)  
 **Routing:** [TanStack Router](https://tanstack.com/router/latest)  
 **Type System:** [TypeScript](https://www.typescriptlang.org/)  
-**Forms/State/Etc:** See root directory [TEMPLATE.md](./TEMPLATE.md)
+**Forms/State/Etc:** See [TEMPLATE.md](./docs/TEMPLATE.md)
+
+## Theme & Styling
+
+- Theme tokens and customization guide: [docs/THEME.md](./docs/THEME.md)
 
 ## Local Development
 
@@ -150,23 +165,41 @@ Start the server (pre-check runs automatically)
   pnpm dev
 ```
 
-## Question Bank JSON & DEMO Data
+## Testing
 
-The application attempts to load DEMO question banks from `public/data/{examId}.json`:
+- Unit Tests (Vitest):
+  - `pnpm test`
+  - Coverage: `pnpm test:coverage`
+- E2E Tests (Playwright):
+  - `pnpm test:e2e`
+  - UI mode: `pnpm test:e2e:ui`
 
-- In the "My Question Banks" list, `examId` appears as a route parameter at `/exams/$examId`
-- After entering an exam details page, you can click:
+### Regression: Joined Exam Sync
+
+- Covers:
+  - Join action writes `owned: true` to Firebase settings for authenticated users
+  - Auth login merges Guest settings → User and pushes to Firebase, then hydrates local settings from Firebase
+  - “My Exams” list uses remote settings when authenticated
+
+## Exams Library
+
+Exams library is registry-driven via `public/data/index.json`. Each exam’s questions live in `public/data/{examId}.json`.
+
+- Routing
+  - Exams list and details use dynamic routes: `/exams`, `/exams/$examId`
   - Practice Mode: `/exams/$examId/practice`
   - Study Mode: `/exams/$examId/study`
-- Both pages prioritize reading DEMO data from `/public/data/{examId}.json`;
-  - If the corresponding JSON does not exist, it falls back to the built-in mock question bank (`src/features/exams/data/mock-exams.ts`)
+- Loading
+  - The app first reads `public/data/index.json` to get the list of available exams and their metadata (title, description).
+  - For each exam, the app loads `public/data/{examId}.json` and derives `questionCount` from `questions.length`.
+  - If `{examId}.json` does not exist, the app falls back to built-in mock data (`src/features/exams/data/mock-exams.ts`).
 
 ### JSON Structure (using `SOA-C03.json` as an example)
 
 - File Path: `public/data/SOA-C03.json`
 - Top-level Fields:
-  - `questions`: DemoQuestion[]
-- DemoQuestion Structure:
+  - `questions`: Question[]
+- Question object structure:
   - `id`: string
   - `questionNumber`: number
   - `type`: string
@@ -174,6 +207,21 @@ The application attempts to load DEMO question banks from `public/data/{examId}.
   - `options`: { `label`: string; `content`: string }[]
   - `correctAnswer`: string (Corresponds to `label`)
   - `explanation?`: string (Explanation, supports HTML)
+
+### Exam Registry (`index.json`)
+
+- File Path: `public/data/index.json`
+- Structure:
+  - `exams`: Array of objects: `{ id: string; title: string; description: string; questionCount: number }`
+- Example:
+  ```json
+  {
+    "exams": [
+      { "id": "SOA-C03", "title": "SOA-C03", "description": "Validates ability to deploy, manage, and operate workloads on AWS, including monitoring, incident response, automation, and cost control.", "questionCount": 65 },
+      { "id": "SAA-C03", "title": "SAA-C03", "description": "Validates ability to design resilient, high-performing, secure, and cost-optimized architectures on AWS.", "questionCount": 1019 }
+    ]
+  }
+  ```
 
 ### Image Reference Convention
 
@@ -260,7 +308,7 @@ Route: `/exams/$examId/practice?mode=mistakes`
   - After answering in this session, tiles turn green/red based on the current attempt result, independent of the global stored status.
   - The **Consecutive correct** value is persisted per user+exam in `localStorage` and, for authenticated users, also synced to Firebase for cross-device consistency.
 
-For more details on the overall tech stack and directory structure, see [TEMPLATE.md](./TEMPLATE.md).
+For more details on the overall tech stack and directory structure, see [TEMPLATE.md](./docs/TEMPLATE.md).
 
 ## Recent UI Updates
 
@@ -290,3 +338,14 @@ For more details on the overall tech stack and directory structure, see [TEMPLAT
   - Keep UI types in sync with data (e.g., SidebarData requires `teams: Team[]`).
   - Avoid implicit `any[]`; annotate arrays like fireworks `Particle[][]`.
   - For `navigate({ search })`, let the updater infer or match the route’s validated search keys.
+
+## Docs
+
+- Project Overview: [PLAN.md](./docs/PLAN.md)
+- Exam Mode (Design): [EXAM_MODE_PLAN.md](./docs/EXAM_MODE_PLAN.md)
+- Exam Mode (Tech): [EXAM_MODE_TECH.md](./docs/EXAM_MODE_TECH.md)
+- My Exams Design: [DESIGN_MY_EXAMS.md](./docs/DESIGN_MY_EXAMS.md)
+- Testing Strategy: [TEST_AUTOMATION_PLAN.md](./docs/TEST_AUTOMATION_PLAN.md)
+- User Data & Firebase: [USER_DATA.md](./docs/USER_DATA.md)
+- Theme Guide: [THEME.md](./docs/THEME.md)
+- TODOs: [TODO.md](./docs/TODO.md)

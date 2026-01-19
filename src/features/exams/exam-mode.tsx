@@ -40,23 +40,23 @@ interface ExamModeProps {
   initialQuestionIndex?: number
 }
 
-type DemoOption = {
+type ExamOption = {
   label: string
   content: string
 }
 
-type DemoQuestion = {
+type ExamQuestion = {
   id: string
   questionNumber: number
   type: string
   content: string
-  options: DemoOption[]
+  options: ExamOption[]
   correctAnswer: string
   explanation?: string
 }
 
-type DemoFile = {
-  questions: DemoQuestion[]
+type ExamFile = {
+  questions: ExamQuestion[]
 }
 
 type PracticeQuestion = {
@@ -213,7 +213,7 @@ export function ExamMode({
         explanation: q.explanation,
       }))
     : null
-  const [allQuestions, setAllQuestions] = useState<PracticeQuestion[] | null>(
+  const [_allQuestions, setAllQuestions] = useState<PracticeQuestion[] | null>(
     fallbackQuestions
   )
   const [questions, setQuestions] = useState<PracticeQuestion[] | null>(null)
@@ -298,7 +298,7 @@ export function ExamMode({
         if (!response.ok) {
           throw new Error(`HTTP ${response.status}`)
         }
-        const data = (await response.json()) as DemoFile
+        const data = (await response.json()) as ExamFile
         const mappedAll = (data.questions ?? [])
           .slice()
           .sort((a, b) => a.questionNumber - b.questionNumber)
@@ -345,8 +345,8 @@ export function ExamMode({
           selected = Array.from(indices)
             .map((i) => available[i])
             .sort((a, b) => {
-              const na = allQuestions?.findIndex((q) => q.id === a.id) ?? 0
-              const nb = allQuestions?.findIndex((q) => q.id === b.id) ?? 0
+              const na = available.findIndex((q) => q.id === a.id)
+              const nb = available.findIndex((q) => q.id === b.id)
               return na - nb
             })
         }
@@ -576,8 +576,8 @@ export function ExamMode({
         </div>
       </Header>
 
-      <div className='flex flex-1 items-start justify-center gap-2 pt-0 sm:gap-4'>
-        <div className='w-full max-w-3xl px-2 sm:px-4'>
+      <div className='flex flex-1 items-start justify-center gap-2 pt-0 sm:gap-4 px-2'>
+        <div className='w-full max-w-3xl px-0 sm:px-0'>
           <Main
             className={cn(
               'w-full px-0 py-2 pb-[calc(var(--mobile-bar-height,0px)+env(safe-area-inset-bottom))] text-xs sm:py-6 lg:pr-0',
@@ -802,7 +802,7 @@ export function ExamMode({
           <div className='h-[calc(var(--mobile-bar-height,0px)+env(safe-area-inset-bottom)+0.5rem)] lg:hidden' />
         </div>
 
-        <div className='hidden py-6 pl-4 lg:block'>
+        <div className='hidden py-6 pl-0 lg:block'>
           <PracticeSidebar
             questions={questions}
             progress={examProgress}

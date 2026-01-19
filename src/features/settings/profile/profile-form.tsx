@@ -93,7 +93,7 @@ export function ProfileForm() {
       }
     }
     void run()
-  }, [user])
+  }, [user, form])
 
   return (
     <Form {...form}>

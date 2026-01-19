@@ -125,6 +125,15 @@ export const ProgressService = {
     this._saveSettingsToStorage(all)
   },
 
+  saveUserSettings(userId: string, settings: UserSettings) {
+    const all = this.getAllSettings()
+    all[userId] = {
+      ...(all[userId] || {}),
+      ...settings,
+    }
+    this._saveSettingsToStorage(all)
+  },
+
   clearExamProgress(userId: string, examId: string) {
     const all = this.getAllProgress()
     if (all[userId] && all[userId][examId]) {
@@ -212,5 +221,24 @@ export const ProgressService = {
 
   _saveSettingsToStorage(data: AppSettings) {
     localStorage.setItem(SETTINGS_KEY, JSON.stringify(data))
+  },
+
+  mergeSettings(sourceUserId: string, targetUserId: string) {
+    const all = this.getAllSettings()
+    const sourceData = all[sourceUserId]
+    if (!sourceData) return
+    if (!all[targetUserId]) all[targetUserId] = {}
+    Object.keys(sourceData).forEach((examId) => {
+      const source = sourceData[examId] || {}
+      const target = all[targetUserId][examId] || {}
+      const owned =
+        (source.owned === true || target.owned === true) ? true : undefined
+      all[targetUserId][examId] = {
+        ...source,
+        ...target,
+        owned,
+      }
+    })
+    this._saveSettingsToStorage(all)
   },
 }

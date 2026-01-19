@@ -31,9 +31,9 @@ export function StudySidebar({
         </div>
       </CardHeader>
 
-      <CardContent className='space-y-6'>
+      <CardContent className='space-y-4'>
         <div className='space-y-4'>
-          <div className='max-h-[260px] overflow-y-auto pr-2'>
+          <div className='max-h-[278px] overflow-y-auto px-2 py-1'>
             <div className='grid grid-cols-5 gap-2'>
               {questions.map((q, idx) => {
                 const isCurrent = idx === currentQuestionIndex
@@ -44,7 +44,7 @@ export function StudySidebar({
                     className={cn(
                       'h-8 w-full rounded border-2 text-xs font-medium transition-colors',
                       isCurrent
-                        ? 'border-primary ring-1 ring-primary'
+                        ? 'border-transparent ring-2 ring-blue-500'
                         : 'border-transparent',
                       'bg-muted text-muted-foreground hover:bg-muted/80'
                     )}

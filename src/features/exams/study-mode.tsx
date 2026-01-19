@@ -32,23 +32,23 @@ interface StudyModeProps {
   examId: string
 }
 
-type DemoOption = {
+type ExamOption = {
   label: string
   content: string
 }
 
-type DemoQuestion = {
+type ExamQuestion = {
   id: string
   questionNumber: number
   type: string
   content: string
-  options: DemoOption[]
+  options: ExamOption[]
   correctAnswer: string
   explanation?: string
 }
 
-type DemoFile = {
-  questions: DemoQuestion[]
+type ExamFile = {
+  questions: ExamQuestion[]
 }
 
 type StudyQuestion = {
@@ -238,7 +238,7 @@ export function StudyMode({ examId }: StudyModeProps) {
           throw new Error(`HTTP ${response.status}`)
         }
 
-        const data = (await response.json()) as DemoFile
+        const data = (await response.json()) as ExamFile
         const mapped = (data.questions ?? [])
           .slice()
           .sort((a, b) => a.questionNumber - b.questionNumber)
@@ -398,8 +398,8 @@ export function StudyMode({ examId }: StudyModeProps) {
         </div>
       </Header>
 
-      <div className='flex flex-1 items-start justify-center gap-2 pt-0 sm:gap-4'>
-        <div className='w-full max-w-3xl px-2 sm:px-4'>
+      <div className='flex flex-1 items-start justify-center gap-2 pt-0 sm:gap-4 px-2'>
+        <div className='w-full max-w-3xl px-0 sm:px-0'>
           <Main
             className={cn(
               'w-full px-0 py-2 pb-[calc(var(--mobile-bar-height,0px)+env(safe-area-inset-bottom))] text-xs sm:py-6 lg:pr-0',

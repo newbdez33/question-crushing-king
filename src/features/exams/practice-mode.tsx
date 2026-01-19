@@ -43,7 +43,6 @@ import {
   PracticeSidebar,
   type PracticeSettings,
 } from './components/practice-sidebar'
-import { PracticeSkeleton } from './components/practice-skeleton'
 import { mockExams } from './data/mock-exams'
 
 interface PracticeModeProps {
@@ -52,23 +51,23 @@ interface PracticeModeProps {
   initialQuestionIndex?: number
 }
 
-type DemoOption = {
+type ExamOption = {
   label: string
   content: string
 }
 
-type DemoQuestion = {
+type ExamQuestion = {
   id: string
   questionNumber: number
   type: string
   content: string
-  options: DemoOption[]
+  options: ExamOption[]
   correctAnswer: string
   explanation?: string
 }
 
-type DemoFile = {
-  questions: DemoQuestion[]
+type ExamFile = {
+  questions: ExamQuestion[]
 }
 
 type PracticeOption = {
@@ -525,7 +524,7 @@ export function PracticeMode({
           throw new Error(`HTTP ${response.status}`)
         }
 
-        const data = (await response.json()) as DemoFile
+        const data = (await response.json()) as ExamFile
         const mapped = (data.questions ?? [])
           .slice()
           .sort((a, b) => a.questionNumber - b.questionNumber)
@@ -571,7 +570,7 @@ export function PracticeMode({
         }
       } catch {
         if (!cancelled && !exam) {
-          setLoadError(`Demo data /data/${examId}.json not found.`)
+          setLoadError(`Exam data /data/${examId}.json not found.`)
         }
       } finally {
         if (!cancelled) setIsLoading(false)
@@ -830,7 +829,30 @@ export function PracticeMode({
   }
 
   if ((isLoading && !questions) || !isReady || authLoading) {
-    return <PracticeSkeleton />
+    return (
+      <>
+        <Header fixed>
+          <div className='flex items-center gap-4'>
+            <Link to='/exams/$examId' params={{ examId }}>
+              <Button variant='ghost' size='icon'>
+                <ArrowLeft className='h-4 w-4' />
+              </Button>
+            </Link>
+            <h1 className='text-lg font-semibold'>
+              {title} - {settings.mistakesMode ? 'My Mistakes' : 'Practice'}
+            </h1>
+          </div>
+          <div className='ms-auto flex items-center space-x-4'>
+            <ThemeSwitch />
+          </div>
+        </Header>
+        <div className='flex flex-1 items-start justify-center gap-2 pt-0 sm:gap-4'>
+          <Main className='mx-auto w-full max-w-3xl px-3 sm:px-0 py-4'>
+            <div className='text-sm text-muted-foreground'>Loading questions…</div>
+          </Main>
+        </div>
+      </>
+    )
   }
 
   if (loadError || !questions || !question) {
@@ -872,8 +894,8 @@ export function PracticeMode({
         </div>
       </Header>
 
-      <div className='flex flex-1 items-start justify-center gap-2 pt-0 sm:gap-4'>
-        <div className='w-full max-w-3xl px-2 sm:px-4'>
+      <div className='flex flex-1 items-start justify-center gap-2 pt-0 sm:gap-4 px-2'>
+        <div className='w-full max-w-3xl px-0 sm:px-0'>
           <Main
             className={cn(
               'w-full px-0 py-2 pb-[calc(var(--mobile-bar-height,0px)+env(safe-area-inset-bottom))] text-xs sm:py-6 lg:pr-0',
@@ -1131,7 +1153,7 @@ export function PracticeMode({
         </div>
 
         {/* Right Sidebar */}
-        <div className='hidden py-6 pl-4 lg:block'>
+        <div className='hidden py-6 pl-0 lg:block'>
           <PracticeSidebar
             questions={questions}
             progress={examProgress}

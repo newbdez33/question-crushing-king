@@ -9,54 +9,56 @@ export type Exam = {
   lastStudied?: string
 }
 
-type DemoExam = {
-  id: string
-  title: string
-  description: string
-  questionCount?: number
+type IndexFile = {
+  exams?: Array<{ id: string; title?: string; description?: string; questionCount?: number }>
 }
 
-const DEMO_EXAMS: DemoExam[] = [
-  {
-    id: 'SOA-C03',
-    title: 'SOA-C03 (Demo)',
-    description: 'Demo from /public/data/SOA-C03.json',
-  },
-]
-
 export function useExams() {
-  const [demoCounts, setDemoCounts] = useState<Record<string, number>>({})
+  const [examsFromIndex, setExamsFromIndex] = useState<Exam[]>([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     let cancelled = false
 
-    async function loadCounts() {
-      const next: Record<string, number> = {}
+    async function loadFromIndex() {
+      const next: Exam[] = []
 
-      await Promise.all(
-        DEMO_EXAMS.map(async (exam) => {
-          try {
-            const res = await fetch(`/data/${exam.id}.json`)
-            if (!res.ok) return
-            const data = (await res.json()) as { questions?: unknown[] }
-            const count = Array.isArray(data.questions)
-              ? data.questions.length
-              : 0
-            next[exam.id] = count
-          } catch {
-            // ignore
+      try {
+        const res = await fetch(`/data/index.json`)
+        if (!res.ok) {
+          if (!cancelled) {
+            setExamsFromIndex([])
+            setLoading(false)
           }
-        })
-      )
+          return
+        }
+        const idx = (await res.json()) as IndexFile
+        const entries = Array.isArray(idx.exams) ? idx.exams : []
+        for (const entry of entries) {
+          const id = entry.id
+          if (!id) continue
+          next.push({
+            id,
+            title: entry.title ?? id,
+            description: entry.description ?? `/public/data/${id}.json`,
+            questionCount: typeof entry.questionCount === 'number' ? entry.questionCount : undefined,
+            lastStudied: undefined,
+          })
+        }
+      } catch {
+        if (!cancelled) {
+          setExamsFromIndex([])
+          setLoading(false)
+        }
+      }
 
       if (!cancelled) {
-        setDemoCounts(next)
+        setExamsFromIndex(next)
         setLoading(false)
       }
     }
 
-    void loadCounts()
+    void loadFromIndex()
     return () => {
       cancelled = true
     }
@@ -65,16 +67,10 @@ export function useExams() {
   const allExams = useMemo(() => {
     const mocks = Array.isArray(mockExams) ? mockExams : []
     return [
-      ...DEMO_EXAMS.map((d) => ({
-        id: d.id,
-        title: d.title,
-        description: d.description,
-        questionCount: demoCounts[d.id] ?? d.questionCount,
-        lastStudied: undefined as string | undefined,
-      })),
+      ...examsFromIndex,
       ...mocks,
     ]
-  }, [demoCounts])
+  }, [examsFromIndex])
 
   return { exams: allExams, loading }
 }

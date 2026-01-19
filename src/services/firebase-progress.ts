@@ -6,6 +6,7 @@ import type {
   ExamSettings,
   QuestionProgress,
   UserProgress,
+  UserSettings,
 } from './progress-service'
 
 const BASE = 'examtopics_progress'
@@ -149,4 +150,31 @@ export async function getExamSettings(
   const snap = await get(r)
   const val = snap.val() as ExamSettings | null
   return val || {}
+}
+
+export async function getUserSettings(userId: string): Promise<UserSettings> {
+  const r = ref(db, `${BASE}/${userId}/${SETTINGS_PATH}`)
+  const snap = await get(r)
+  const val = snap.val() as UserSettings | null
+  return val || {}
+}
+
+export async function mergeLocalSettingsIntoRemote(
+  userId: string,
+  local: UserSettings
+) {
+  const updates: Record<string, unknown> = {}
+  Object.entries(local).forEach(([examId, settings]) => {
+    const base = `${BASE}/${userId}/${SETTINGS_PATH}/${examId}`
+    Object.entries(settings).forEach(([k, v]) => {
+      updates[`${base}/${k}`] = v ?? null
+    })
+  })
+  if (Object.keys(updates).length > 0) {
+    try {
+      await update(ref(db), updates)
+    } catch {
+      toast.error('Failed to push settings to cloud')
+    }
+  }
 }

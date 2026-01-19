@@ -73,10 +73,10 @@ export function PracticeSidebar({
         </div>
       </CardHeader>
 
-      <CardContent className='space-y-6'>
+      <CardContent className='space-y-4'>
         {/* Answer Grid */}
-        <div className='space-y-4'>
-          <div className='max-h-[260px] overflow-y-auto pr-2'>
+          <div className='space-y-4'>
+          <div className='max-h-[278px] overflow-y-auto px-2 py-1'>
             <div className='grid grid-cols-5 gap-2'>
               {questions.map((q, idx) => {
                 const status = settings.mistakesMode
@@ -90,7 +90,9 @@ export function PracticeSidebar({
                     onClick={() => onNavigate(idx)}
                     className={cn(
                       'h-8 w-full rounded border-2 text-xs font-medium transition-colors',
-                      isCurrent ? 'border-primary' : 'border-transparent',
+                      isCurrent
+                        ? 'border-transparent ring-2 ring-blue-500'
+                        : 'border-transparent',
                       status === 'correct'
                         ? 'bg-green-500 text-white hover:bg-green-600'
                         : status === 'incorrect'

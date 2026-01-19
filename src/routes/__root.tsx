@@ -15,8 +15,11 @@ export const Route = createRootRouteWithContext<{
   component: () => {
     const showDevtools = import.meta.env.VITE_SHOW_DEVTOOLS === '1'
     const isEnvValid =
-      !!import.meta.env.VITE_CLERK_PUBLISHABLE_KEY &&
-      !!import.meta.env.VITE_FIREBASE_API_KEY
+      !!import.meta.env.VITE_FIREBASE_API_KEY &&
+      !!import.meta.env.VITE_FIREBASE_AUTH_DOMAIN &&
+      !!import.meta.env.VITE_FIREBASE_PROJECT_ID &&
+      !!import.meta.env.VITE_FIREBASE_APP_ID &&
+      !!import.meta.env.VITE_FIREBASE_DATABASE_URL
 
     if (!isEnvValid) {
       return <EnvError />

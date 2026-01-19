@@ -45,10 +45,9 @@
 
 ### Data Loading Priority
 
-在 exams 相关页面，会优先尝试加载 DEMO JSON：
-
-- `/data/${examId}.json`（对应文件 `public/data/${examId}.json`）
-- 如果 DEMO JSON 不存在，则回退使用内置 mock 数据（`src/features/exams/data/mock-exams.ts`）
+- 读取 `public/data/index.json` 获得当前可用考试的列表与元信息（`id`, `title`, `description`）
+- 对每个考试从 `/data/${examId}.json`（对应 `public/data/${examId}.json`）加载题库，并基于 `questions.length` 计算题量
+- 若 `{examId}.json` 不存在，则回退到内置 mock 数据（`src/features/exams/data/mock-exams.ts`）
 
 ### HTML + Images Rendering
 
@@ -75,3 +74,4 @@
 
 - Practice mode: [practice-mode.tsx](file:///c:/Users/newbd/projects/dev/examtopics/src/features/exams/practice-mode.tsx)
 - Study mode: [study-mode.tsx](file:///c:/Users/newbd/projects/dev/examtopics/src/features/exams/study-mode.tsx)
+

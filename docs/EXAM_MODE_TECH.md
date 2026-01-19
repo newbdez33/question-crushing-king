@@ -37,7 +37,7 @@
 - 全局进度（复用）：
   - 本地： [progress-service.ts](file:///c:/Users/newbd/projects/dev/examtopics/src/services/progress-service.ts)
   - 云端： [firebase-progress.ts](file:///c:/Users/newbd/projects/dev/examtopics/src/services/firebase-progress.ts)
-  - 字段：`status`、`userSelection`、`lastAnswered`、`consecutiveCorrect`、`timesWrong`、`bookmarked`（详见 [USER_DATA.md](file:///c:/Users/newbd/projects/dev/examtopics/USER_DATA.md)）
+  - 字段：`status`、`userSelection`、`lastAnswered`、`consecutiveCorrect`、`timesWrong`、`bookmarked`（详见 [USER_DATA.md](file:///c:/Users/newbd/projects/dev/examtopics/docs/USER_DATA.md)）
 
 ## 题目加载与渲染
 
