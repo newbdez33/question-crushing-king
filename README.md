@@ -93,7 +93,7 @@ Value (JSON Object):
 - **Analytics in Development**:
   - To avoid certificate issues when loading Google Tag Manager (`gtag.js`) locally, Firebase Analytics is disabled in development.
   - Production-only initialization conditions: `import.meta.env.PROD` + browser environment + non-empty `measurementId`.
-  - Implementation: [firebase.ts](file:///c:/Users/newbd/projects/dev/examtopics/src/lib/firebase.ts#L17-L22)
+  - Implementation: [src/lib/firebase.ts](src/lib/firebase.ts#L17-L22)
 - **ENV Guidance**:
   - Development: No need to set `VITE_FIREBASE_MEASUREMENT_ID` (even if set, Analytics won’t initialize).
   - Production: Set `VITE_FIREBASE_MEASUREMENT_ID` to enable Analytics; leave empty to disable.
@@ -244,8 +244,8 @@ Conventions:
 
 Relevant implementations can be found in:
 
-- Practice Mode Component: [practice-mode.tsx](file:///c:/Users/newbd/projects/dev/examtopics/src/features/exams/practice-mode.tsx)
-- Study Mode Component: [study-mode.tsx](file:///c:/Users/newbd/projects/dev/examtopics/src/features/exams/study-mode.tsx)
+- Practice Mode Component: [src/features/exams/practice-mode.tsx](src/features/exams/practice-mode.tsx)
+- Study Mode Component: [src/features/exams/study-mode.tsx](src/features/exams/study-mode.tsx)
 
 ## Practice Mode Guide
 

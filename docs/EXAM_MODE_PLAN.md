@@ -28,11 +28,11 @@
   - `seed`：随机种子（可选，便于复现）
   - `q`：当前题号（1-based）
   - `mode=exam`：用于界面层区分
-- 路由与题号同步参考：[practice.tsx](file:///c:/Users/newbd/projects/dev/examtopics/src/routes/_authenticated/exams/$examId/practice.tsx) 与题号同步逻辑 [practice-mode.tsx:L236-L251](file:///c:/Users/newbd/projects/dev/examtopics/src/features/exams/practice-mode.tsx#L236-L251)。
+- 路由与题号同步参考：[src/routes/_authenticated/exams/$examId/practice.tsx](src/routes/_authenticated/exams/$examId/practice.tsx) 与题号同步逻辑 [src/features/exams/practice-mode.tsx](src/features/exams/practice-mode.tsx#L236-L251)。
 
 ## 题目选择
 
-- 来源：该考试的 `allQuestions`（与 Practice Mode 相同加载流程 [practice-mode.tsx:L446-L509](file:///c:/Users/newbd/projects/dev/examtopics/src/features/exams/practice-mode.tsx#L446-L509)）。
+- 来源：该考试的 `allQuestions`（与 Practice Mode 相同加载流程 [src/features/exams/practice-mode.tsx](src/features/exams/practice-mode.tsx#L446-L509)）。
 - 抽样规则：
   - `count >= allQuestions.length`：选取全部；
   - 否则基于 `seed` 的可复现随机，进行无重复抽样；
@@ -42,8 +42,8 @@
 ## UI/UX
 
 - 复用 Practice Mode 布局与组件：
-  - 桌面侧边栏题卡与设置：[practice-sidebar.tsx](file:///c:/Users/newbd/projects/dev/examtopics/src/features/exams/components/practice-sidebar.tsx)
-  - 移动端底栏：[practice-mobile-bar.tsx](file:///c:/Users/newbd/projects/dev/examtopics/src/features/exams/components/practice-mobile-bar.tsx)
+  - 桌面侧边栏题卡与设置：[src/features/exams/components/practice-sidebar.tsx](src/features/exams/components/practice-sidebar.tsx)
+  - 移动端底栏：[src/features/exams/components/practice-mobile-bar.tsx](src/features/exams/components/practice-mobile-bar.tsx)
 - 差异：
   - 头部标签显示“Exam Mode”
   - 隐藏“仅练错题”等错题模式专属控件
@@ -55,13 +55,13 @@
 - 会话内提交：在 `ExamSession` 中记录 `userSelection` 与 `isCorrect`，更新本次会话统计。
 - 全局进度与错题库：
   - 提交后调用现有进度服务，更新 `status`、`consecutiveCorrect`、`timesWrong`；
-  - 参考提交与持久化逻辑：[practice-mode.tsx:L575-L626](file:///c:/Users/newbd/projects/dev/examtopics/src/features/exams/practice-mode.tsx#L575-L626)、
-    [progress-service.ts:L86-L125](file:///c:/Users/newbd/projects/dev/examtopics/src/services/progress-service.ts#L86-L125)、
-    [firebase-progress.ts:L29-L62](file:///c:/Users/newbd/projects/dev/examtopics/src/services/firebase-progress.ts#L29-L62)。
+  - 参考提交与持久化逻辑：[src/features/exams/practice-mode.tsx](src/features/exams/practice-mode.tsx#L575-L626)、
+    [src/services/progress-service.ts](src/services/progress-service.ts#L86-L125)、
+    [src/services/firebase-progress.ts](src/services/firebase-progress.ts#L29-L62)。
 - 错题毕业规则不区分模式：
   - 错答：`timesWrong+1`，`consecutiveCorrect=0`
   - 连对：`consecutiveCorrect+1`，达阈值（默认 3）后毕业并可重置 `timesWrong=0`
-  - 过滤/毕业实现参考：[practice-mode.tsx:L260-L336](file:///c:/Users/newbd/projects/dev/examtopics/src/features/exams/practice-mode.tsx#L260-L336)。
+  - 过滤/毕业实现参考：[src/features/exams/practice-mode.tsx](src/features/exams/practice-mode.tsx#L260-L336)。
 
 ## 结果页与复盘
 
@@ -98,27 +98,27 @@
 - 设计与实现要点
   - 导航与路由
     - 移除侧边导航条目 Notifications、Display 与其对应页面容器：
-      - Settings 主页与侧边导航：[index.tsx](file:///c:/Users/newbd/projects/dev/examtopics/src/features/settings/index.tsx#L1-L74)
-      - Notifications 容器与表单：[notifications/index.tsx](file:///c:/Users/newbd/projects/dev/examtopics/src/features/settings/notifications/index.tsx#L1-L13)、[notifications-form.tsx](file:///c:/Users/newbd/projects/dev/examtopics/src/features/settings/notifications/notifications-form.tsx#L1-L220)
-      - Display 容器与表单：[display/index.tsx](file:///c:/Users/newbd/projects/dev/examtopics/src/features/settings/display/index.tsx#L1-L13)、[display-form.tsx](file:///c:/Users/newbd/projects/dev/examtopics/src/features/settings/display/display-form.tsx#L1-L121)
-    - 移除路由生成树中的注册项：[routeTree.gen.ts](file:///c:/Users/newbd/projects/dev/examtopics/src/routeTree.gen.ts#L235-L283) 与 [routeTree.gen.ts:L507-L515](file:///c:/Users/newbd/projects/dev/examtopics/src/routeTree.gen.ts#L507-L515)
+      - Settings 主页与侧边导航：[src/features/settings/index.tsx](src/features/settings/index.tsx#L1-L74)
+      - Notifications 容器与表单：[src/features/settings/notifications/index.tsx](src/features/settings/notifications/index.tsx#L1-L13)、[src/features/settings/notifications/notifications-form.tsx](src/features/settings/notifications/notifications-form.tsx#L1-L220)
+      - Display 容器与表单：[src/features/settings/display/index.tsx](src/features/settings/display/index.tsx#L1-L13)、[src/features/settings/display/display-form.tsx](src/features/settings/display/display-form.tsx#L1-L121)
+    - 移除路由生成树中的注册项：[src/routeTree.gen.ts](src/routeTree.gen.ts#L235-L283) 与 [src/routeTree.gen.ts](src/routeTree.gen.ts#L507-L515)
   - Layout 要素（统一配置入口）
     - Theme：系统/明亮/暗黑，入口位于 Config Drawer 与 Header 的 ThemeSwitch
-      - 参考：[config-drawer.tsx](file:///c:/Users/newbd/projects/dev/examtopics/src/components/config-drawer.tsx#L1-L354)、[settings/index.tsx:ThemeSwitch](file:///c:/Users/newbd/projects/dev/examtopics/src/features/settings/index.tsx#L14-L21)
+      - 参考：[src/components/config-drawer.tsx](src/components/config-drawer.tsx#L1-L354)、[src/features/settings/index.tsx](src/features/settings/index.tsx#L14-L21)
     - Sidebar Variant：inset/floating/sidebar，作用于 AppSidebar
-      - 参考：[app-sidebar.tsx](file:///c:/Users/newbd/projects/dev/examtopics/src/components/layout/app-sidebar.tsx#L1-L62)
+      - 参考：[src/components/layout/app-sidebar.tsx](src/components/layout/app-sidebar.tsx#L1-L62)
     - Collapsible 展开模式：default/icon/offcanvas，支持移动端 Sheet 与 cookie 持久化
-      - 参考：[layout-provider.tsx](file:///c:/Users/newbd/projects/dev/examtopics/src/context/layout-provider.tsx#L1-L85)、[ui/sidebar.tsx](file:///c:/Users/newbd/projects/dev/examtopics/src/components/ui/sidebar.tsx#L1-L728)
+      - 参考：[src/context/layout-provider.tsx](src/context/layout-provider.tsx#L1-L85)、[src/components/ui/sidebar.tsx](src/components/ui/sidebar.tsx#L1-L728)
     - Direction：LTR/RTL，通过 DirConfig 控制
-      - 参考：[config-drawer.tsx](file:///c:/Users/newbd/projects/dev/examtopics/src/components/config-drawer.tsx#L230-L290)
+      - 参考：[src/components/config-drawer.tsx](src/components/config-drawer.tsx#L230-L290)
     - Reset Layout：一键重置 Theme/Dir/Layout 并打开侧栏
-      - 参考：[config-drawer.tsx](file:///c:/Users/newbd/projects/dev/examtopics/src/components/config-drawer.tsx#L300-L340)
+      - 参考：[src/components/config-drawer.tsx](src/components/config-drawer.tsx#L300-L340)
     - 侧栏开合快捷键：Ctrl/Cmd + B
-      - 参考：[ui/sidebar.tsx](file:///c:/Users/newbd/projects/dev/examtopics/src/components/ui/sidebar.tsx#L74-L106)
+      - 参考：[src/components/ui/sidebar.tsx](src/components/ui/sidebar.tsx#L74-L106)
   - Settings 页面改造
     - 页面布局继续使用固定布局容器以保证两列结构与内部滚动：
-      - 主容器：[main.tsx](file:///c:/Users/newbd/projects/dev/examtopics/src/components/layout/main.tsx#L1-L27)（`fixed`）
-      - 适配固定高度：[authenticated-layout.tsx](file:///c:/Users/newbd/projects/dev/examtopics/src/components/layout/authenticated-layout.tsx#L20-L34)
+      - 主容器：[src/components/layout/main.tsx](src/components/layout/main.tsx#L1-L27)（`fixed`）
+      - 适配固定高度：[src/components/layout/authenticated-layout.tsx](src/components/layout/authenticated-layout.tsx#L20-L34)
     - 保留分区：Profile、Account、Appearance
       - Appearance 聚焦主题设置；集成或复用 Header 的 ThemeSwitch，不在 Settings 内重复布局项
     - 移除分区：Notifications、Display（连同其表单与“Update”按钮）
@@ -134,9 +134,9 @@
 
 - 现状
   - 用户基础资料（displayName、photoURL、email）来源于 Firebase Auth 的 User 对象，通过 AuthContext 提供。
-    - 参考：[auth-context.tsx](file:///c:/Users/newbd/projects/dev/examtopics/src/context/auth-context.tsx#L12-L50)、[auth-ctx.ts](file:///c:/Users/newbd/projects/dev/examtopics/src/context/auth-ctx.ts#L11-L19)
+    - 参考：[src/context/auth-context.tsx](src/context/auth-context.tsx#L12-L50)、[src/context/auth-ctx.ts](src/context/auth-ctx.ts#L11-L19)
   - Settings › Profile 当前为演示表单（username、bio、urls），提交不与 Firebase 交互。
-    - 参考：[profile-form.tsx](file:///c:/Users/newbd/projects/dev/examtopics/src/features/settings/profile/profile-form.tsx#L59-L177)、[profile/index.tsx](file:///c:/Users/newbd/projects/dev/examtopics/src/features/settings/profile/index.tsx#L4-L13)
+    - 参考：[src/features/settings/profile/profile-form.tsx](src/features/settings/profile/profile-form.tsx#L59-L177)、[src/features/settings/profile/index.tsx](src/features/settings/profile/index.tsx#L4-L13)
 - 目标
   - Profile 页需与 Firebase 关联：读取与展示 Auth User 基础资料；支持编辑后更新至 Firebase。
   - 自定义资料字段（bio、urls、username 等）采用数据库持久化（建议 Realtime DB 的 `users/{uid}/profile`，或 Firestore）。
@@ -144,7 +144,7 @@
   - 读取
     - 基础资料：从 useAuth().user 读取 displayName、photoURL、email。
     - 自定义字段：从 `db` 读取 `users/{uid}/profile`（若不存在则使用默认空值）。
-    - 参考 Firebase 初始化：[lib/firebase.ts](file:///c:/Users/newbd/projects/dev/examtopics/src/lib/firebase.ts#L1-L20)
+    - 参考 Firebase 初始化：[src/lib/firebase.ts](src/lib/firebase.ts#L1-L20)
   - 更新
     - 基础资料：调用 Firebase Auth API 更新
       - displayName/photoURL：`updateProfile(user, { displayName, photoURL })`
@@ -161,7 +161,7 @@
 - 影响范围
   - 新增用户资料服务模块（如 `services/user-profile.ts`）供 Profile 表单复用。
   - 侧边栏与头像下拉显示名称与头像来源不变，但提交后需立即反映最新值：
-    - 参考显示位置：[app-sidebar.tsx](file:///c:/Users/newbd/projects/dev/examtopics/src/components/layout/app-sidebar.tsx#L21-L31)、[profile-dropdown.tsx](file:///c:/Users/newbd/projects/dev/examtopics/src/components/profile-dropdown.tsx#L18-L30)
+    - 参考显示位置：[src/components/layout/app-sidebar.tsx](src/components/layout/app-sidebar.tsx#L21-L31)、[src/components/profile-dropdown.tsx](src/components/profile-dropdown.tsx#L18-L30)
 
 ## Practice Mode
 

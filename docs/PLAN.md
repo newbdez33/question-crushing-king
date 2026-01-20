@@ -41,7 +41,7 @@ Exam Topics is a web-based application designed to help users practice for certi
     - **Practice Mode**: Standard practice session.
     - **Study Mode**: View questions with answers revealed.
     - **My Mistakes**: Practice session filtered to show only incorrect/missed questions.
-    - **Exam Mode**: (Coming Soon) Timed simulation.
+    - **Exam Mode**: Simulated exam with random question selection. No timer (planned for future).
 
 ### 4.3 Practice Mode
 
@@ -104,6 +104,12 @@ Exam Topics is a web-based application designed to help users practice for certi
 ### 4.7 Exam Mode
 
 - **Purpose**: Simulated exam with random question selection by count.
+- **Route**: `/exams/$examId/exam`
+- **Features**:
+  - Random question selection with optional reproducible seed
+  - Session-based statistics (total, answered, correct, wrong, accuracy)
+  - Real-time result page with review entry
+  - No timer (planned for future iterations)
 - **Docs**: See [EXAM_MODE_PLAN.md](./EXAM_MODE_PLAN.md) for user-facing design and [EXAM_MODE_TECH.md](./EXAM_MODE_TECH.md) for technical details.
 
 ## 5. Data Specifications
