@@ -146,7 +146,10 @@ export function StudyMobileBar({
                         'flex h-9 items-center justify-center rounded-md border text-xs transition-colors hover:bg-muted/50',
                         isCurrent && 'ring-2 ring-blue-500'
                       )}
-                      onClick={() => onNavigate(idx)}
+                      onClick={() => {
+                        onNavigate(idx)
+                        setSheetOpen(false)
+                      }}
                     >
                       {idx + 1}
                     </button>

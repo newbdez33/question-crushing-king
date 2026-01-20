@@ -194,7 +194,10 @@ export function PracticeMobileBar({
                         !status && 'hover:bg-muted/50',
                         isCurrent && 'ring-2 ring-blue-500'
                       )}
-                      onClick={() => onNavigate(idx)}
+                      onClick={() => {
+                        onNavigate(idx)
+                        setSheetOpen(false)
+                      }}
                     >
                       {idx + 1}
                     </button>
