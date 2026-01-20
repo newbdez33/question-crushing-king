@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import type { ExamProgress } from '@/services/progress-service'
 import { Bookmark, List, CheckCircle, XCircle } from 'lucide-react'
 import { cn } from '@/lib/utils'
@@ -35,6 +35,7 @@ export function PracticeMobileBar({
   let correct = 0
   let incorrect = 0
   const barRef = useRef<HTMLDivElement | null>(null)
+  const [sheetOpen, setSheetOpen] = useState(false)
 
   if (mistakesMode) {
     const statuses = questions
@@ -106,7 +107,7 @@ export function PracticeMobileBar({
           <span className='font-semibold text-red-600'>{incorrect}</span>
         </div>
 
-        <Sheet>
+        <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
           <SheetTrigger asChild>
             <Button variant='ghost' size='sm' className='justify-center gap-1'>
               <List className='h-4 w-4' />
@@ -136,7 +137,10 @@ export function PracticeMobileBar({
                         !status && 'hover:bg-muted/50',
                         isCurrent && 'ring-2 ring-blue-500'
                       )}
-                      onClick={() => onNavigate(idx)}
+                      onClick={() => {
+                        onNavigate(idx)
+                        setSheetOpen(false)
+                      }}
                     >
                       {idx + 1}
                     </button>

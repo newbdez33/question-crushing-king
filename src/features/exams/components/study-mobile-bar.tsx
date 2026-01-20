@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Bookmark, List } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
@@ -26,6 +26,7 @@ export function StudyMobileBar({
   onToggleBookmark,
 }: StudyMobileBarProps) {
   const barRef = useRef<HTMLDivElement | null>(null)
+  const [sheetOpen, setSheetOpen] = useState(false)
 
   useEffect(() => {
     const el = barRef.current
@@ -66,7 +67,7 @@ export function StudyMobileBar({
           <span className='sr-only'>Bookmark</span>
         </Button>
 
-        <Sheet>
+        <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
           <SheetTrigger asChild>
             <Button variant='ghost' size='sm' className='justify-center gap-1'>
               <List className='h-4 w-4' />
@@ -88,7 +89,10 @@ export function StudyMobileBar({
                         'flex h-9 items-center justify-center rounded-md border text-xs transition-colors hover:bg-muted/50',
                         isCurrent && 'ring-2 ring-blue-500'
                       )}
-                      onClick={() => onNavigate(idx)}
+                      onClick={() => {
+                        onNavigate(idx)
+                        setSheetOpen(false)
+                      }}
                     >
                       {idx + 1}
                     </button>
