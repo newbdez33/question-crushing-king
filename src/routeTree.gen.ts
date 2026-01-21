@@ -153,6 +153,7 @@ const AuthenticatedExamsExamIdExamRoute =
   } as any)
 
 export interface FileRoutesByFullPath {
+  '/': typeof AuthenticatedIndexRoute
   '/settings': typeof AuthenticatedSettingsRouteRouteWithChildren
   '/forgot-password': typeof authForgotPasswordRoute
   '/otp': typeof authOtpRoute
@@ -163,17 +164,16 @@ export interface FileRoutesByFullPath {
   '/404': typeof errors404Route
   '/500': typeof errors500Route
   '/503': typeof errors503Route
-  '/': typeof AuthenticatedIndexRoute
   '/errors/$error': typeof AuthenticatedErrorsErrorRoute
   '/settings/account': typeof AuthenticatedSettingsAccountRoute
   '/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
-  '/exams': typeof AuthenticatedExamsIndexRoute
-  '/help-center': typeof AuthenticatedHelpCenterIndexRoute
+  '/exams/': typeof AuthenticatedExamsIndexRoute
+  '/help-center/': typeof AuthenticatedHelpCenterIndexRoute
   '/settings/': typeof AuthenticatedSettingsIndexRoute
   '/exams/$examId/exam': typeof AuthenticatedExamsExamIdExamRoute
   '/exams/$examId/practice': typeof AuthenticatedExamsExamIdPracticeRoute
   '/exams/$examId/study': typeof AuthenticatedExamsExamIdStudyRoute
-  '/exams/$examId': typeof AuthenticatedExamsExamIdIndexRoute
+  '/exams/$examId/': typeof AuthenticatedExamsExamIdIndexRoute
 }
 export interface FileRoutesByTo {
   '/forgot-password': typeof authForgotPasswordRoute
@@ -225,6 +225,7 @@ export interface FileRoutesById {
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
+    | '/'
     | '/settings'
     | '/forgot-password'
     | '/otp'
@@ -235,17 +236,16 @@ export interface FileRouteTypes {
     | '/404'
     | '/500'
     | '/503'
-    | '/'
     | '/errors/$error'
     | '/settings/account'
     | '/settings/appearance'
-    | '/exams'
-    | '/help-center'
+    | '/exams/'
+    | '/help-center/'
     | '/settings/'
     | '/exams/$examId/exam'
     | '/exams/$examId/practice'
     | '/exams/$examId/study'
-    | '/exams/$examId'
+    | '/exams/$examId/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/forgot-password'
@@ -312,7 +312,7 @@ declare module '@tanstack/react-router' {
     '/_authenticated': {
       id: '/_authenticated'
       path: ''
-      fullPath: ''
+      fullPath: '/'
       preLoaderRoute: typeof AuthenticatedRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
@@ -403,14 +403,14 @@ declare module '@tanstack/react-router' {
     '/_authenticated/help-center/': {
       id: '/_authenticated/help-center/'
       path: '/help-center'
-      fullPath: '/help-center'
+      fullPath: '/help-center/'
       preLoaderRoute: typeof AuthenticatedHelpCenterIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/exams/': {
       id: '/_authenticated/exams/'
       path: '/exams'
-      fullPath: '/exams'
+      fullPath: '/exams/'
       preLoaderRoute: typeof AuthenticatedExamsIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
@@ -438,7 +438,7 @@ declare module '@tanstack/react-router' {
     '/_authenticated/exams/$examId/': {
       id: '/_authenticated/exams/$examId/'
       path: '/exams/$examId'
-      fullPath: '/exams/$examId'
+      fullPath: '/exams/$examId/'
       preLoaderRoute: typeof AuthenticatedExamsExamIdIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }

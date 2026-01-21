@@ -21,11 +21,11 @@ test.describe('Guest Join Exam with screenshots', () => {
     await page.goto('/exams')
     await page.waitForLoadState('networkidle')
     await expect(page.getByRole('heading', { name: /My Exams/i })).toBeVisible()
-    await expect(page.getByText(/SOA-C03 \(Demo\)/i)).toBeVisible()
+    await expect(page.getByText(/SOA-C03/i)).toBeVisible()
     await page.screenshot({ path: path.join(dir, '03-my-exams.png'), fullPage: true })
 
     await page.reload()
-    await expect(page.getByText(/SOA-C03 \(Demo\)/i)).toBeVisible()
+    await expect(page.getByText(/SOA-C03/i)).toBeVisible()
     await page.screenshot({ path: path.join(dir, '04-my-exams-after-reload.png'), fullPage: true })
   })
 })

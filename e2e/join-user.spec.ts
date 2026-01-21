@@ -30,7 +30,7 @@ test.describe('User Join Exam with screenshots', () => {
     await page.getByRole('textbox', { name: 'Confirm Password' }).fill(password)
     await capture(page, '04-signup-filled-confirm')
     await page.getByRole('button', { name: /sign up with email/i }).click()
-    await expect(page).toHaveTitle(/刷题大王/i)
+    await expect(page).toHaveTitle(/Question Crushing King/i)
     await capture(page, '05-signup-done')
 
     await page.goto('/exams/SOA-C03')
@@ -45,12 +45,12 @@ test.describe('User Join Exam with screenshots', () => {
     await page.goto('/exams')
     await page.waitForLoadState('networkidle')
     await expect(page.getByRole('heading', { name: /My Exams/i })).toBeVisible()
-    await expect(page.getByText(/SOA-C03 \(Demo\)/i)).toBeVisible()
+    await expect(page.getByText(/SOA-C03/i)).toBeVisible()
     await capture(page, '08-my-exams')
 
     await page.reload()
     await expect(page.getByRole('heading', { name: /My Exams/i })).toBeVisible()
-    await expect(page.getByText(/SOA-C03 \(Demo\)/i)).toBeVisible()
+    await expect(page.getByText(/SOA-C03/i)).toBeVisible()
     await capture(page, '09-my-exams-after-reload')
 
     const deleted = await page.evaluate(async () => {

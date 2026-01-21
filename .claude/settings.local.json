@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git pull:*)",
+      "Bash(pnpm test:e2e:*)",
+      "Bash(pnpm exec playwright:*)",
+      "Bash(open:*)",
+      "Bash(pnpm exec tsc:*)",
+      "Bash(git diff:*)",
+      "Bash(ls:*)",
+      "Bash(git add:*)"
+    ]
+  }
+}

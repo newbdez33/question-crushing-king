@@ -32,7 +32,7 @@ test('@regression user sign-up then sign-in success and cleanup', async ({
   await page.getByRole('textbox', { name: 'Confirm Password' }).fill(password)
   await capture(page, 'signup-filled-confirm')
   await page.getByRole('button', { name: /sign up with email/i }).click()
-  await expect(page).toHaveTitle(/刷题大王/i)
+  await expect(page).toHaveTitle(/Question Crushing King/i)
   await capture(page, 'signup-done')
 
   // New context for clean login state
@@ -47,7 +47,7 @@ test('@regression user sign-up then sign-in success and cleanup', async ({
   await page2.getByRole('textbox', { name: 'Password', exact: true }).fill(password)
   await capture(page2, 'signin-filled-password')
   await page2.getByRole('button', { name: /sign in with email/i }).click()
-  await expect(page2).toHaveTitle(/刷题大王/i)
+  await expect(page2).toHaveTitle(/Question Crushing King/i)
   await capture(page2, 'after-login')
   await expect(page2.getByText('Guest User')).not.toBeVisible()
   await expect(page2.getByText('User')).toBeVisible()

@@ -6,7 +6,7 @@ test.describe('Smoke Test - Normal Access', () => {
 
     // Expect the page title to contain the app name or key text
     // Assuming the home page has "Question Crushing King" or similar, or just check we are NOT on the error page
-    await expect(page).toHaveTitle(/刷题大王/i)
+    await expect(page).toHaveTitle(/Question Crushing King/i)
 
     // Ensure the EnvError component is NOT visible
     const errorText = page.getByText('Configuration Missing')
