@@ -482,9 +482,11 @@ export function StudyMode({ examId }: StudyModeProps) {
                     <Lightbulb className='h-4 w-4' />
                     <span>Explanation</span>
                   </div>
-                  <p className='text-sm text-muted-foreground'>
-                    {question.explanation || 'No explanation provided.'}
-                  </p>
+                  <div className='prose prose-sm max-w-none text-muted-foreground dark:prose-invert prose-p:my-1 prose-ul:my-1 prose-li:my-0.5 prose-strong:text-blue-700 dark:prose-strong:text-blue-300'>
+                    {question.explanation
+                      ? renderExamHtml(question.explanation)
+                      : 'No explanation provided.'}
+                  </div>
                 </div>
               </CardContent>
               <CardFooter className='flex justify-between border-t p-3 sm:p-6'>
