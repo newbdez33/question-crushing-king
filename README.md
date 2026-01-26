@@ -124,6 +124,7 @@ Value (JSON Object):
 
 ## Tech Stack
 
+**Package Manager:** [pnpm](https://pnpm.io/) ⚠️ **Required** - Do not use npm or yarn  
 **UI:** [ShadcnUI](https://ui.shadcn.com) (TailwindCSS + RadixUI)  
 **Build Tool:** [Vite](https://vitejs.dev/)  
 **Routing:** [TanStack Router](https://tanstack.com/router/latest)  
