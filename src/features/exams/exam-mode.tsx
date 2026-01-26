@@ -755,9 +755,11 @@ export function ExamMode({
                       </p>
                     </div>
                     {question.explanation && (
-                      <div className='mt-2'>
-                        <p className='font-semibold'>Explanation:</p>
-                        <p>{question.explanation}</p>
+                      <div className='mt-3 border-t border-current/20 pt-3'>
+                        <p className='mb-2 font-semibold'>Explanation:</p>
+                        <div className='prose prose-sm max-w-none dark:prose-invert prose-p:my-1 prose-ul:my-1 prose-li:my-0.5'>
+                          {renderExamHtml(question.explanation)}
+                        </div>
                       </div>
                     )}
                   </div>
