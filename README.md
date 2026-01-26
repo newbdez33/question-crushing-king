@@ -124,10 +124,11 @@ Value (JSON Object):
 
 ## Tech Stack
 
-**UI:** [ShadcnUI](https://ui.shadcn.com) (TailwindCSS + RadixUI)  
-**Build Tool:** [Vite](https://vitejs.dev/)  
-**Routing:** [TanStack Router](https://tanstack.com/router/latest)  
-**Type System:** [TypeScript](https://www.typescriptlang.org/)  
+**Package Manager:** [pnpm](https://pnpm.io/) ⚠️ **Required** - Do not use npm or yarn
+**UI:** [ShadcnUI](https://ui.shadcn.com) (TailwindCSS + RadixUI)
+**Build Tool:** [Vite](https://vitejs.dev/)
+**Routing:** [TanStack Router](https://tanstack.com/router/latest)
+**Type System:** [TypeScript](https://www.typescriptlang.org/)
 **Forms/State/Etc:** See [TEMPLATE.md](./docs/TEMPLATE.md)
 
 ## Theme & Styling
