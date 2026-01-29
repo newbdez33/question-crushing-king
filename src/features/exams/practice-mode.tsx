@@ -312,6 +312,10 @@ export function PracticeMode({
     prevMistakesMode.current = settings.mistakesMode
 
     if (settings.mistakesMode && allQuestions) {
+      // Sync ref with latest state before filtering to avoid stale data
+      // This is necessary because the ref update effect may not have run yet
+      examProgressRef.current = examProgress
+
       if (userIdRef.current) {
         const toGraduate: string[] = []
         allQuestions.forEach((q) => {
@@ -387,13 +391,9 @@ export function PracticeMode({
     } else {
       setMistakeQuestions(null)
     }
-  }, [
-    settings.mistakesMode,
-    settings.consecutiveCorrect,
-    allQuestions,
-    isRemoteSynced,
-    isProgressLoaded,
-  ]) // Re-run when remote data syncs or local progress loads
+    // Note: examProgress is intentionally omitted from deps and synced via ref at the start
+    // to prevent the question list from shifting while user is practicing
+  }, [settings.mistakesMode, settings.consecutiveCorrect, allQuestions, isRemoteSynced, isProgressLoaded]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const questions = settings.mistakesMode ? mistakeQuestions : allQuestions
 
