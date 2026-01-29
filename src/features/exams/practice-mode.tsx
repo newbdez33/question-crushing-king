@@ -420,7 +420,11 @@ export function PracticeMode({
       user.uid,
       examId,
       (p) => {
-        setExamProgress((prev) => mergeProgress(prev, p || {}))
+        const remote = p || {}
+        // Sync remote progress to localStorage so that ProgressService.saveAnswer
+        // reads the correct consecutiveCorrect value when computing the next value
+        ProgressService.mergeRemoteExamProgress(user.uid, examId, remote)
+        setExamProgress((prev) => mergeProgress(prev, remote))
         setIsRemoteSynced(true)
       }
     )
