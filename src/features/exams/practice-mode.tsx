@@ -476,6 +476,13 @@ export function PracticeMode({
     if (user?.uid && !isRemoteSynced && Object.keys(examProgress).length === 0)
       return
 
+    // Handle empty questions case (e.g., My Mistakes with no mistakes)
+    // Mark as ready so we can show the "no questions" state instead of infinite loading
+    if (questions && questions.length === 0) {
+      setIsReady(true)
+      return
+    }
+
     if (questions && questions[currentQuestionIndex] && userId) {
       const qId = questions[currentQuestionIndex].id
       const progress = examProgress[qId]
@@ -861,14 +868,26 @@ export function PracticeMode({
   }
 
   if (loadError || !questions || !question) {
+    // Show friendly message for My Mistakes mode with no mistakes
+    const isEmptyMistakes = settings.mistakesMode && questions && questions.length === 0
     return (
       <Main className='mx-auto w-full max-w-3xl pt-8'>
         <div className='flex flex-col items-center gap-4 text-center'>
-          <p className='text-destructive'>
-            {loadError ?? 'Question not found'}
-          </p>
-          <Link to='/exams'>
-            <Button>Back to Exams</Button>
+          {isEmptyMistakes ? (
+            <>
+              <CheckCircle className='h-12 w-12 text-green-500' />
+              <p className='text-lg font-medium'>No mistakes to review!</p>
+              <p className='text-sm text-muted-foreground'>
+                Great job! You don't have any incorrect answers yet.
+              </p>
+            </>
+          ) : (
+            <p className='text-destructive'>
+              {loadError ?? 'Question not found'}
+            </p>
+          )}
+          <Link to='/exams/$examId' params={{ examId }}>
+            <Button>Back to Exam</Button>
           </Link>
         </div>
       </Main>
