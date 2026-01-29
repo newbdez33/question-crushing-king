@@ -2,7 +2,7 @@ import { createFileRoute, getRouteApi } from '@tanstack/react-router'
 import { PracticeMode } from '@/features/exams/practice-mode'
 
 interface PracticeSearch {
-  mode?: 'mistakes'
+  mode?: 'mistakes' | 'bookmarks'
   q?: number
 }
 
@@ -11,8 +11,9 @@ const route = getRouteApi('/_authenticated/exams/$examId/practice')
 export const Route = createFileRoute('/_authenticated/exams/$examId/practice')({
   validateSearch: (search: Record<string, unknown>): PracticeSearch => {
     const q = Number(search.q)
+    const mode = search.mode === 'mistakes' ? 'mistakes' : search.mode === 'bookmarks' ? 'bookmarks' : undefined
     return {
-      mode: search.mode === 'mistakes' ? 'mistakes' : undefined,
+      mode,
       q: !isNaN(q) && q > 0 ? q : undefined,
     }
   },

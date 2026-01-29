@@ -241,6 +241,7 @@ export function ExamMode({
     consecutiveCorrect: 3,
     fontSize: 'normal',
     mistakesMode: false,
+    bookmarksMode: false,
   })
   const userUidRef = useRef(user?.uid)
   const examIdRef = useRef(examId)
