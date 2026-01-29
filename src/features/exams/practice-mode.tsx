@@ -47,7 +47,7 @@ import { mockExams } from './data/mock-exams'
 
 interface PracticeModeProps {
   examId: string
-  initialMode?: 'mistakes'
+  initialMode?: 'mistakes' | 'bookmarks'
   initialQuestionIndex?: number
 }
 
@@ -268,6 +268,7 @@ export function PracticeMode({
     consecutiveCorrect: 3,
     fontSize: 'normal',
     mistakesMode: initialMode === 'mistakes',
+    bookmarksMode: initialMode === 'bookmarks',
   })
   const [showClearConfirm, setShowClearConfirm] = useState(false)
   const [isReady, setIsReady] = useState(false)
@@ -288,6 +289,12 @@ export function PracticeMode({
   >({})
   const prevMistakesMode = useRef(settings.mistakesMode)
   const settingsLoadedRef = useRef(false)
+
+  // Filter questions for "My Bookmarks" mode
+  const [bookmarkQuestions, setBookmarkQuestions] = useState<
+    PracticeQuestion[] | null
+  >(null)
+  const prevBookmarksMode = useRef(settings.bookmarksMode)
 
   useEffect(() => {
     if (initialQuestionIndex !== undefined) {
@@ -395,7 +402,40 @@ export function PracticeMode({
     // to prevent the question list from shifting while user is practicing
   }, [settings.mistakesMode, settings.consecutiveCorrect, allQuestions, isRemoteSynced, isProgressLoaded]) // eslint-disable-line react-hooks/exhaustive-deps
 
-  const questions = settings.mistakesMode ? mistakeQuestions : allQuestions
+  // Filter questions for "My Bookmarks" mode
+  useEffect(() => {
+    const wasBookmarksMode = prevBookmarksMode.current
+    prevBookmarksMode.current = settings.bookmarksMode
+
+    if (settings.bookmarksMode && allQuestions) {
+      // Sync ref with latest state before filtering
+      examProgressRef.current = examProgress
+
+      const filtered = allQuestions.filter((q) => {
+        const p = examProgressRef.current[q.id]
+        return p?.bookmarked === true
+      })
+      setBookmarkQuestions(filtered)
+
+      if (settings.bookmarksMode !== wasBookmarksMode) {
+        setCurrentQuestionIndex(0)
+      } else {
+        // Clamp index to ensure it's valid
+        setCurrentQuestionIndex((prev) => {
+          if (prev < filtered.length) return prev
+          return 0
+        })
+      }
+    } else {
+      setBookmarkQuestions(null)
+    }
+  }, [settings.bookmarksMode, allQuestions, isRemoteSynced, isProgressLoaded]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  const questions = settings.bookmarksMode
+    ? bookmarkQuestions
+    : settings.mistakesMode
+      ? mistakeQuestions
+      : allQuestions
 
   // Load progress for the whole exam
   useEffect(() => {
@@ -856,7 +896,7 @@ export function PracticeMode({
               </Button>
             </Link>
             <h1 className='text-lg font-semibold'>
-              {title} - {settings.mistakesMode ? 'My Mistakes' : 'Practice'}
+              {title} - {settings.bookmarksMode ? 'My Bookmarks' : settings.mistakesMode ? 'My Mistakes' : 'Practice'}
             </h1>
           </div>
           <div className='ms-auto flex items-center space-x-4'>
@@ -873,8 +913,9 @@ export function PracticeMode({
   }
 
   if (loadError || !questions || !question) {
-    // Show friendly message for My Mistakes mode with no mistakes
+    // Show friendly message for My Mistakes/Bookmarks mode with no items
     const isEmptyMistakes = settings.mistakesMode && questions && questions.length === 0
+    const isEmptyBookmarks = settings.bookmarksMode && questions && questions.length === 0
     return (
       <Main className='mx-auto w-full max-w-3xl pt-8'>
         <div className='flex flex-col items-center gap-4 text-center'>
@@ -884,6 +925,14 @@ export function PracticeMode({
               <p className='text-lg font-medium'>No mistakes to review!</p>
               <p className='text-sm text-muted-foreground'>
                 Great job! You don't have any incorrect answers yet.
+              </p>
+            </>
+          ) : isEmptyBookmarks ? (
+            <>
+              <Bookmark className='h-12 w-12 text-muted-foreground' />
+              <p className='text-lg font-medium'>No bookmarked questions!</p>
+              <p className='text-sm text-muted-foreground'>
+                Bookmark questions while practicing to review them here later.
               </p>
             </>
           ) : (
@@ -915,7 +964,7 @@ export function PracticeMode({
             </Button>
           </Link>
           <h1 className='text-lg font-semibold'>
-            {title} - {settings.mistakesMode ? 'My Mistakes' : 'Practice'}
+            {title} - {settings.bookmarksMode ? 'My Bookmarks' : settings.mistakesMode ? 'My Mistakes' : 'Practice'}
           </h1>
         </div>
         <div className='ms-auto flex items-center space-x-4'>
