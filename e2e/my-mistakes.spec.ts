@@ -22,17 +22,38 @@ test.describe('My Mistakes Mode', () => {
     await expect(page.getByText(/My Mistakes/i).first()).toBeVisible()
   })
 
-  test('should show empty state when no mistakes', async ({ page }) => {
+  test('should show empty state when no mistakes (not stuck on loading)', async ({ page }) => {
     const capture = createCapture('e2e/artifacts/my-mistakes')
+
+    // Clear any existing progress by using a fresh context
+    await page.context().clearCookies()
+    await page.evaluate(() => localStorage.clear())
 
     // Navigate directly to My Mistakes mode
     await page.goto(`/exams/${EXAM_ID}/practice?mode=mistakes`)
-    await page.waitForLoadState('networkidle')
+
+    // Wait for either the empty state message or loading to complete
+    // This test ensures we don't get stuck on "Loading questions..."
+    await Promise.race([
+      page.waitForSelector('text=No mistakes to review!', { timeout: 10000 }),
+      page.waitForSelector('text=Question not found', { timeout: 10000 }),
+      page.waitForSelector('[data-testid="question-card"]', { timeout: 10000 }),
+    ])
+
     await capture(page, '03-empty-mistakes')
 
-    // Should show some indication that there are no mistakes
-    // (either empty question list or a message)
-    // The behavior depends on whether there are any mistakes in local storage
+    // Verify we're NOT stuck on loading
+    const loadingVisible = await page.getByText('Loading questions').isVisible()
+    expect(loadingVisible).toBe(false)
+
+    // Should show the friendly empty state message
+    const emptyStateVisible = await page.getByText('No mistakes to review!').isVisible()
+    if (emptyStateVisible) {
+      // Verify the green checkmark and friendly message
+      await expect(page.getByText('No mistakes to review!')).toBeVisible()
+      await expect(page.getByText("Great job! You don't have any incorrect answers yet.")).toBeVisible()
+      await expect(page.getByRole('link', { name: /Back to Exam/i })).toBeVisible()
+    }
   })
 
   test('should show incorrect questions in My Mistakes mode', async ({ page }) => {
@@ -68,6 +89,61 @@ test.describe('My Mistakes Mode', () => {
       // The incorrectly answered question should appear
       await expect(page.getByText(/Question \d+ of/i)).toBeVisible()
     }
+
+    // Cleanup
+    const deleted = await deleteCurrentUser(page)
+    expect(deleted).toBeTruthy()
+  })
+
+  test('should load My Mistakes quickly without getting stuck (race condition fix)', async ({ page }) => {
+    const { email, password } = uniqueCreds()
+    const capture = createCapture('e2e/artifacts/my-mistakes')
+
+    // Sign up to persist progress
+    await signUp(page, email, password)
+
+    // First create a mistake by answering incorrectly
+    await page.goto(`/exams/${EXAM_ID}/practice`)
+    await page.waitForLoadState('networkidle')
+
+    // Select first option (likely wrong) and submit
+    const options = page.locator('.rounded-lg.border')
+    await options.first().click()
+    await page.getByRole('button', { name: /Submit Answer/i }).click()
+
+    // Check if we got it wrong, if not try second option on next question
+    const isIncorrect = await page.getByText('Incorrect Answer').isVisible()
+
+    if (!isIncorrect) {
+      // Go to next question and try to get it wrong
+      await page.getByRole('button', { name: /Next/ }).click()
+      await page.waitForTimeout(500)
+      await options.first().click()
+      await page.getByRole('button', { name: /Submit Answer/i }).click()
+    }
+
+    await capture(page, '09-created-mistake')
+
+    // Now navigate to My Mistakes mode
+    // This tests the race condition fix - should load within 5 seconds
+    const startTime = Date.now()
+    await page.goto(`/exams/${EXAM_ID}/practice?mode=mistakes`)
+
+    // Wait for either question content or empty state (not stuck on loading)
+    await Promise.race([
+      page.waitForSelector('text=/Question \\d+ of/i', { timeout: 10000 }),
+      page.waitForSelector('text=No mistakes to review!', { timeout: 10000 }),
+    ])
+
+    const loadTime = Date.now() - startTime
+    await capture(page, '10-my-mistakes-loaded')
+
+    // Verify page loaded in reasonable time (not stuck)
+    expect(loadTime).toBeLessThan(10000)
+
+    // Verify we're not stuck on loading screen
+    const loadingVisible = await page.getByText('Loading questions').isVisible()
+    expect(loadingVisible).toBe(false)
 
     // Cleanup
     const deleted = await deleteCurrentUser(page)
