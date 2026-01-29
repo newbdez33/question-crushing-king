@@ -1,18 +1,15 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { describe, it, expect, beforeEach, afterEach } from 'vitest'
 import { ProgressService, type ExamProgress } from '../progress-service'
-
-// Mock localStorage
-const memoryStorage = new Map<string, string>()
-vi.stubGlobal('localStorage', {
-  getItem: (k: string) => memoryStorage.get(k) ?? null,
-  setItem: (k: string, v: string) => memoryStorage.set(k, String(v)),
-  removeItem: (k: string) => memoryStorage.delete(k),
-  clear: () => memoryStorage.clear(),
-})
 
 describe('ProgressService', () => {
   beforeEach(() => {
-    memoryStorage.clear()
+    // Clear localStorage before each test
+    localStorage.clear()
+  })
+
+  afterEach(() => {
+    // Clean up after each test
+    localStorage.clear()
   })
 
   describe('mergeRemoteExamProgress', () => {
@@ -53,7 +50,7 @@ describe('ProgressService', () => {
           },
         },
       }
-      memoryStorage.set('examtopics_progress', JSON.stringify(localData))
+      localStorage.setItem('examtopics_progress', JSON.stringify(localData))
 
       // Remote has newer data
       const remote: ExamProgress = {
@@ -87,7 +84,7 @@ describe('ProgressService', () => {
           },
         },
       }
-      memoryStorage.set('examtopics_progress', JSON.stringify(localData))
+      localStorage.setItem('examtopics_progress', JSON.stringify(localData))
 
       // Remote has older data
       const remote: ExamProgress = {
@@ -126,7 +123,7 @@ describe('ProgressService', () => {
           },
         },
       }
-      memoryStorage.set('examtopics_progress', JSON.stringify(localData))
+      localStorage.setItem('examtopics_progress', JSON.stringify(localData))
 
       // Remote has q1 older, q2 newer, q3 new
       const remote: ExamProgress = {
@@ -175,7 +172,7 @@ describe('ProgressService', () => {
           },
         },
       }
-      memoryStorage.set('examtopics_progress', JSON.stringify(localData))
+      localStorage.setItem('examtopics_progress', JSON.stringify(localData))
 
       // Remote has newer answer data but no bookmark field
       const remote: ExamProgress = {
