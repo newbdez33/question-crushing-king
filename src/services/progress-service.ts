@@ -241,4 +241,29 @@ export const ProgressService = {
     })
     this._saveSettingsToStorage(all)
   },
+
+  /**
+   * Merge remote exam progress into localStorage.
+   * Uses lastAnswered timestamp to decide which version to keep.
+   */
+  mergeRemoteExamProgress(
+    userId: string,
+    examId: string,
+    remote: ExamProgress
+  ) {
+    const all = this.getAllProgress()
+    if (!all[userId]) all[userId] = {}
+    if (!all[userId][examId]) all[userId][examId] = {}
+
+    const local = all[userId][examId]
+    Object.entries(remote).forEach(([qId, rVal]) => {
+      const lVal = local[qId]
+      // Keep the version with the most recent lastAnswered timestamp
+      if (!lVal || (rVal.lastAnswered || 0) > (lVal.lastAnswered || 0)) {
+        local[qId] = { ...local[qId], ...rVal }
+      }
+    })
+
+    this._saveToStorage(all)
+  },
 }
