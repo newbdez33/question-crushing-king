@@ -392,7 +392,8 @@ export function PracticeMode({
     settings.consecutiveCorrect,
     allQuestions,
     isRemoteSynced,
-  ]) // Re-run when remote data syncs, but avoid examProgress to prevent shifting while practicing
+    isProgressLoaded,
+  ]) // Re-run when remote data syncs or local progress loads
 
   const questions = settings.mistakesMode ? mistakeQuestions : allQuestions
 
