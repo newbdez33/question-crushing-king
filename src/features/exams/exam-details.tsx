@@ -5,6 +5,7 @@ import { ProgressService, type ExamProgress } from '@/services/progress-service'
 import {
   ArrowLeft,
   BookOpen,
+  Bookmark,
   CheckCircle,
   RotateCcw,
   AlertCircle,
@@ -281,6 +282,26 @@ export function ExamDetails({ examId }: ExamDetailsProps) {
                 <CardContent>
                   <p className='text-sm text-muted-foreground'>
                     Review and retry questions you answered incorrectly.
+                  </p>
+                </CardContent>
+              </Card>
+            </Link>
+
+            <Link
+              to='/exams/$examId/practice'
+              params={{ examId: exam.id }}
+              search={{ mode: 'bookmarks' }}
+            >
+              <Card className='h-full cursor-pointer transition-colors hover:bg-muted/50'>
+                <CardHeader>
+                  <CardTitle className='flex items-center gap-2'>
+                    <Bookmark className='h-5 w-5' />
+                    My Bookmarks
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className='text-sm text-muted-foreground'>
+                    Review questions you've bookmarked for later.
                   </p>
                 </CardContent>
               </Card>
