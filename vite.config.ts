@@ -27,10 +27,10 @@ export default defineConfig({
     coverage: {
       reporter: ['text', 'html'],
       thresholds: {
-        lines: 95,
-        branches: 85,
-        functions: 92,
-        statements: 92,
+        lines: 99,
+        branches: 91,
+        functions: 97,
+        statements: 97,
       },
     },
   },

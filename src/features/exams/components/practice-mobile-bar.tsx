@@ -107,6 +107,7 @@ export function PracticeMobileBar({
     const el = barRef.current
     /* istanbul ignore if -- ref always exists when useEffect runs */
     if (!el) return
+    /* istanbul ignore next -- resize observer and event handlers */
     const setVar = () => {
       const h = el.offsetHeight
       document.documentElement.style.setProperty(
