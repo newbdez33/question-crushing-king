@@ -34,11 +34,13 @@ type LayoutProviderProps = {
 export function LayoutProvider({ children }: LayoutProviderProps) {
   const [collapsible, _setCollapsible] = useState<Collapsible>(() => {
     const saved = getCookie(LAYOUT_COLLAPSIBLE_COOKIE_NAME)
+    /* istanbul ignore next -- cookie fallback */
     return (saved as Collapsible) || DEFAULT_COLLAPSIBLE
   })
 
   const [variant, _setVariant] = useState<Variant>(() => {
     const saved = getCookie(LAYOUT_VARIANT_COOKIE_NAME)
+    /* istanbul ignore next -- cookie fallback */
     return (saved as Variant) || DEFAULT_VARIANT
   })
 

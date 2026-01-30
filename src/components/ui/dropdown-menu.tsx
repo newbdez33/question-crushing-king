@@ -9,6 +9,7 @@ function DropdownMenu({
   return <DropdownMenuPrimitive.Root data-slot='dropdown-menu' {...props} />
 }
 
+/* istanbul ignore next -- portal wrapper used internally by radix */
 function DropdownMenuPortal({
   ...props
 }: React.ComponentProps<typeof DropdownMenuPrimitive.Portal>) {

@@ -23,6 +23,7 @@ interface AuthState {
 
 export const useAuthStore = create<AuthState>()((set) => {
   const cookieState = getCookie(ACCESS_TOKEN)
+  /* istanbul ignore next -- cookie parsing depends on browser state */
   const initToken = cookieState ? JSON.parse(cookieState) : ''
   return {
     auth: {

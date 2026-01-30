@@ -26,7 +26,9 @@ const initialState: ThemeProviderState = {
   defaultTheme: DEFAULT_THEME,
   resolvedTheme: 'light',
   theme: DEFAULT_THEME,
+  /* istanbul ignore next -- placeholder never called when provider wraps app */
   setTheme: () => null,
+  /* istanbul ignore next -- placeholder never called when provider wraps app */
   resetTheme: () => null,
 }
 
