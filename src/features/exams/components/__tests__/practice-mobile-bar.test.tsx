@@ -20,6 +20,7 @@ describe('PracticeMobileBar', () => {
     consecutiveCorrect: 3,
     fontSize: 'normal',
     mistakesMode: false,
+    bookmarksMode: false,
   }
 
   const mockQuestions = [
@@ -258,5 +259,43 @@ describe('PracticeMobileBar', () => {
       '--mobile-bar-height',
       expect.any(String)
     )
+  })
+
+  describe('Sheet content', () => {
+    it('should render drag handle in sheet', async () => {
+      const user = userEvent.setup()
+      render(<PracticeMobileBar {...defaultProps} />)
+
+      // Open sheet
+      const answerCardButton = screen.getByText('Answer Card').closest('button')
+      await user.click(answerCardButton!)
+
+      await waitFor(() => {
+        expect(screen.getByText('Answer Sheet')).toBeInTheDocument()
+      })
+
+      // Find the drag handle element in the document (sheet is rendered in a portal)
+      const dragHandle = document.querySelector('[data-drag-handle]')
+      expect(dragHandle).toBeInTheDocument()
+    })
+
+    it('should render sheet content with correct structure', async () => {
+      const user = userEvent.setup()
+      render(<PracticeMobileBar {...defaultProps} />)
+
+      // Open sheet
+      const answerCardButton = screen.getByText('Answer Card').closest('button')
+      await user.click(answerCardButton!)
+
+      await waitFor(() => {
+        expect(screen.getByText('Answer Sheet')).toBeInTheDocument()
+        // Check for question grid
+        for (let i = 1; i <= 5; i++) {
+          expect(screen.getByRole('button', { name: String(i) })).toBeInTheDocument()
+        }
+        // Check for settings
+        expect(screen.getByText('Font size')).toBeInTheDocument()
+      })
+    })
   })
 })
