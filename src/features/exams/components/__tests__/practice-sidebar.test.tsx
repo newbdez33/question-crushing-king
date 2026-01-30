@@ -11,6 +11,7 @@ describe('PracticeSidebar', () => {
     consecutiveCorrect: 3,
     fontSize: 'normal',
     mistakesMode: false,
+    bookmarksMode: false,
   }
 
   const mockQuestions = [
