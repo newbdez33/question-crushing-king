@@ -5,21 +5,21 @@
 
 ## Summary
 
-All unit test coverage thresholds have been met. The project now has comprehensive unit test coverage for testable components, with complex UI components designated for E2E testing.
+All unit test coverage thresholds have been met. The project now has comprehensive unit test coverage including `practice-mode.tsx` and `practice-mobile-bar.tsx`.
 
 ## Coverage Metrics
 
 | Metric | Coverage | Threshold | Status |
 |--------|----------|-----------|--------|
-| **Lines** | 98.89% | 80% | ✅ Pass |
-| **Branches** | 91.54% | 75% | ✅ Pass |
-| **Functions** | 96.13% | 80% | ✅ Pass |
-| **Statements** | 98.18% | 80% | ✅ Pass |
+| **Lines** | 83.22% | 80% | ✅ Pass |
+| **Branches** | 75.97% | 75% | ✅ Pass |
+| **Functions** | 84.64% | 80% | ✅ Pass |
+| **Statements** | 81.2% | 80% | ✅ Pass |
 
 ## Test Statistics
 
-- **Test Files:** 32
-- **Total Tests:** 386
+- **Test Files:** 35
+- **Total Tests:** 454
 - **All Tests Passing:** ✅
 
 ## Coverage by Directory
@@ -109,16 +109,16 @@ All unit test coverage thresholds have been met. The project now has comprehensi
 |------|------------|----------|-----------|-------|-------|
 | `auth-store.ts` | 100% | 50% | 100% | 100% | Branch 26 |
 
-## Excluded from Coverage
+## All Files Included in Coverage
 
-The following files are excluded from unit test coverage metrics because they are complex UI components with many interactive branches that are better suited for E2E testing:
+Both `practice-mode.tsx` and `practice-mobile-bar.tsx` are now included in coverage metrics with comprehensive tests:
 
-| File | Reason |
-|------|--------|
-| `src/features/exams/practice-mode.tsx` | Complex interactive UI with touch handlers, animations, and state management |
-| `src/features/exams/components/practice-mobile-bar.tsx` | Touch gesture handlers that require real browser environment |
+| File | Lines | Branches | Notes |
+|------|-------|----------|-------|
+| `practice-mode.tsx` | 69.49% | 68.04% | Includes interactive tests for answer submission, navigation, bookmarking |
+| `practice-mobile-bar.tsx` | 66.15% | 55.26% | Touch handlers tested; some branches require real browser |
 
-These components should be tested via Playwright E2E tests instead.
+The touch gesture handlers in `practice-mobile-bar.tsx` have limited coverage due to jsdom limitations, but overall coverage thresholds are met.
 
 ## Test Files Created/Modified
 
@@ -139,10 +139,35 @@ These components should be tested via Playwright E2E tests instead.
    - Sidebar and settings rendering
    - Progress service integration
 
+3. **`src/features/exams/__tests__/practice-mode-interactions.test.tsx`** (29 tests)
+   - Answer selection and submission
+   - Correct/incorrect answer handling
+   - Navigation (next/previous)
+   - Bookmarking functionality
+   - Multiple choice questions
+   - Clear progress dialog
+   - Empty states (mistakes/bookmarks mode)
+
+4. **`src/features/exams/__tests__/practice-mode-advanced.test.tsx`** (17 tests)
+   - HTML content rendering (bold, italic, code, lists, images)
+   - Question state indicators (correct/incorrect styling)
+   - Auto-navigation with existing progress
+   - Submit button state management
+   - Pre-answered questions display
+
+5. **`src/features/exams/__tests__/practice-mode-helpers.test.ts`** (25 tests)
+   - Helper function logic tests
+   - parseCorrectLabels behavior
+   - formatQuestionType behavior
+   - sameSelections comparison
+   - resolveAssetUrl URL handling
+   - mergeProgress conflict resolution
+
 ### Modified Test Files
 
 1. **`src/features/exams/components/__tests__/practice-mobile-bar.test.tsx`**
    - Added sheet content tests
+   - Added touch gesture tests
    - Fixed `PracticeSettings` type with `bookmarksMode` property
 
 2. **`src/features/exams/__tests__/practice-mode-mistakes.test.tsx`**
@@ -156,16 +181,11 @@ These components should be tested via Playwright E2E tests instead.
 
 ### vite.config.ts
 
-Added coverage exclusions for complex UI components:
+Coverage configuration with no exclusions - all files are included:
 
 ```typescript
 coverage: {
   reporter: ['text', 'html'],
-  exclude: [
-    // Complex UI components better tested with E2E tests
-    'src/features/exams/practice-mode.tsx',
-    'src/features/exams/components/practice-mobile-bar.tsx',
-  ],
   thresholds: {
     lines: 80,
     branches: 75,
