@@ -11,6 +11,7 @@ export interface PracticeSettings {
   consecutiveCorrect: number
   fontSize: 'small' | 'normal' | 'large'
   mistakesMode: boolean
+  bookmarksMode: boolean
 }
 
 interface PracticeSidebarProps {
