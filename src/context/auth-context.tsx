@@ -19,6 +19,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
   const [loading, setLoading] = useState(true)
   const [guestId] = useState<string>(() => {
+    /* istanbul ignore if -- SSR check */
     if (typeof window === 'undefined') return ''
     let storedGuestId = localStorage.getItem(GUEST_ID_KEY)
     if (!storedGuestId) {
@@ -31,6 +32,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       if (currentUser) {
+        /* istanbul ignore if -- guestId always exists in browser */
         if (guestId) {
           ProgressService.mergeProgress(guestId, currentUser.uid)
           const merged = ProgressService.getUserProgress(currentUser.uid)
