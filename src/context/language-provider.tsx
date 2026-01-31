@@ -31,6 +31,47 @@ const translations: Record<Language, Record<string, string>> = {
     'common.continue': 'Continue',
     'common.save': 'Save',
     'common.back': 'Back',
+    'common.questions': 'Questions',
+    'common.progress': 'Progress',
+    'common.accuracy': 'Accuracy',
+
+    // Dashboard
+    'dashboard.title': 'Dashboard',
+    'dashboard.totalQuestionsAnswered': 'Total Questions Answered',
+    'dashboard.correctAnswers': 'Correct Answers',
+    'dashboard.overallAccuracy': 'Overall Accuracy',
+    'dashboard.examsStarted': 'Exams Started',
+    'dashboard.recentActivity': 'Recent Activity',
+    'dashboard.noHistory': 'No practice history yet. Start an exam to see your stats!',
+    'dashboard.allExams': 'All Available Exams',
+    'dashboard.loadingExams': 'Loading exams...',
+    'dashboard.syncPromptTitle': 'Sign in to sync your learning progress',
+    'dashboard.syncPromptDesc': 'Sign in to automatically sync practice progress across your devices.',
+    'dashboard.lastStudied': 'Last studied',
+
+    // Exams list
+    'exams.myExams': 'My Exams',
+    'exams.noExams': 'No exams yet',
+    'exams.noExamsDesc': "You haven't joined any exams yet. Go to the dashboard to explore and join exams.",
+    'exams.goToDashboard': 'Go to Dashboard',
+
+    // Exam details
+    'examDetails.join': 'Join Exam',
+    'examDetails.joined': 'Joined',
+    'examDetails.practice': 'Practice',
+    'examDetails.study': 'Study',
+    'examDetails.exam': 'Exam',
+    'examDetails.questionsAnswered': 'Questions Answered',
+    'examDetails.correctRate': 'Correct Rate',
+    'examDetails.bookmarked': 'Bookmarked',
+    'examDetails.mistakes': 'Mistakes',
+    'examDetails.startExam': 'Start Exam',
+    'examDetails.examSettings': 'Exam Settings',
+    'examDetails.numberOfQuestions': 'Number of Questions',
+    'examDetails.randomSeed': 'Random Seed (Optional)',
+    'examDetails.startExamBtn': 'Start Exam',
+    'examDetails.loadingExam': 'Loading exam…',
+    'examDetails.addedToMyExams': 'Exam added to My Exams',
 
     // Practice mode
     'practice.title': 'Practice',
@@ -73,6 +114,13 @@ const translations: Record<Language, Record<string, string>> = {
     'exam.passed': 'Passed',
     'exam.failed': 'Failed',
 
+    // Settings
+    'settings.title': 'Settings',
+    'settings.description': 'Manage your account settings and set e-mail preferences.',
+    'settings.profile': 'Profile',
+    'settings.account': 'Account',
+    'settings.appearance': 'Appearance',
+
     // Navigation
     'nav.exams': 'Exams',
     'nav.settings': 'Settings',
@@ -94,6 +142,47 @@ const translations: Record<Language, Record<string, string>> = {
     'common.continue': '继续',
     'common.save': '保存',
     'common.back': '返回',
+    'common.questions': '题目',
+    'common.progress': '进度',
+    'common.accuracy': '正确率',
+
+    // Dashboard
+    'dashboard.title': '仪表盘',
+    'dashboard.totalQuestionsAnswered': '已答题目总数',
+    'dashboard.correctAnswers': '正确答案',
+    'dashboard.overallAccuracy': '总体正确率',
+    'dashboard.examsStarted': '已开始考试',
+    'dashboard.recentActivity': '最近活动',
+    'dashboard.noHistory': '还没有练习记录。开始一场考试来查看你的统计数据！',
+    'dashboard.allExams': '所有可用考试',
+    'dashboard.loadingExams': '正在加载考试...',
+    'dashboard.syncPromptTitle': '登录以同步学习进度',
+    'dashboard.syncPromptDesc': '登录后可自动在不同设备间同步练习进度。',
+    'dashboard.lastStudied': '上次学习',
+
+    // Exams list
+    'exams.myExams': '我的考试',
+    'exams.noExams': '还没有考试',
+    'exams.noExamsDesc': '你还没有加入任何考试。去仪表盘探索并加入考试吧。',
+    'exams.goToDashboard': '前往仪表盘',
+
+    // Exam details
+    'examDetails.join': '加入考试',
+    'examDetails.joined': '已加入',
+    'examDetails.practice': '练习',
+    'examDetails.study': '学习',
+    'examDetails.exam': '考试',
+    'examDetails.questionsAnswered': '已答题目',
+    'examDetails.correctRate': '正确率',
+    'examDetails.bookmarked': '已收藏',
+    'examDetails.mistakes': '错题',
+    'examDetails.startExam': '开始考试',
+    'examDetails.examSettings': '考试设置',
+    'examDetails.numberOfQuestions': '题目数量',
+    'examDetails.randomSeed': '随机种子（可选）',
+    'examDetails.startExamBtn': '开始考试',
+    'examDetails.loadingExam': '正在加载考试...',
+    'examDetails.addedToMyExams': '已添加到我的考试',
 
     // Practice mode
     'practice.title': '练习',
@@ -136,6 +225,13 @@ const translations: Record<Language, Record<string, string>> = {
     'exam.passed': '通过',
     'exam.failed': '未通过',
 
+    // Settings
+    'settings.title': '设置',
+    'settings.description': '管理你的账户设置和邮件偏好。',
+    'settings.profile': '个人资料',
+    'settings.account': '账户',
+    'settings.appearance': '外观',
+
     // Navigation
     'nav.exams': '考试',
     'nav.settings': '设置',
@@ -157,6 +253,47 @@ const translations: Record<Language, Record<string, string>> = {
     'common.continue': '続ける',
     'common.save': '保存',
     'common.back': '戻る',
+    'common.questions': '問題',
+    'common.progress': '進捗',
+    'common.accuracy': '正答率',
+
+    // Dashboard
+    'dashboard.title': 'ダッシュボード',
+    'dashboard.totalQuestionsAnswered': '回答した問題数',
+    'dashboard.correctAnswers': '正解数',
+    'dashboard.overallAccuracy': '総合正答率',
+    'dashboard.examsStarted': '開始した試験',
+    'dashboard.recentActivity': '最近のアクティビティ',
+    'dashboard.noHistory': 'まだ練習履歴がありません。試験を始めて統計を確認しましょう！',
+    'dashboard.allExams': '利用可能な試験',
+    'dashboard.loadingExams': '試験を読み込み中...',
+    'dashboard.syncPromptTitle': 'ログインして学習進捗を同期',
+    'dashboard.syncPromptDesc': 'ログインすると、複数のデバイス間で練習進捗を自動的に同期できます。',
+    'dashboard.lastStudied': '最終学習日',
+
+    // Exams list
+    'exams.myExams': 'マイ試験',
+    'exams.noExams': '試験がありません',
+    'exams.noExamsDesc': 'まだ試験に参加していません。ダッシュボードで試験を探して参加しましょう。',
+    'exams.goToDashboard': 'ダッシュボードへ',
+
+    // Exam details
+    'examDetails.join': '試験に参加',
+    'examDetails.joined': '参加済み',
+    'examDetails.practice': '練習',
+    'examDetails.study': '学習',
+    'examDetails.exam': '試験',
+    'examDetails.questionsAnswered': '回答済み問題',
+    'examDetails.correctRate': '正答率',
+    'examDetails.bookmarked': 'ブックマーク',
+    'examDetails.mistakes': '間違い',
+    'examDetails.startExam': '試験を開始',
+    'examDetails.examSettings': '試験設定',
+    'examDetails.numberOfQuestions': '問題数',
+    'examDetails.randomSeed': 'ランダムシード（任意）',
+    'examDetails.startExamBtn': '試験を開始',
+    'examDetails.loadingExam': '試験を読み込み中…',
+    'examDetails.addedToMyExams': 'マイ試験に追加しました',
 
     // Practice mode
     'practice.title': '練習',
@@ -198,6 +335,13 @@ const translations: Record<Language, Record<string, string>> = {
     'exam.score': 'スコア',
     'exam.passed': '合格',
     'exam.failed': '不合格',
+
+    // Settings
+    'settings.title': '設定',
+    'settings.description': 'アカウント設定とメール設定を管理します。',
+    'settings.profile': 'プロフィール',
+    'settings.account': 'アカウント',
+    'settings.appearance': '外観',
 
     // Navigation
     'nav.exams': '試験',

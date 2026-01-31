@@ -69,7 +69,7 @@ describe('ExamDetails join sync', () => {
       expect(screen.queryByText(/Loading exam/i)).toBeNull()
     )
 
-    const btn = await screen.findByRole('button', { name: /Join My Exams/i })
+    const btn = await screen.findByRole('button', { name: /Join Exam/i })
     await user.click(btn)
 
     expect(Local.ProgressService.saveExamSettings).toHaveBeenCalledWith(
