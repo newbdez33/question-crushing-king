@@ -23,7 +23,9 @@ import {
 } from '@/components/ui/card'
 import { Header } from '@/components/layout/header'
 import { Main } from '@/components/layout/main'
+import { LanguageSwitch } from '@/components/language-switch'
 import { ThemeSwitch } from '@/components/theme-switch'
+import { useLanguage, getLocalizedExplanation } from '@/context/language-provider'
 import { StudyMobileBar } from './components/study-mobile-bar'
 import { StudySidebar, type StudySettings } from './components/study-sidebar'
 import { mockExams } from './data/mock-exams'
@@ -59,6 +61,16 @@ type StudyQuestion = {
   options: string[]
   correctAnswers: number[]
   explanation?: string
+  explanations?: {
+    en?: string
+    zh?: string
+    ja?: string
+  }
+}
+
+function formatQuestionTypeWithT(type: string, t: (key: string) => string) {
+  if (type === 'multiple') return t('practice.multiple')
+  return t('practice.single')
 }
 
 function htmlToText(html: string) {
@@ -81,10 +93,6 @@ function parseCorrectLabels(input: string) {
   return Array.from(new Set(matches))
 }
 
-function formatQuestionType(type: string) {
-  if (type === 'multiple') return 'Multiple'
-  return 'Single'
-}
 
 function renderExamHtml(html: string) {
   if (typeof window === 'undefined') return <span>{html}</span>
@@ -179,6 +187,7 @@ function renderExamHtml(html: string) {
 
 export function StudyMode({ examId }: StudyModeProps) {
   const { user, guestId } = useAuth()
+  const { language, t } = useLanguage()
   const userId = user?.uid || guestId
   const exam = mockExams.find((e) => e.id === examId)
   const fallbackQuestions: StudyQuestion[] | null = exam
@@ -254,6 +263,37 @@ export function StudyMode({ examId }: StudyModeProps) {
               .map((label) => options.findIndex((o) => o.label === label))
               .filter((idx) => idx >= 0)
 
+            // Build explanations object for multi-language support
+            const explanations: { en?: string; zh?: string; ja?: string } = {}
+            const rawExplanation = (q.explanation ?? '').trim()
+
+            // Check if explanation contains Chinese characters - if so, it's the Chinese version
+            const hasChinese = /[\u4e00-\u9fff]/.test(rawExplanation)
+            if (hasChinese) {
+              explanations.zh = rawExplanation
+            } else if (rawExplanation) {
+              explanations.en = rawExplanation
+            }
+
+            // Check for explicit language-specific explanations in the data
+            const qAny = q as Record<string, unknown>
+            if (qAny.explanation_en && typeof qAny.explanation_en === 'string') {
+              explanations.en = (qAny.explanation_en as string).trim()
+            }
+            if (qAny.explanation_zh && typeof qAny.explanation_zh === 'string') {
+              explanations.zh = (qAny.explanation_zh as string).trim()
+            }
+            if (qAny.explanation_ja && typeof qAny.explanation_ja === 'string') {
+              explanations.ja = (qAny.explanation_ja as string).trim()
+            }
+            // Also support explanations object format
+            if (qAny.explanations && typeof qAny.explanations === 'object') {
+              const explObj = qAny.explanations as Record<string, string>
+              if (explObj.en) explanations.en = explObj.en.trim()
+              if (explObj.zh) explanations.zh = explObj.zh.trim()
+              if (explObj.ja) explanations.ja = explObj.ja.trim()
+            }
+
             return {
               id: q.id,
               type: (q.type === 'multiple'
@@ -266,7 +306,8 @@ export function StudyMode({ examId }: StudyModeProps) {
                 correctAnswers.length > 0
                   ? correctAnswers
                   : [Math.max(correctIndex, 0)],
-              explanation: (q.explanation ?? '').trim(),
+              explanation: rawExplanation,
+              explanations,
             }
           })
 
@@ -299,16 +340,17 @@ export function StudyMode({ examId }: StudyModeProps) {
                 <ArrowLeft className='h-4 w-4' />
               </Button>
             </Link>
-            <h1 className='text-lg font-semibold'>{title} - Study Mode</h1>
+            <h1 className='text-lg font-semibold'>{title} - {t('study.title')}</h1>
           </div>
           <div className='ms-auto flex items-center space-x-4'>
+            <LanguageSwitch />
             <ThemeSwitch />
           </div>
         </Header>
 
         <Main className='mx-auto w-full max-w-3xl'>
           <div className='text-sm text-muted-foreground'>
-            Loading questions…
+            {t('practice.loadingQuestions')}
           </div>
         </Main>
       </>
@@ -325,9 +367,10 @@ export function StudyMode({ examId }: StudyModeProps) {
                 <ArrowLeft className='h-4 w-4' />
               </Button>
             </Link>
-            <h1 className='text-lg font-semibold'>{title} - Study Mode</h1>
+            <h1 className='text-lg font-semibold'>{title} - {t('study.title')}</h1>
           </div>
           <div className='ms-auto flex items-center space-x-4'>
+            <LanguageSwitch />
             <ThemeSwitch />
           </div>
         </Header>
@@ -378,7 +421,7 @@ export function StudyMode({ examId }: StudyModeProps) {
         newState
       )
     } else {
-      toast.message('Bookmark saved locally. Sign in to sync to cloud')
+      toast.message(t('practice.bookmarkSavedLocally'))
     }
   }
 
@@ -391,9 +434,10 @@ export function StudyMode({ examId }: StudyModeProps) {
               <ArrowLeft className='h-4 w-4' />
             </Button>
           </Link>
-          <h1 className='text-lg font-semibold'>{title} - Study Mode</h1>
+          <h1 className='text-lg font-semibold'>{title} - {t('study.title')}</h1>
         </div>
         <div className='ms-auto flex items-center space-x-4'>
+          <LanguageSwitch />
           <ThemeSwitch />
         </div>
       </Header>
@@ -414,10 +458,10 @@ export function StudyMode({ examId }: StudyModeProps) {
               <CardHeader className='relative px-2 sm:px-6'>
                 <CardTitle className='leading-normal font-medium'>
                   <Badge variant='outline' className='me-2 mb-2'>
-                    Question {currentQuestionIndex + 1} of {questions.length}
+                    {t('practice.question')} {currentQuestionIndex + 1} {t('practice.of')} {questions.length}
                   </Badge>
                   <Badge variant='secondary' className='mb-2'>
-                    {formatQuestionType(question.type)}
+                    {formatQuestionTypeWithT(question.type, t)}
                   </Badge>
                   <div className='mt-2'>
                     {question.contentHtml ? (
@@ -480,12 +524,15 @@ export function StudyMode({ examId }: StudyModeProps) {
                 <div className='rounded-md border border-blue-100 bg-blue-50 p-3 sm:p-4 dark:border-blue-900 dark:bg-blue-900/10'>
                   <div className='mb-2 flex items-center gap-2 font-semibold text-blue-700 dark:text-blue-300'>
                     <Lightbulb className='h-4 w-4' />
-                    <span>Explanation</span>
+                    <span>{t('practice.explanation')}</span>
                   </div>
                   <div className='prose prose-sm max-w-none text-muted-foreground dark:prose-invert prose-p:my-1 prose-ul:my-1 prose-li:my-0.5 prose-strong:text-blue-700 dark:prose-strong:text-blue-300'>
-                    {question.explanation
-                      ? renderExamHtml(question.explanation)
-                      : 'No explanation provided.'}
+                    {(() => {
+                      const localizedExplanation = getLocalizedExplanation(question.explanations, language)
+                      return localizedExplanation
+                        ? renderExamHtml(localizedExplanation)
+                        : 'No explanation provided.'
+                    })()}
                   </div>
                 </div>
               </CardContent>
