@@ -10,6 +10,7 @@ import {
   Cloud,
 } from 'lucide-react'
 import { useAuth } from '@/context/auth-ctx'
+import { useLanguage } from '@/context/language-provider'
 import { useExams } from '@/hooks/use-exams'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
@@ -29,6 +30,7 @@ import { LanguageSwitch } from '@/components/language-switch'
 
 export function Dashboard() {
   const { user, guestId } = useAuth()
+  const { t } = useLanguage()
   const userId = user?.uid || guestId
 
   const { exams: allExams, loading: examsLoading } = useExams()
@@ -125,22 +127,21 @@ export function Dashboard() {
 
       <Main>
         <div className='mb-6 flex items-center justify-between space-y-2'>
-          <h1 className='text-3xl font-bold tracking-tight'>Dashboard</h1>
+          <h1 className='text-3xl font-bold tracking-tight'>{t('dashboard.title')}</h1>
         </div>
 
         {!user && (
           <Alert className='mb-6'>
             <Cloud />
-            <AlertTitle>Sign in to sync your learning progress</AlertTitle>
+            <AlertTitle>{t('dashboard.syncPromptTitle')}</AlertTitle>
             <AlertDescription>
               <div className='flex flex-wrap items-center gap-3'>
                 <span>
-                  Sign in to automatically sync practice progress across your
-                  devices.
+                  {t('dashboard.syncPromptDesc')}
                 </span>
                 <Button asChild size='sm'>
                   <Link from='/' to='/sign-in' search={{ redirect: '/' }}>
-                    Sign in
+                    {t('nav.signIn')}
                   </Link>
                 </Button>
               </div>
@@ -152,7 +153,7 @@ export function Dashboard() {
           <Card>
             <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
               <CardTitle className='text-sm font-medium'>
-                Total Questions Answered
+                {t('dashboard.totalQuestionsAnswered')}
               </CardTitle>
               <BookOpen className='h-4 w-4 text-muted-foreground' />
             </CardHeader>
@@ -165,7 +166,7 @@ export function Dashboard() {
           <Card>
             <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
               <CardTitle className='text-sm font-medium'>
-                Correct Answers
+                {t('dashboard.correctAnswers')}
               </CardTitle>
               <CheckCircle className='h-4 w-4 text-muted-foreground' />
             </CardHeader>
@@ -178,7 +179,7 @@ export function Dashboard() {
           <Card>
             <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
               <CardTitle className='text-sm font-medium'>
-                Overall Accuracy
+                {t('dashboard.overallAccuracy')}
               </CardTitle>
               <TrendingUp className='h-4 w-4 text-muted-foreground' />
             </CardHeader>
@@ -191,7 +192,7 @@ export function Dashboard() {
           <Card>
             <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
               <CardTitle className='text-sm font-medium'>
-                Exams Started
+                {t('dashboard.examsStarted')}
               </CardTitle>
               <Activity className='h-4 w-4 text-muted-foreground' />
             </CardHeader>
@@ -204,10 +205,10 @@ export function Dashboard() {
         </div>
 
         <div className='space-y-4'>
-          <h2 className='text-xl font-semibold'>Recent Activity</h2>
+          <h2 className='text-xl font-semibold'>{t('dashboard.recentActivity')}</h2>
           {stats?.examStats.length === 0 ? (
             <div className='py-10 text-center text-muted-foreground'>
-              No practice history yet. Start an exam to see your stats!
+              {t('dashboard.noHistory')}
             </div>
           ) : (
             <div className='grid gap-4 md:grid-cols-2 lg:grid-cols-3'>
@@ -234,7 +235,7 @@ export function Dashboard() {
                       <div className='space-y-2'>
                         <div className='flex justify-between text-sm'>
                           <span className='text-muted-foreground'>
-                            Progress
+                            {t('common.progress')}
                           </span>
                           <span className='font-medium'>
                             {exam.answered} / {exam.totalQuestions || '?'}
@@ -252,7 +253,7 @@ export function Dashboard() {
 
                         <div className='flex justify-between pt-2 text-sm'>
                           <span className='text-muted-foreground'>
-                            Accuracy
+                            {t('common.accuracy')}
                           </span>
                           <span
                             className={
@@ -274,10 +275,10 @@ export function Dashboard() {
         </div>
 
         <div className='mt-8 space-y-4'>
-          <h2 className='text-xl font-semibold'>All Available Exams</h2>
+          <h2 className='text-xl font-semibold'>{t('dashboard.allExams')}</h2>
           {examsLoading ? (
             <div className='py-10 text-center text-muted-foreground'>
-              Loading exams...
+              {t('dashboard.loadingExams')}
             </div>
           ) : (
             <div className='grid gap-4 md:grid-cols-2 lg:grid-cols-3'>
@@ -300,8 +301,8 @@ export function Dashboard() {
                       <div className='flex justify-between text-sm text-muted-foreground'>
                         <span>
                           {typeof exam.questionCount === 'number'
-                            ? `${exam.questionCount} Questions`
-                            : 'Questions: —'}
+                            ? `${exam.questionCount} ${t('common.questions')}`
+                            : `${t('common.questions')}: —`}
                         </span>
                       </div>
                     </CardContent>

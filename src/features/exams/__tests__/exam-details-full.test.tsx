@@ -120,7 +120,7 @@ describe('ExamDetails', () => {
     renderWithAuth('test-exam', { user: null, guestId: 'guest-1', loading: false })
 
     await waitFor(() => {
-      expect(screen.getByRole('button', { name: /Join My Exams/i })).toBeInTheDocument()
+      expect(screen.getByRole('button', { name: /Join Exam/i })).toBeInTheDocument()
     })
   })
 
@@ -130,7 +130,7 @@ describe('ExamDetails', () => {
     renderWithAuth('test-exam', { user: null, guestId: 'guest-1', loading: false })
 
     await waitFor(() => {
-      expect(screen.queryByRole('button', { name: /Join My Exams/i })).not.toBeInTheDocument()
+      expect(screen.queryByRole('button', { name: /Join Exam/i })).not.toBeInTheDocument()
     })
   })
 
@@ -144,13 +144,13 @@ describe('ExamDetails', () => {
     renderWithAuth('test-exam', { user: null, guestId: 'guest-1', loading: false })
 
     await waitFor(() => {
-      expect(screen.getByRole('button', { name: /Join My Exams/i })).toBeInTheDocument()
+      expect(screen.getByRole('button', { name: /Join Exam/i })).toBeInTheDocument()
     })
 
-    await user.click(screen.getByRole('button', { name: /Join My Exams/i }))
+    await user.click(screen.getByRole('button', { name: /Join Exam/i }))
 
     await waitFor(() => {
-      expect(toast.error).toHaveBeenCalledWith('Failed to download exam data')
+      expect(toast.error).toHaveBeenCalledWith('Error')
     })
   })
 
@@ -165,7 +165,7 @@ describe('ExamDetails', () => {
     await waitFor(() => {
       // 2 of 50 = 4%
       expect(screen.getByText('4%')).toBeInTheDocument()
-      expect(screen.getByText('2 of 50 completed')).toBeInTheDocument()
+      expect(screen.getByText('2 / 50')).toBeInTheDocument()
     })
   })
 
@@ -183,13 +183,13 @@ describe('ExamDetails', () => {
     })
   })
 
-  it('should show Never when no last studied', async () => {
+  it('should show dash when no last studied', async () => {
     mockGetExamProgress.mockReturnValue({})
 
     renderWithAuth('test-exam', { user: null, guestId: 'guest-1', loading: false })
 
     await waitFor(() => {
-      expect(screen.getByText('Never')).toBeInTheDocument()
+      expect(screen.getByText('-')).toBeInTheDocument()
     })
   })
 
@@ -213,7 +213,7 @@ describe('ExamDetails', () => {
     renderWithAuth('test-exam', { user: null, guestId: 'guest-1', loading: false })
 
     await waitFor(() => {
-      expect(screen.getByText('Practice Mode')).toBeInTheDocument()
+      expect(screen.getByText('Practice')).toBeInTheDocument()
       expect(screen.getByText('Study Mode')).toBeInTheDocument()
       expect(screen.getByText('My Mistakes')).toBeInTheDocument()
       expect(screen.getByText('My Bookmarks')).toBeInTheDocument()
@@ -232,9 +232,9 @@ describe('ExamDetails', () => {
     await user.click(screen.getByText('Exam Mode'))
 
     await waitFor(() => {
-      expect(screen.getByText('Start Exam Mode')).toBeInTheDocument()
-      expect(screen.getByLabelText(/Question count/i)).toBeInTheDocument()
-      expect(screen.getByLabelText(/Seed/i)).toBeInTheDocument()
+      expect(screen.getByRole('heading', { name: 'Start Exam' })).toBeInTheDocument()
+      expect(screen.getByLabelText(/Number of Questions/i)).toBeInTheDocument()
+      expect(screen.getByLabelText(/Random Seed/i)).toBeInTheDocument()
     })
   })
 
@@ -249,10 +249,10 @@ describe('ExamDetails', () => {
     await user.click(screen.getByText('Exam Mode'))
 
     await waitFor(() => {
-      expect(screen.getByLabelText(/Question count/i)).toBeInTheDocument()
+      expect(screen.getByLabelText(/Number of Questions/i)).toBeInTheDocument()
     })
 
-    const countInput = screen.getByLabelText(/Question count/i)
+    const countInput = screen.getByLabelText(/Number of Questions/i)
     // Triple-click to select all, then type new value
     await user.tripleClick(countInput)
     await user.keyboard('20')
@@ -271,10 +271,10 @@ describe('ExamDetails', () => {
     await user.click(screen.getByText('Exam Mode'))
 
     await waitFor(() => {
-      expect(screen.getByLabelText(/Seed/i)).toBeInTheDocument()
+      expect(screen.getByLabelText(/Random Seed/i)).toBeInTheDocument()
     })
 
-    const seedInput = screen.getByLabelText(/Seed/i)
+    const seedInput = screen.getByLabelText(/Random Seed/i)
     await user.type(seedInput, 'test-seed')
 
     expect(seedInput).toHaveValue('test-seed')
@@ -291,13 +291,13 @@ describe('ExamDetails', () => {
     await user.click(screen.getByText('Exam Mode'))
 
     await waitFor(() => {
-      expect(screen.getByText('Start Exam Mode')).toBeInTheDocument()
+      expect(screen.getByRole('heading', { name: 'Start Exam' })).toBeInTheDocument()
     })
 
     await user.click(screen.getByRole('button', { name: /Cancel/i }))
 
     await waitFor(() => {
-      expect(screen.queryByText('Start Exam Mode')).not.toBeInTheDocument()
+      expect(screen.queryByRole('heading', { name: 'Start Exam' })).not.toBeInTheDocument()
     })
   })
 
@@ -312,10 +312,12 @@ describe('ExamDetails', () => {
     await user.click(screen.getByText('Exam Mode'))
 
     await waitFor(() => {
-      expect(screen.getByText('Start Exam Mode')).toBeInTheDocument()
+      expect(screen.getByRole('heading', { name: 'Start Exam' })).toBeInTheDocument()
     })
 
-    await user.click(screen.getByRole('button', { name: 'Start' }))
+    // Click the Start Exam button (not the heading)
+    const startButton = screen.getAllByText('Start Exam').find(el => el.tagName === 'BUTTON')
+    await user.click(startButton!)
 
     await waitFor(() => {
       expect(mockNavigate).toHaveBeenCalledWith({
@@ -326,7 +328,7 @@ describe('ExamDetails', () => {
     })
   })
 
-  it('should show available questions info in dialog', async () => {
+  it('should show exam settings dialog', async () => {
     const user = userEvent.setup()
     renderWithAuth('test-exam', { user: null, guestId: 'guest-1', loading: false })
 
@@ -337,7 +339,7 @@ describe('ExamDetails', () => {
     await user.click(screen.getByText('Exam Mode'))
 
     await waitFor(() => {
-      expect(screen.getByText(/Available questions: 50/)).toBeInTheDocument()
+      expect(screen.getByText('Exam Settings')).toBeInTheDocument()
     })
   })
 

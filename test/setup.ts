@@ -10,6 +10,47 @@ const englishTranslations: Record<string, string> = {
   'common.continue': 'Continue',
   'common.save': 'Save',
   'common.back': 'Back',
+  'common.questions': 'Questions',
+  'common.progress': 'Progress',
+  'common.accuracy': 'Accuracy',
+
+  // Dashboard
+  'dashboard.title': 'Dashboard',
+  'dashboard.totalQuestionsAnswered': 'Total Questions Answered',
+  'dashboard.correctAnswers': 'Correct Answers',
+  'dashboard.overallAccuracy': 'Overall Accuracy',
+  'dashboard.examsStarted': 'Exams Started',
+  'dashboard.recentActivity': 'Recent Activity',
+  'dashboard.noHistory': 'No practice history yet. Start an exam to see your stats!',
+  'dashboard.allExams': 'All Available Exams',
+  'dashboard.loadingExams': 'Loading exams...',
+  'dashboard.syncPromptTitle': 'Sign in to sync your learning progress',
+  'dashboard.syncPromptDesc': 'Sign in to automatically sync practice progress across your devices.',
+  'dashboard.lastStudied': 'Last studied',
+
+  // Exams list
+  'exams.myExams': 'My Exams',
+  'exams.noExams': 'No exams yet',
+  'exams.noExamsDesc': "You haven't joined any exams yet. Go to the dashboard to explore and join exams.",
+  'exams.goToDashboard': 'Go to Dashboard',
+
+  // Exam details
+  'examDetails.join': 'Join Exam',
+  'examDetails.joined': 'Joined',
+  'examDetails.practice': 'Practice',
+  'examDetails.study': 'Study',
+  'examDetails.exam': 'Exam',
+  'examDetails.questionsAnswered': 'Questions Answered',
+  'examDetails.correctRate': 'Correct Rate',
+  'examDetails.bookmarked': 'Bookmarked',
+  'examDetails.mistakes': 'Mistakes',
+  'examDetails.startExam': 'Start Exam',
+  'examDetails.examSettings': 'Exam Settings',
+  'examDetails.numberOfQuestions': 'Number of Questions',
+  'examDetails.randomSeed': 'Random Seed (Optional)',
+  'examDetails.startExamBtn': 'Start Exam',
+  'examDetails.loadingExam': 'Loading exam…',
+  'examDetails.addedToMyExams': 'Exam added to My Exams',
 
   // Practice mode
   'practice.title': 'Practice',
@@ -51,6 +92,13 @@ const englishTranslations: Record<string, string> = {
   'exam.score': 'Score',
   'exam.passed': 'Passed',
   'exam.failed': 'Failed',
+
+  // Settings
+  'settings.title': 'Settings',
+  'settings.description': 'Manage your account settings and set e-mail preferences.',
+  'settings.profile': 'Profile',
+  'settings.account': 'Account',
+  'settings.appearance': 'Appearance',
 
   // Navigation
   'nav.exams': 'Exams',
