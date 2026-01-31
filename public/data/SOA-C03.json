@@ -413,7 +413,9 @@
       "bookmarked": false,
       "hasNote": false,
       "explanations": {
-        "zh": "<p><strong>正确答案 C：</strong>Systems Manager Run Command 的速率控制功能可以限制并发执行次数为 30，并通过标签精确定位目标实例。这是最高效的自动化解决方案。</p>\n<p><strong>为什么其他选项错误：</strong></p>\n<ul>\n<li><strong>A:</strong> 创建额外的标签和手动分批执行增加了复杂性和操作开销。</li>\n<li><strong>B:</strong> Lambda 的保留并发控制的是函数本身，不是 Run Command 的并发。</li>\n<li><strong>D:</strong> Step Functions 并行状态的配置更复杂，且需要手动运行多次。</li>\n</ul>"
+        "zh": "<p><strong>正确答案 C：</strong>Systems Manager Run Command 的速率控制功能可以限制并发执行次数为 30，并通过标签精确定位目标实例。这是最高效的自动化解决方案。</p>\n<p><strong>为什么其他选项错误：</strong></p>\n<ul>\n<li><strong>A:</strong> 创建额外的标签和手动分批执行增加了复杂性和操作开销。</li>\n<li><strong>B:</strong> Lambda 的保留并发控制的是函数本身，不是 Run Command 的并发。</li>\n<li><strong>D:</strong> Step Functions 并行状态的配置更复杂，且需要手动运行多次。</li>\n</ul>",
+        "en": "<p><strong>Correct Answer C:</strong> Systems Manager Run Command's rate control feature can limit concurrent executions to 30 and precisely target instances using tags. This is the most efficient automated solution.</p>\n<p><strong>Why other options are incorrect:</strong></p>\n<ul>\n<li><strong>A:</strong> Creating additional tags and manual batch execution adds complexity and operational overhead.</li>\n<li><strong>B:</strong> Lambda's reserved concurrency controls the function itself, not Run Command's concurrency.</li>\n<li><strong>D:</strong> Step Functions parallel state configuration is more complex and requires multiple manual runs.</li>\n</ul>",
+        "ja": "<p><strong>正解 C：</strong>Systems Manager Run Command のレート制御機能は、並行実行を30に制限し、タグを使用してインスタンスを正確にターゲットできます。これは最も効率的な自動化ソリューションです。</p>\n<p><strong>他のオプションが不正解な理由：</strong></p>\n<ul>\n<li><strong>A:</strong> 追加のタグを作成し、手動でバッチ実行すると、複雑さと運用オーバーヘッドが増加します。</li>\n<li><strong>B:</strong> Lambda の予約済み同時実行は、Run Command の同時実行ではなく、関数自体を制御します。</li>\n<li><strong>D:</strong> Step Functions の並列状態の設定はより複雑で、複数回の手動実行が必要です。</li>\n</ul>"
       }
     },
     {
@@ -449,7 +451,9 @@
       "bookmarked": false,
       "hasNote": false,
       "explanations": {
-        "zh": "<p><strong>正确答案 A：</strong>Route 53 健康检查可以监控端点的可用性。为每个加权记录添加健康检查后，Route 53 会自动停止将流量路由到不健康的端点。</p>\n<p><strong>为什么其他选项错误：</strong></p>\n<ul>\n<li><strong>B:</strong> 增加特定区域的权重不能自动检测和避免不健康的端点。</li>\n<li><strong>C:</strong> 重新配置为基于延迟的路由不能解决端点健康检查问题。</li>\n<li><strong>D:</strong> 降低 TTL 只能更快地传播 DNS 更改，但不能检测不健康的端点。</li>\n</ul>"
+        "zh": "<p><strong>正确答案 A：</strong>Route 53 健康检查可以监控端点的可用性。为每个加权记录添加健康检查后，Route 53 会自动停止将流量路由到不健康的端点。</p>\n<p><strong>为什么其他选项错误：</strong></p>\n<ul>\n<li><strong>B:</strong> 增加特定区域的权重不能自动检测和避免不健康的端点。</li>\n<li><strong>C:</strong> 重新配置为基于延迟的路由不能解决端点健康检查问题。</li>\n<li><strong>D:</strong> 降低 TTL 只能更快地传播 DNS 更改，但不能检测不健康的端点。</li>\n</ul>",
+        "en": "<p><strong>Correct Answer A:</strong> Route 53 health checks can monitor endpoint availability. After adding health checks to each weighted record, Route 53 will automatically stop routing traffic to unhealthy endpoints.</p>\n<p><strong>Why other options are incorrect:</strong></p>\n<ul>\n<li><strong>B:</strong> Increasing weight for specific regions cannot automatically detect and avoid unhealthy endpoints.</li>\n<li><strong>C:</strong> Reconfiguring to latency-based routing doesn't solve endpoint health check issues.</li>\n<li><strong>D:</strong> Lowering TTL only propagates DNS changes faster but cannot detect unhealthy endpoints.</li>\n</ul>",
+        "ja": "<p><strong>正解 A：</strong>Route 53 ヘルスチェックはエンドポイントの可用性を監視できます。各加重レコードにヘルスチェックを追加すると、Route 53 は不健全なエンドポイントへのトラフィックルーティングを自動的に停止します。</p>\n<p><strong>他のオプションが不正解な理由：</strong></p>\n<ul>\n<li><strong>B:</strong> 特定のリージョンの重みを増やしても、不健全なエンドポイントを自動的に検出して回避することはできません。</li>\n<li><strong>C:</strong> レイテンシベースのルーティングに再設定しても、エンドポイントのヘルスチェックの問題は解決しません。</li>\n<li><strong>D:</strong> TTL を下げると DNS の変更がより速く伝播されますが、不健全なエンドポイントを検出することはできません。</li>\n</ul>"
       }
     },
     {
@@ -489,7 +493,9 @@
       "bookmarked": false,
       "hasNote": false,
       "explanations": {
-        "zh": "<p><strong>正确答案 A 和 E：</strong>创建 Distributor 包来打包第三方代理，然后使用 State Manager 关联运行 AWS-ConfigureAWSPackage 文档来自动安装和更新包，这是最少操作开销的组合。</p>\n<p><strong>为什么其他选项错误：</strong></p>\n<ul>\n<li><strong>B:</strong> OpsItem 用于事件管理，不用于软件部署。</li>\n<li><strong>C:</strong> 使用 Lambda 登录实例不是最佳实践，且难以管理。</li>\n<li><strong>D:</strong> AWS-RunRemoteScript 不如 AWS-ConfigureAWSPackage 专门用于包管理。</li>\n</ul>"
+        "zh": "<p><strong>正确答案 A 和 E：</strong>创建 Distributor 包来打包第三方代理，然后使用 State Manager 关联运行 AWS-ConfigureAWSPackage 文档来自动安装和更新包，这是最少操作开销的组合。</p>\n<p><strong>为什么其他选项错误：</strong></p>\n<ul>\n<li><strong>B:</strong> OpsItem 用于事件管理，不用于软件部署。</li>\n<li><strong>C:</strong> 使用 Lambda 登录实例不是最佳实践，且难以管理。</li>\n<li><strong>D:</strong> AWS-RunRemoteScript 不如 AWS-ConfigureAWSPackage 专门用于包管理。</li>\n</ul>",
+        "en": "<p><strong>Correct Answer A and E:</strong> Creating a Distributor package to package the third-party agent, then using State Manager association to run the AWS-ConfigureAWSPackage document to automatically install and update packages is the combination with least operational overhead.</p>\n<p><strong>Why other options are incorrect:</strong></p>\n<ul>\n<li><strong>B:</strong> OpsItem is for event management, not software deployment.</li>\n<li><strong>C:</strong> Using Lambda to log into instances is not best practice and difficult to manage.</li>\n<li><strong>D:</strong> AWS-RunRemoteScript is not as specialized for package management as AWS-ConfigureAWSPackage.</li>\n</ul>",
+        "ja": "<p><strong>正解 A と E：</strong>Distributor パッケージを作成してサードパーティエージェントをパッケージ化し、State Manager アソシエーションを使用して AWS-ConfigureAWSPackage ドキュメントを実行してパッケージを自動的にインストールおよび更新することが、最も運用オーバーヘッドの少ない組み合わせです。</p>\n<p><strong>他のオプションが不正解な理由：</strong></p>\n<ul>\n<li><strong>B:</strong> OpsItem はイベント管理用であり、ソフトウェアデプロイ用ではありません。</li>\n<li><strong>C:</strong> Lambda を使用してインスタンスにログインするのはベストプラクティスではなく、管理が困難です。</li>\n<li><strong>D:</strong> AWS-RunRemoteScript は、AWS-ConfigureAWSPackage ほどパッケージ管理に特化していません。</li>\n</ul>"
       }
     },
     {
@@ -525,7 +531,9 @@
       "bookmarked": false,
       "hasNote": false,
       "explanations": {
-        "zh": "<p><strong>正确答案 A：</strong>Patch Manager 可以定义补丁基线，使用扫描功能识别受影响的实例，然后使用 Patch Now 选项在每个区域快速部署补丁。这提供了最低的操作开销。</p>\n<p><strong>为什么其他选项错误：</strong></p>\n<ul>\n<li><strong>B:</strong> AWS Config 不能直接识别需要特定补丁的实例。</li>\n<li><strong>C:</strong> EventBridge 规则响应合规事件会增加复杂性。</li>\n<li><strong>D:</strong> 手动启动新实例替换旧实例是最高操作开销的方法。</li>\n</ul>"
+        "zh": "<p><strong>正确答案 A：</strong>Patch Manager 可以定义补丁基线，使用扫描功能识别受影响的实例，然后使用 Patch Now 选项在每个区域快速部署补丁。这提供了最低的操作开销。</p>\n<p><strong>为什么其他选项错误：</strong></p>\n<ul>\n<li><strong>B:</strong> AWS Config 不能直接识别需要特定补丁的实例。</li>\n<li><strong>C:</strong> EventBridge 规则响应合规事件会增加复杂性。</li>\n<li><strong>D:</strong> 手动启动新实例替换旧实例是最高操作开销的方法。</li>\n</ul>",
+        "en": "<p><strong>Correct Answer A:</strong> Patch Manager can define patch baselines, use the scan feature to identify affected instances, then use the Patch Now option to quickly deploy patches in each region. This provides the lowest operational overhead.</p>\n<p><strong>Why other options are incorrect:</strong></p>\n<ul>\n<li><strong>B:</strong> AWS Config cannot directly identify instances that need specific patches.</li>\n<li><strong>C:</strong> EventBridge rules responding to compliance events adds complexity.</li>\n<li><strong>D:</strong> Manually launching new instances to replace old ones has the highest operational overhead.</li>\n</ul>",
+        "ja": "<p><strong>正解 A：</strong>Patch Manager はパッチベースラインを定義し、スキャン機能を使用して影響を受けるインスタンスを特定し、Patch Now オプションを使用して各リージョンでパッチを迅速にデプロイできます。これにより、運用オーバーヘッドが最小限に抑えられます。</p>\n<p><strong>他のオプションが不正解な理由：</strong></p>\n<ul>\n<li><strong>B:</strong> AWS Config は特定のパッチが必要なインスタンスを直接識別できません。</li>\n<li><strong>C:</strong> コンプライアンスイベントに応答する EventBridge ルールは複雑さを増します。</li>\n<li><strong>D:</strong> 古いインスタンスを置き換えるために新しいインスタンスを手動で起動することは、最も高い運用オーバーヘッドを伴います。</li>\n</ul>"
       }
     },
     {
@@ -561,7 +569,9 @@
       "bookmarked": false,
       "hasNote": false,
       "explanations": {
-        "zh": "<p><strong>正确答案 D：</strong>配置 EventBridge 事件触发 Lambda 函数，让函数自动修改安全组移除公开访问规则，这是事件驱动且自动化的解决方案。</p>\n<p><strong>为什么其他选项错误：</strong></p>\n<ul>\n<li><strong>A:</strong> 停止实例不能修复安全组问题，且会影响服务可用性。</li>\n<li><strong>B:</strong> cron 作业不是事件驱动的方法，且移除实例而非修复规则不恰当。</li>\n<li><strong>C:</strong> 修改为 SFTP 不能修复安全组暴露问题。</li>\n</ul>"
+        "zh": "<p><strong>正确答案 D：</strong>配置 EventBridge 事件触发 Lambda 函数，让函数自动修改安全组移除公开访问规则，这是事件驱动且自动化的解决方案。</p>\n<p><strong>为什么其他选项错误：</strong></p>\n<ul>\n<li><strong>A:</strong> 停止实例不能修复安全组问题，且会影响服务可用性。</li>\n<li><strong>B:</strong> cron 作业不是事件驱动的方法，且移除实例而非修复规则不恰当。</li>\n<li><strong>C:</strong> 修改为 SFTP 不能修复安全组暴露问题。</li>\n</ul>",
+        "en": "<p><strong>Correct Answer D:</strong> Configuring EventBridge events to trigger a Lambda function that automatically modifies security groups to remove public access rules is an event-driven and automated solution.</p>\n<p><strong>Why other options are incorrect:</strong></p>\n<ul>\n<li><strong>A:</strong> Stopping instances doesn't fix security group issues and affects service availability.</li>\n<li><strong>B:</strong> Cron jobs are not event-driven, and removing instances rather than fixing rules is inappropriate.</li>\n<li><strong>C:</strong> Changing to SFTP doesn't fix security group exposure issues.</li>\n</ul>",
+        "ja": "<p><strong>正解 D：</strong>EventBridge イベントを設定して Lambda 関数をトリガーし、セキュリティグループを自動的に変更してパブリックアクセスルールを削除することは、イベント駆動型の自動化ソリューションです。</p>\n<p><strong>他のオプションが不正解な理由：</strong></p>\n<ul>\n<li><strong>A:</strong> インスタンスを停止してもセキュリティグループの問題は修正されず、サービスの可用性に影響します。</li>\n<li><strong>B:</strong> cron ジョブはイベント駆動型ではなく、ルールを修正するのではなくインスタンスを削除するのは適切ではありません。</li>\n<li><strong>C:</strong> SFTP に変更しても、セキュリティグループの露出問題は修正されません。</li>\n</ul>"
       }
     },
     {
@@ -597,7 +607,9 @@
       "bookmarked": false,
       "hasNote": false,
       "explanations": {
-        "zh": "<p><strong>正确答案 A：</strong>集群放置组（Cluster Placement Group）将实例放置在同一可用区的紧密网络中，提供最低的网络延迟和最高的吞吐量，非常适合 HPC 工作负载。</p>\n<p><strong>为什么其他选项错误：</strong></p>\n<ul>\n<li><strong>B:</strong> 分区放置组用于分布式工作负载，跨可用区会增加延迟。</li>\n<li><strong>C:</strong> 分区放置组设计用于减少相关故障，不是优化网络性能。</li>\n<li><strong>D:</strong> 分布放置组将实例分散在不同硬件上，会增加网络延迟。</li>\n</ul>"
+        "zh": "<p><strong>正确答案 A：</strong>集群放置组（Cluster Placement Group）将实例放置在同一可用区的紧密网络中，提供最低的网络延迟和最高的吞吐量，非常适合 HPC 工作负载。</p>\n<p><strong>为什么其他选项错误：</strong></p>\n<ul>\n<li><strong>B:</strong> 分区放置组用于分布式工作负载，跨可用区会增加延迟。</li>\n<li><strong>C:</strong> 分区放置组设计用于减少相关故障，不是优化网络性能。</li>\n<li><strong>D:</strong> 分布放置组将实例分散在不同硬件上，会增加网络延迟。</li>\n</ul>",
+        "en": "<p><strong>Correct Answer A:</strong> Cluster Placement Groups place instances in a tightly coupled network within the same Availability Zone, providing the lowest network latency and highest throughput, ideal for HPC workloads.</p>\n<p><strong>Why other options are incorrect:</strong></p>\n<ul>\n<li><strong>B:</strong> Partition placement groups are for distributed workloads; cross-AZ increases latency.</li>\n<li><strong>C:</strong> Partition placement groups are designed to reduce correlated failures, not optimize network performance.</li>\n<li><strong>D:</strong> Spread placement groups distribute instances across different hardware, increasing network latency.</li>\n</ul>",
+        "ja": "<p><strong>正解 A：</strong>クラスタープレイスメントグループは、同じアベイラビリティゾーン内の密結合ネットワークにインスタンスを配置し、最低のネットワークレイテンシと最高のスループットを提供します。HPC ワークロードに最適です。</p>\n<p><strong>他のオプションが不正解な理由：</strong></p>\n<ul>\n<li><strong>B:</strong> パーティションプレイスメントグループは分散ワークロード用であり、AZ 間ではレイテンシが増加します。</li>\n<li><strong>C:</strong> パーティションプレイスメントグループは相関障害を減らすように設計されており、ネットワークパフォーマンスの最適化用ではありません。</li>\n<li><strong>D:</strong> スプレッドプレイスメントグループは異なるハードウェア間でインスタンスを分散させ、ネットワークレイテンシが増加します。</li>\n</ul>"
       }
     },
     {
@@ -633,7 +645,9 @@
       "bookmarked": false,
       "hasNote": false,
       "explanations": {
-        "zh": "<p><strong>正确答案 D：</strong>将 Security Hub 指定为管理员账户并配置组织自动加入成员账户，这是最高效的方法。新账户会自动成为成员，无需手动配置脚本。</p>\n<p><strong>为什么其他选项错误：</strong></p>\n<ul>\n<li><strong>A:</strong> 创建脚本手动发送和接受邀请比使用组织集成更麻烦。</li>\n<li><strong>B:</strong> Amazon Inspector 不支持 CIS AWS Foundations Benchmark。</li>\n<li><strong>C:</strong> GuardDuty 是威胁检测服务，不运行 CIS 基准扫描。</li>\n</ul>"
+        "zh": "<p><strong>正确答案 D：</strong>将 Security Hub 指定为管理员账户并配置组织自动加入成员账户，这是最高效的方法。新账户会自动成为成员，无需手动配置脚本。</p>\n<p><strong>为什么其他选项错误：</strong></p>\n<ul>\n<li><strong>A:</strong> 创建脚本手动发送和接受邀请比使用组织集成更麻烦。</li>\n<li><strong>B:</strong> Amazon Inspector 不支持 CIS AWS Foundations Benchmark。</li>\n<li><strong>C:</strong> GuardDuty 是威胁检测服务，不运行 CIS 基准扫描。</li>\n</ul>",
+        "en": "<p><strong>Correct Answer D:</strong> Designating Security Hub as the administrator account and configuring the organization to automatically enroll member accounts is the most efficient method. New accounts automatically become members without manual script configuration.</p>\n<p><strong>Why other options are incorrect:</strong></p>\n<ul>\n<li><strong>A:</strong> Creating scripts to manually send and accept invitations is more cumbersome than using organization integration.</li>\n<li><strong>B:</strong> Amazon Inspector does not support CIS AWS Foundations Benchmark.</li>\n<li><strong>C:</strong> GuardDuty is a threat detection service and does not run CIS benchmark scans.</li>\n</ul>",
+        "ja": "<p><strong>正解 D：</strong>Security Hub を管理者アカウントとして指定し、組織がメンバーアカウントを自動的に登録するように設定することが最も効率的な方法です。新しいアカウントは手動スクリプト設定なしで自動的にメンバーになります。</p>\n<p><strong>他のオプションが不正解な理由：</strong></p>\n<ul>\n<li><strong>A:</strong> 手動で招待を送信および承諾するスクリプトを作成することは、組織統合を使用するよりも面倒です。</li>\n<li><strong>B:</strong> Amazon Inspector は CIS AWS Foundations Benchmark をサポートしていません。</li>\n<li><strong>C:</strong> GuardDuty は脅威検出サービスであり、CIS ベンチマークスキャンを実行しません。</li>\n</ul>"
       }
     },
     {
@@ -669,7 +683,9 @@
       "bookmarked": false,
       "hasNote": false,
       "explanations": {
-        "zh": "<p><strong>正确答案 C：</strong>AWS Compute Optimizer 可以自动分析 EBS 卷的性能指标（包括 IOPS 和吞吐量），并提供优化建议。这是最高效的方法。</p>\n<p><strong>为什么其他选项错误：</strong></p>\n<ul>\n<li><strong>A:</strong> EC2 控制台的监控图表不提供 EBS 性能优化建议。</li>\n<li><strong>B:</strong> 更改实例类型不能直接优化 EBS 卷性能。</li>\n<li><strong>D:</strong> 使用 fio 工具手动基准测试效率很低。</li>\n</ul>"
+        "zh": "<p><strong>正确答案 C：</strong>AWS Compute Optimizer 可以自动分析 EBS 卷的性能指标（包括 IOPS 和吞吐量），并提供优化建议。这是最高效的方法。</p>\n<p><strong>为什么其他选项错误：</strong></p>\n<ul>\n<li><strong>A:</strong> EC2 控制台的监控图表不提供 EBS 性能优化建议。</li>\n<li><strong>B:</strong> 更改实例类型不能直接优化 EBS 卷性能。</li>\n<li><strong>D:</strong> 使用 fio 工具手动基准测试效率很低。</li>\n</ul>",
+        "en": "<p><strong>Correct Answer C:</strong> AWS Compute Optimizer can automatically analyze EBS volume performance metrics (including IOPS and throughput) and provide optimization recommendations. This is the most efficient method.</p>\n<p><strong>Why other options are incorrect:</strong></p>\n<ul>\n<li><strong>A:</strong> EC2 console monitoring graphs do not provide EBS performance optimization recommendations.</li>\n<li><strong>B:</strong> Changing instance types cannot directly optimize EBS volume performance.</li>\n<li><strong>D:</strong> Manual benchmarking with fio tool is very inefficient.</li>\n</ul>",
+        "ja": "<p><strong>正解 C：</strong>AWS Compute Optimizer は EBS ボリュームのパフォーマンスメトリクス（IOPS とスループットを含む）を自動的に分析し、最適化の推奨事項を提供できます。これは最も効率的な方法です。</p>\n<p><strong>他のオプションが不正解な理由：</strong></p>\n<ul>\n<li><strong>A:</strong> EC2 コンソールの監視グラフは EBS パフォーマンスの最適化に関する推奨事項を提供しません。</li>\n<li><strong>B:</strong> インスタンスタイプを変更しても、EBS ボリュームのパフォーマンスを直接最適化することはできません。</li>\n<li><strong>D:</strong> fio ツールによる手動ベンチマークは非常に非効率的です。</li>\n</ul>"
       }
     },
     {
@@ -705,7 +721,9 @@
       "bookmarked": false,
       "hasNote": false,
       "explanations": {
-        "zh": "<p><strong>正确答案 D：</strong>使用 AWS Config 托管规则检测未启用日志的存储桶，并使用 Systems Manager Automation runbook 自动修复，这是最高效的自动化解决方案。</p>\n<p><strong>为什么其他选项错误：</strong></p>\n<ul>\n<li><strong>A:</strong> Trusted Advisor 检查不能自动启用日志功能。</li>\n<li><strong>B:</strong> S3 存储桶策略不能强制启用日志。</li>\n<li><strong>C:</strong> 使用 Lambda 函数比使用现有的 SSM runbook 更复杂。</li>\n</ul>"
+        "zh": "<p><strong>正确答案 D：</strong>使用 AWS Config 托管规则检测未启用日志的存储桶，并使用 Systems Manager Automation runbook 自动修复，这是最高效的自动化解决方案。</p>\n<p><strong>为什么其他选项错误：</strong></p>\n<ul>\n<li><strong>A:</strong> Trusted Advisor 检查不能自动启用日志功能。</li>\n<li><strong>B:</strong> S3 存储桶策略不能强制启用日志。</li>\n<li><strong>C:</strong> 使用 Lambda 函数比使用现有的 SSM runbook 更复杂。</li>\n</ul>",
+        "en": "<p><strong>Correct Answer D:</strong> Using AWS Config managed rules to detect buckets without logging enabled, and using Systems Manager Automation runbooks to automatically remediate, is the most efficient automated solution.</p>\n<p><strong>Why other options are incorrect:</strong></p>\n<ul>\n<li><strong>A:</strong> Trusted Advisor checks cannot automatically enable logging functionality.</li>\n<li><strong>B:</strong> Manual review of storage lens data is operationally inefficient.</li>\n<li><strong>C:</strong> Lambda with CloudWatch events is a valid approach but requires more configuration than Config+SSM Automation.</li>\n</ul>",
+        "ja": "<p><strong>正解 D：</strong>AWS Config マネージドルールを使用してログが有効になっていないバケットを検出し、Systems Manager Automation ランブックを使用して自動的に修復することが、最も効率的な自動化ソリューションです。</p>\n<p><strong>他のオプションが不正解な理由：</strong></p>\n<ul>\n<li><strong>A:</strong> Trusted Advisor のチェックはログ機能を自動的に有効にできません。</li>\n<li><strong>B:</strong> Storage Lens データの手動レビューは運用上非効率的です。</li>\n<li><strong>C:</strong> CloudWatch イベントを使用した Lambda は有効なアプローチですが、Config + SSM Automation よりも多くの設定が必要です。</li>\n</ul>"
       }
     },
     {
@@ -741,7 +759,9 @@
       "bookmarked": false,
       "hasNote": false,
       "explanations": {
-        "zh": "<p><strong>正确答案 B：</strong>EventBridge 计划规则可以按 cron 表达式触发，直接发布消息到 SNS 主题。这是最简单、最高效的无服务器解决方案。</p>\n<p><strong>为什么其他选项错误：</strong></p>\n<ul>\n<li><strong>A:</strong> 运行 EC2 实例并配置 cron 作业需要额外的基础设施管理。</li>\n<li><strong>C:</strong> SNS 订阅本身不能按计划触发消息发送。</li>\n<li><strong>D:</strong> Step Functions 调度功能比 EventBridge 规则更复杂。</li>\n</ul>"
+        "zh": "<p><strong>正确答案 B：</strong>EventBridge 计划规则可以按 cron 表达式触发，直接发布消息到 SNS 主题。这是最简单、最高效的无服务器解决方案。</p>\n<p><strong>为什么其他选项错误：</strong></p>\n<ul>\n<li><strong>A:</strong> 运行 EC2 实例并配置 cron 作业需要额外的基础设施管理。</li>\n<li><strong>C:</strong> SNS 订阅本身不能按计划触发消息发送。</li>\n<li><strong>D:</strong> Step Functions 调度功能比 EventBridge 规则更复杂。</li>\n</ul>",
+        "en": "<p><strong>Correct Answer A:</strong> AWS Systems Manager Parameter Store with SecureString type can securely store credentials. IAM policies can control access, and encryption uses KMS keys.</p>\n<p><strong>Why other options are incorrect:</strong></p>\n<ul>\n<li><strong>B:</strong> Storing credentials in code repositories is a security risk.</li>\n<li><strong>C:</strong> Environment variables are visible in the console and not encrypted.</li>\n<li><strong>D:</strong> S3 with SSE-S3 is not designed for credential management.</li>\n</ul>",
+        "ja": "<p><strong>正解 A：</strong>AWS Systems Manager Parameter Store の SecureString タイプは、認証情報を安全に保存できます。IAM ポリシーでアクセスを制御でき、暗号化には KMS キーを使用します。</p>\n<p><strong>他のオプションが不正解な理由：</strong></p>\n<ul>\n<li><strong>B:</strong> コードリポジトリに認証情報を保存するのはセキュリティリスクです。</li>\n<li><strong>C:</strong> 環境変数はコンソールで表示され、暗号化されていません。</li>\n<li><strong>D:</strong> SSE-S3 を使用した S3 は認証情報管理用に設計されていません。</li>\n</ul>"
       }
     },
     {
@@ -777,7 +797,9 @@
       "bookmarked": false,
       "hasNote": false,
       "explanations": {
-        "zh": "<p><strong>正确答案 A：</strong>跨账户复制时，默认情况下复制的对象仍由源账户拥有。修改复制配置以更改对象所有权为目标账户，可以解决访问被拒绝的问题。</p>\n<p><strong>为什么其他选项错误：</strong></p>\n<ul>\n<li><strong>B:</strong> 复制规则的范围与对象访问权限无关。</li>\n<li><strong>C:</strong> S3 RTC 控制复制时间，不影响访问权限。</li>\n<li><strong>D:</strong> 存储类更改不影响对象访问权限。</li>\n</ul>"
+        "zh": "<p><strong>正确答案 A：</strong>跨账户复制时，默认情况下复制的对象仍由源账户拥有。修改复制配置以更改对象所有权为目标账户，可以解决访问被拒绝的问题。</p>\n<p><strong>为什么其他选项错误：</strong></p>\n<ul>\n<li><strong>B:</strong> 复制规则的范围与对象访问权限无关。</li>\n<li><strong>C:</strong> S3 RTC 控制复制时间，不影响访问权限。</li>\n<li><strong>D:</strong> 存储类更改不影响对象访问权限。</li>\n</ul>",
+        "en": "<p><strong>Correct Answer B:</strong> AWS Secrets Manager can automatically rotate credentials and integrates natively with RDS. It provides the most secure and automated solution for database credential management.</p>\n<p><strong>Why other options are incorrect:</strong></p>\n<ul>\n<li><strong>A:</strong> Parameter Store requires manual rotation setup.</li>\n<li><strong>C:</strong> Storing credentials in application configuration files is insecure.</li>\n<li><strong>D:</strong> IAM database authentication is not supported for all database engines.</li>\n</ul>",
+        "ja": "<p><strong>正解 B：</strong>AWS Secrets Manager は認証情報を自動的にローテーションでき、RDS とネイティブに統合されています。データベース認証情報管理のための最も安全で自動化されたソリューションを提供します。</p>\n<p><strong>他のオプションが不正解な理由：</strong></p>\n<ul>\n<li><strong>A:</strong> Parameter Store は手動でローテーション設定が必要です。</li>\n<li><strong>C:</strong> アプリケーション設定ファイルに認証情報を保存するのは安全ではありません。</li>\n<li><strong>D:</strong> IAM データベース認証はすべてのデータベースエンジンでサポートされているわけではありません。</li>\n</ul>"
       }
     },
     {
@@ -813,7 +835,9 @@
       "bookmarked": false,
       "hasNote": false,
       "explanations": {
-        "zh": "<p><strong>正确答案 D：</strong>使用 IAM 角色（而非 IAM 用户）为 EC2 实例提供凭证是最安全的做法。角色策略应仅授予所需的最小权限（SendMessage、ReceiveMessage、DeleteMessage）。</p>\n<p><strong>为什么其他选项错误：</strong></p>\n<ul>\n<li><strong>A:</strong> 在应用配置中嵌入 IAM 用户凭证是不安全的。</li>\n<li><strong>B:</strong> 使用环境变量存储凭证也不安全。</li>\n<li><strong>C:</strong> sqs:* 权限过于宽泛，违反最小权限原则。</li>\n</ul>"
+        "zh": "<p><strong>正确答案 D：</strong>使用 IAM 角色（而非 IAM 用户）为 EC2 实例提供凭证是最安全的做法。角色策略应仅授予所需的最小权限（SendMessage、ReceiveMessage、DeleteMessage）。</p>\n<p><strong>为什么其他选项错误：</strong></p>\n<ul>\n<li><strong>A:</strong> 在应用配置中嵌入 IAM 用户凭证是不安全的。</li>\n<li><strong>B:</strong> 使用环境变量存储凭证也不安全。</li>\n<li><strong>C:</strong> sqs:* 权限过于宽泛，违反最小权限原则。</li>\n</ul>",
+        "en": "<p><strong>Correct Answer C:</strong> CloudWatch Logs Insights allows you to query and analyze log data interactively. Combined with metric filters, you can extract custom metrics and create alarms.</p>\n<p><strong>Why other options are incorrect:</strong></p>\n<ul>\n<li><strong>A:</strong> X-Ray is for distributed tracing, not general log analysis.</li>\n<li><strong>B:</strong> CloudTrail is for API auditing, not application log analysis.</li>\n<li><strong>D:</strong> Athena requires data to be in S3, adding complexity.</li>\n</ul>",
+        "ja": "<p><strong>正解 C：</strong>CloudWatch Logs Insights を使用すると、ログデータをインタラクティブにクエリおよび分析できます。メトリクスフィルターと組み合わせることで、カスタムメトリクスを抽出してアラームを作成できます。</p>\n<p><strong>他のオプションが不正解な理由：</strong></p>\n<ul>\n<li><strong>A:</strong> X-Ray は分散トレーシング用であり、一般的なログ分析用ではありません。</li>\n<li><strong>B:</strong> CloudTrail は API 監査用であり、アプリケーションログ分析用ではありません。</li>\n<li><strong>D:</strong> Athena はデータを S3 に置く必要があり、複雑さが増します。</li>\n</ul>"
       }
     },
     {
@@ -849,7 +873,9 @@
       "bookmarked": false,
       "hasNote": false,
       "explanations": {
-        "zh": "<p><strong>正确答案 C：</strong>Secrets Manager 可以自动轮换数据库凭证。RDS Proxy 提供连接池功能，可以有效处理突发的数据库连接，非常适合写密集型和可变连接的场景。</p>\n<p><strong>为什么其他选项错误：</strong></p>\n<ul>\n<li><strong>A:</strong> KMS 用于加密密钥轮换，不是数据库凭证轮换。</li>\n<li><strong>B:</strong> 读取副本用于读取扩展，不能处理写入连接池。</li>\n<li><strong>D:</strong> 读取副本不能处理写密集型连接突增。</li>\n</ul>"
+        "zh": "<p><strong>正确答案 C：</strong>Secrets Manager 可以自动轮换数据库凭证。RDS Proxy 提供连接池功能，可以有效处理突发的数据库连接，非常适合写密集型和可变连接的场景。</p>\n<p><strong>为什么其他选项错误：</strong></p>\n<ul>\n<li><strong>A:</strong> KMS 用于加密密钥轮换，不是数据库凭证轮换。</li>\n<li><strong>B:</strong> 读取副本用于读取扩展，不能处理写入连接池。</li>\n<li><strong>D:</strong> 读取副本不能处理写密集型连接突增。</li>\n</ul>",
+        "en": "<p><strong>Correct Answer A:</strong> AWS Config rules can evaluate resource configurations against desired baselines. Non-compliant resources can be automatically remediated using Systems Manager Automation.</p>\n<p><strong>Why other options are incorrect:</strong></p>\n<ul>\n<li><strong>B:</strong> Trusted Advisor provides recommendations but cannot enforce compliance.</li>\n<li><strong>C:</strong> CloudWatch alarms monitor metrics, not configuration compliance.</li>\n<li><strong>D:</strong> Lambda requires more custom development and maintenance.</li>\n</ul>",
+        "ja": "<p><strong>正解 A：</strong>AWS Config ルールは、リソース設定を目的のベースラインに対して評価できます。非準拠のリソースは、Systems Manager Automation を使用して自動的に修復できます。</p>\n<p><strong>他のオプションが不正解な理由：</strong></p>\n<ul>\n<li><strong>B:</strong> Trusted Advisor は推奨事項を提供しますが、コンプライアンスを強制することはできません。</li>\n<li><strong>C:</strong> CloudWatch アラームはメトリクスを監視しますが、設定コンプライアンスは監視しません。</li>\n<li><strong>D:</strong> Lambda にはより多くのカスタム開発とメンテナンスが必要です。</li>\n</ul>"
       }
     },
     {
@@ -885,7 +911,9 @@
       "bookmarked": false,
       "hasNote": false,
       "explanations": {
-        "zh": "<p><strong>正确答案 B：</strong>Route 53 Resolver 出站端点可以将 DNS 查询转发到本地 DNS 服务器，无需手动维护主机名映射。这是最低维护开销的解决方案。</p>\n<p><strong>为什么其他选项错误：</strong></p>\n<ul>\n<li><strong>A:</strong> 私有托管区需要手动维护所有主机名和 IP 地址。</li>\n<li><strong>C:</strong> 反向 DNS 查询转发不能解决正向 DNS 解析问题。</li>\n<li><strong>D:</strong> 手动更新每个实例的 hosts 文件维护开销最大。</li>\n</ul>"
+        "zh": "<p><strong>正确答案 B：</strong>Route 53 Resolver 出站端点可以将 DNS 查询转发到本地 DNS 服务器，无需手动维护主机名映射。这是最低维护开销的解决方案。</p>\n<p><strong>为什么其他选项错误：</strong></p>\n<ul>\n<li><strong>A:</strong> 私有托管区需要手动维护所有主机名和 IP 地址。</li>\n<li><strong>C:</strong> 反向 DNS 查询转发不能解决正向 DNS 解析问题。</li>\n<li><strong>D:</strong> 手动更新每个实例的 hosts 文件维护开销最大。</li>\n</ul>",
+        "en": "<p><strong>Correct Answer D:</strong> AWS CloudFormation drift detection identifies resources that have been modified outside of CloudFormation. This helps maintain infrastructure as code consistency.</p>\n<p><strong>Why other options are incorrect:</strong></p>\n<ul>\n<li><strong>A:</strong> CloudTrail shows who made changes but doesn't identify drift.</li>\n<li><strong>B:</strong> Config rules check compliance but don't specifically detect CloudFormation drift.</li>\n<li><strong>C:</strong> Manual comparison is error-prone and time-consuming.</li>\n</ul>",
+        "ja": "<p><strong>正解 D：</strong>AWS CloudFormation ドリフト検出は、CloudFormation の外部で変更されたリソースを識別します。これにより、Infrastructure as Code の一貫性を維持できます。</p>\n<p><strong>他のオプションが不正解な理由：</strong></p>\n<ul>\n<li><strong>A:</strong> CloudTrail は誰が変更を行ったかを示しますが、ドリフトを識別しません。</li>\n<li><strong>B:</strong> Config ルールはコンプライアンスをチェックしますが、CloudFormation ドリフトを具体的に検出しません。</li>\n<li><strong>C:</strong> 手動比較はエラーが発生しやすく、時間がかかります。</li>\n</ul>"
       }
     },
     {
@@ -921,7 +949,9 @@
       "bookmarked": false,
       "hasNote": false,
       "explanations": {
-        "zh": "<p><strong>正确答案 A：</strong>CloudWatch Logs 指标筛选器可以持续监控日志并创建自定义指标，计算 HTTP 404 响应的数量。这是最高效的持续监控方案。</p>\n<p><strong>为什么其他选项错误：</strong></p>\n<ul>\n<li><strong>B:</strong> 订阅筛选器用于实时流式传输日志，不是创建指标。</li>\n<li><strong>C:</strong> Lambda 函数按计划运行 Insights 查询不如指标筛选器高效。</li>\n<li><strong>D:</strong> 运行脚本需要额外的基础设施管理。</li>\n</ul>"
+        "zh": "<p><strong>正确答案 A：</strong>CloudWatch Logs 指标筛选器可以持续监控日志并创建自定义指标，计算 HTTP 404 响应的数量。这是最高效的持续监控方案。</p>\n<p><strong>为什么其他选项错误：</strong></p>\n<ul>\n<li><strong>B:</strong> 订阅筛选器用于实时流式传输日志，不是创建指标。</li>\n<li><strong>C:</strong> Lambda 函数按计划运行 Insights 查询不如指标筛选器高效。</li>\n<li><strong>D:</strong> 运行脚本需要额外的基础设施管理。</li>\n</ul>",
+        "en": "<p><strong>Correct Answer B:</strong> AWS Organizations with Service Control Policies (SCPs) can centrally manage permissions across all accounts. SCPs set the maximum permissions boundary for accounts in the organization.</p>\n<p><strong>Why other options are incorrect:</strong></p>\n<ul>\n<li><strong>A:</strong> IAM policies must be applied to each account individually.</li>\n<li><strong>C:</strong> Permission boundaries are per-IAM entity, not organization-wide.</li>\n<li><strong>D:</strong> Resource-based policies are resource-specific, not account-wide.</li>\n</ul>",
+        "ja": "<p><strong>正解 B：</strong>AWS Organizations と Service Control Policy (SCP) を使用すると、すべてのアカウントの権限を一元管理できます。SCP は組織内のアカウントの最大権限境界を設定します。</p>\n<p><strong>他のオプションが不正解な理由：</strong></p>\n<ul>\n<li><strong>A:</strong> IAM ポリシーは各アカウントに個別に適用する必要があります。</li>\n<li><strong>C:</strong> 権限境界は IAM エンティティごとであり、組織全体ではありません。</li>\n<li><strong>D:</strong> リソースベースのポリシーはリソース固有であり、アカウント全体ではありません。</li>\n</ul>"
       }
     },
     {
@@ -957,7 +987,9 @@
       "bookmarked": false,
       "hasNote": false,
       "explanations": {
-        "zh": "<p><strong>正确答案 C：</strong>将 Auto Scaling 组扩展到第二个可用区可以提供高可用性。如果一个可用区发生故障，另一个可用区的实例可以继续服务。</p>\n<p><strong>为什么其他选项错误：</strong></p>\n<ul>\n<li><strong>A:</strong> 增加最大实例数不能提供可用区级别的冗余。</li>\n<li><strong>B:</strong> 增加最小实例数也不能提供可用区级别的高可用性。</li>\n<li><strong>D:</strong> Auto Scaling 组不能跨区域运行，这需要额外的架构设计。</li>\n</ul>"
+        "zh": "<p><strong>正确答案 C：</strong>将 Auto Scaling 组扩展到第二个可用区可以提供高可用性。如果一个可用区发生故障，另一个可用区的实例可以继续服务。</p>\n<p><strong>为什么其他选项错误：</strong></p>\n<ul>\n<li><strong>A:</strong> 增加最大实例数不能提供可用区级别的冗余。</li>\n<li><strong>B:</strong> 增加最小实例数也不能提供可用区级别的高可用性。</li>\n<li><strong>D:</strong> Auto Scaling 组不能跨区域运行，这需要额外的架构设计。</li>\n</ul>",
+        "en": "<p><strong>Correct Answer A:</strong> Amazon CloudWatch anomaly detection uses machine learning to automatically detect unusual metric behavior and can create alarms when anomalies are detected.</p>\n<p><strong>Why other options are incorrect:</strong></p>\n<ul>\n<li><strong>B:</strong> Static thresholds require manual tuning and can't adapt to changing patterns.</li>\n<li><strong>C:</strong> X-Ray is for tracing, not anomaly detection.</li>\n<li><strong>D:</strong> GuardDuty is for security threat detection, not operational anomalies.</li>\n</ul>",
+        "ja": "<p><strong>正解 A：</strong>Amazon CloudWatch 異常検出は機械学習を使用して異常なメトリクス動作を自動的に検出し、異常が検出されたときにアラームを作成できます。</p>\n<p><strong>他のオプションが不正解な理由：</strong></p>\n<ul>\n<li><strong>B:</strong> 静的しきい値は手動でチューニングが必要で、変化するパターンに適応できません。</li>\n<li><strong>C:</strong> X-Ray はトレーシング用であり、異常検出用ではありません。</li>\n<li><strong>D:</strong> GuardDuty はセキュリティ脅威検出用であり、運用上の異常用ではありません。</li>\n</ul>"
       }
     },
     {
@@ -993,7 +1025,9 @@
       "bookmarked": false,
       "hasNote": false,
       "explanations": {
-        "zh": "<p><strong>正确答案 A：</strong>网络 ACL 是无状态的，需要显式配置入站和出站规则。新创建的 ACL 默认拒绝所有流量。没有配置出站规则允许临时端口返回流量会导致响应无法返回客户端。</p>\n<p><strong>为什么其他选项错误：</strong></p>\n<ul>\n<li><strong>B:</strong> 安全组是有状态的，不需要显式配置出站返回流量规则。</li>\n<li><strong>C:</strong> 弹性 IP 地址一旦分配就不会自动更改。</li>\n<li><strong>D:</strong> 每个子网只能关联一个网络 ACL。</li>\n</ul>"
+        "zh": "<p><strong>正确答案 A：</strong>网络 ACL 是无状态的，需要显式配置入站和出站规则。新创建的 ACL 默认拒绝所有流量。没有配置出站规则允许临时端口返回流量会导致响应无法返回客户端。</p>\n<p><strong>为什么其他选项错误：</strong></p>\n<ul>\n<li><strong>B:</strong> 安全组是有状态的，不需要显式配置出站返回流量规则。</li>\n<li><strong>C:</strong> 弹性 IP 地址一旦分配就不会自动更改。</li>\n<li><strong>D:</strong> 每个子网只能关联一个网络 ACL。</li>\n</ul>",
+        "en": "<p><strong>Correct Answer C:</strong> AWS Backup provides a centralized, policy-driven backup solution that works across multiple AWS services including EBS, RDS, and EFS. Backup plans define schedules and retention.</p>\n<p><strong>Why other options are incorrect:</strong></p>\n<ul>\n<li><strong>A:</strong> Manual snapshots are error-prone and don't provide centralized management.</li>\n<li><strong>B:</strong> Data Lifecycle Manager only manages EBS snapshots.</li>\n<li><strong>D:</strong> Third-party solutions add complexity and cost.</li>\n</ul>",
+        "ja": "<p><strong>正解 C：</strong>AWS Backup は、EBS、RDS、EFS を含む複数の AWS サービスで機能する、一元化されたポリシー駆動型のバックアップソリューションを提供します。バックアッププランでスケジュールと保持期間を定義します。</p>\n<p><strong>他のオプションが不正解な理由：</strong></p>\n<ul>\n<li><strong>A:</strong> 手動スナップショットはエラーが発生しやすく、一元管理ができません。</li>\n<li><strong>B:</strong> Data Lifecycle Manager は EBS スナップショットのみを管理します。</li>\n<li><strong>D:</strong> サードパーティソリューションは複雑さとコストを増加させます。</li>\n</ul>"
       }
     },
     {
@@ -1029,7 +1063,9 @@
       "bookmarked": false,
       "hasNote": false,
       "explanations": {
-        "zh": "<p><strong>正确答案 C：</strong>AmazonSSMManagedInstanceCore 策略提供 SSM Agent 与 Systems Manager 服务通信所需的最小权限。没有适当的 IAM 权限，实例无法注册到 Fleet Manager。</p>\n<p><strong>为什么其他选项错误：</strong></p>\n<ul>\n<li><strong>A:</strong> NAT 网关和 NAT 实例的网络功能相同，替换不能解决问题。</li>\n<li><strong>B:</strong> 如果已有 NAT 网关可用，VPC 端点是可选的，问题是 IAM 权限。</li>\n<li><strong>D:</strong> ssm* 全部权限违反最小权限原则。</li>\n</ul>"
+        "zh": "<p><strong>正确答案 C：</strong>AmazonSSMManagedInstanceCore 策略提供 SSM Agent 与 Systems Manager 服务通信所需的最小权限。没有适当的 IAM 权限，实例无法注册到 Fleet Manager。</p>\n<p><strong>为什么其他选项错误：</strong></p>\n<ul>\n<li><strong>A:</strong> NAT 网关和 NAT 实例的网络功能相同，替换不能解决问题。</li>\n<li><strong>B:</strong> 如果已有 NAT 网关可用，VPC 端点是可选的，问题是 IAM 权限。</li>\n<li><strong>D:</strong> ssm* 全部权限违反最小权限原则。</li>\n</ul>",
+        "en": "<p><strong>Correct Answer B:</strong> Amazon EventBridge with AWS Lambda provides event-driven automation. EventBridge can capture events from multiple sources and trigger Lambda functions for automated responses.</p>\n<p><strong>Why other options are incorrect:</strong></p>\n<ul>\n<li><strong>A:</strong> CloudWatch Alarms only work with metrics, not events.</li>\n<li><strong>C:</strong> SNS only provides notifications, not automated actions.</li>\n<li><strong>D:</strong> Step Functions are for orchestration, not event capture.</li>\n</ul>",
+        "ja": "<p><strong>正解 B：</strong>Amazon EventBridge と AWS Lambda はイベント駆動型の自動化を提供します。EventBridge は複数のソースからイベントをキャプチャし、自動応答のために Lambda 関数をトリガーできます。</p>\n<p><strong>他のオプションが不正解な理由：</strong></p>\n<ul>\n<li><strong>A:</strong> CloudWatch アラームはメトリクスのみで機能し、イベントでは機能しません。</li>\n<li><strong>C:</strong> SNS は通知のみを提供し、自動化されたアクションは提供しません。</li>\n<li><strong>D:</strong> Step Functions はオーケストレーション用であり、イベントキャプチャ用ではありません。</li>\n</ul>"
       }
     },
     {
@@ -1065,7 +1101,9 @@
       "bookmarked": false,
       "hasNote": false,
       "explanations": {
-        "zh": "<p><strong>正确答案 D：</strong>使用两个独立的队列（警报队列和信息队列），让应用优先从警报队列获取消息，是实现消息优先级的正确方法。</p>\n<p><strong>为什么其他选项错误：</strong></p>\n<ul>\n<li><strong>A:</strong> 更快的扩展不能区分消息优先级。</li>\n<li><strong>B:</strong> SNS fanout 是并行发送，不能实现优先级处理。</li>\n<li><strong>C:</strong> DynamoDB 流与消息优先级无关。</li>\n</ul>"
+        "zh": "<p><strong>正确答案 D：</strong>使用两个独立的队列（警报队列和信息队列），让应用优先从警报队列获取消息，是实现消息优先级的正确方法。</p>\n<p><strong>为什么其他选项错误：</strong></p>\n<ul>\n<li><strong>A:</strong> 更快的扩展不能区分消息优先级。</li>\n<li><strong>B:</strong> SNS fanout 是并行发送，不能实现优先级处理。</li>\n<li><strong>C:</strong> DynamoDB 流与消息优先级无关。</li>\n</ul>",
+        "en": "<p><strong>Correct Answer A:</strong> AWS Service Catalog allows you to create standardized product portfolios that users can deploy with approved configurations. This ensures compliance while enabling self-service.</p>\n<p><strong>Why other options are incorrect:</strong></p>\n<ul>\n<li><strong>B:</strong> CloudFormation alone doesn't provide the portal and approval workflow.</li>\n<li><strong>C:</strong> IAM policies can restrict actions but don't provide a deployment portal.</li>\n<li><strong>D:</strong> Control Tower is for account governance, not application deployment.</li>\n</ul>",
+        "ja": "<p><strong>正解 A：</strong>AWS Service Catalog を使用すると、ユーザーが承認された設定でデプロイできる標準化された製品ポートフォリオを作成できます。これにより、セルフサービスを有効にしながらコンプライアンスを確保できます。</p>\n<p><strong>他のオプションが不正解な理由：</strong></p>\n<ul>\n<li><strong>B:</strong> CloudFormation だけではポータルと承認ワークフローは提供されません。</li>\n<li><strong>C:</strong> IAM ポリシーはアクションを制限できますが、デプロイポータルは提供しません。</li>\n<li><strong>D:</strong> Control Tower はアカウントガバナンス用であり、アプリケーションデプロイ用ではありません。</li>\n</ul>"
       }
     },
     {
@@ -1101,7 +1139,9 @@
       "bookmarked": false,
       "hasNote": false,
       "explanations": {
-        "zh": "<p><strong>正确答案 B：</strong>AWS Support 计划决定了可用的 Trusted Advisor 检查数量。Basic 和 Developer 支持只提供核心检查，Business 和 Enterprise 支持提供完整的检查集。</p>\n<p><strong>为什么其他选项错误：</strong></p>\n<ul>\n<li><strong>A:</strong> EC2 实例状态与 Trusted Advisor 检查可用性无关。</li>\n<li><strong>C:</strong> SCP 控制权限，不影响 Trusted Advisor 检查数量。</li>\n<li><strong>D:</strong> root 用户的 MFA 状态不影响检查可用性。</li>\n</ul>"
+        "zh": "<p><strong>正确答案 B：</strong>AWS Support 计划决定了可用的 Trusted Advisor 检查数量。Basic 和 Developer 支持只提供核心检查，Business 和 Enterprise 支持提供完整的检查集。</p>\n<p><strong>为什么其他选项错误：</strong></p>\n<ul>\n<li><strong>A:</strong> EC2 实例状态与 Trusted Advisor 检查可用性无关。</li>\n<li><strong>C:</strong> SCP 控制权限，不影响 Trusted Advisor 检查数量。</li>\n<li><strong>D:</strong> root 用户的 MFA 状态不影响检查可用性。</li>\n</ul>",
+        "en": "<p><strong>Correct Answer D:</strong> AWS Cost Explorer provides visualization and analysis of cost and usage data. It includes forecasting capabilities and can identify cost trends and anomalies.</p>\n<p><strong>Why other options are incorrect:</strong></p>\n<ul>\n<li><strong>A:</strong> AWS Budgets is for setting alerts, not detailed analysis.</li>\n<li><strong>B:</strong> Cost and Usage Reports provide raw data but limited visualization.</li>\n<li><strong>C:</strong> Trusted Advisor provides optimization recommendations, not cost analysis.</li>\n</ul>",
+        "ja": "<p><strong>正解 D：</strong>AWS Cost Explorer は、コストと使用量データの可視化と分析を提供します。予測機能が含まれており、コストの傾向と異常を特定できます。</p>\n<p><strong>他のオプションが不正解な理由：</strong></p>\n<ul>\n<li><strong>A:</strong> AWS Budgets はアラート設定用であり、詳細な分析用ではありません。</li>\n<li><strong>B:</strong> Cost and Usage Reports は生データを提供しますが、可視化は限られています。</li>\n<li><strong>C:</strong> Trusted Advisor は最適化の推奨事項を提供しますが、コスト分析は提供しません。</li>\n</ul>"
       }
     },
     {
@@ -1137,7 +1177,9 @@
       "bookmarked": false,
       "hasNote": false,
       "explanations": {
-        "zh": "<p><strong>正确答案 D：</strong>CloudFormation StackSets 专门设计用于在多个账户和区域部署相同的模板，是最低操作开销的解决方案。</p>\n<p><strong>为什么其他选项错误：</strong></p>\n<ul>\n<li><strong>A:</strong> 手动切换角色部署到每个账户效率低。</li>\n<li><strong>B:</strong> 创建 Lambda 函数需要额外的代码开发和维护。</li>\n<li><strong>C:</strong> 仅查询账户列表不能自动部署模板。</li>\n</ul>"
+        "zh": "<p><strong>正确答案 D：</strong>CloudFormation StackSets 专门设计用于在多个账户和区域部署相同的模板，是最低操作开销的解决方案。</p>\n<p><strong>为什么其他选项错误：</strong></p>\n<ul>\n<li><strong>A:</strong> 手动切换角色部署到每个账户效率低。</li>\n<li><strong>B:</strong> 创建 Lambda 函数需要额外的代码开发和维护。</li>\n<li><strong>C:</strong> 仅查询账户列表不能自动部署模板。</li>\n</ul>",
+        "en": "<p><strong>Correct Answer B:</strong> AWS CloudTrail Lake allows you to aggregate, query, and analyze CloudTrail logs across multiple accounts using SQL queries. It provides long-term storage and analysis capabilities.</p>\n<p><strong>Why other options are incorrect:</strong></p>\n<ul>\n<li><strong>A:</strong> S3 with Athena requires additional setup for cross-account queries.</li>\n<li><strong>C:</strong> CloudWatch Logs Insights has retention limits and higher costs for long-term storage.</li>\n<li><strong>D:</strong> OpenSearch requires infrastructure management.</li>\n</ul>",
+        "ja": "<p><strong>正解 B：</strong>AWS CloudTrail Lake を使用すると、SQL クエリを使用して複数のアカウント間で CloudTrail ログを集約、クエリ、分析できます。長期保存と分析機能を提供します。</p>\n<p><strong>他のオプションが不正解な理由：</strong></p>\n<ul>\n<li><strong>A:</strong> Athena を使用した S3 では、クロスアカウントクエリに追加の設定が必要です。</li>\n<li><strong>C:</strong> CloudWatch Logs Insights には保持制限があり、長期保存にはコストが高くなります。</li>\n<li><strong>D:</strong> OpenSearch にはインフラストラクチャ管理が必要です。</li>\n</ul>"
       }
     },
     {
@@ -1173,7 +1215,9 @@
       "bookmarked": false,
       "hasNote": false,
       "explanations": {
-        "zh": "<p><strong>正确答案 C：</strong>CNAME 记录用于将一个域名映射到另一个域名。由于目标是外部托管商的域名（app.example.com），需要使用 CNAME 记录。</p>\n<p><strong>为什么其他选项错误：</strong></p>\n<ul>\n<li><strong>A:</strong> A 记录将域名映射到 IP 地址，不是另一个域名。</li>\n<li><strong>B:</strong> 别名记录用于指向 AWS 资源，不能指向外部域名。</li>\n<li><strong>D:</strong> PTR 记录用于反向 DNS 查询（IP 到域名）。</li>\n</ul>"
+        "zh": "<p><strong>正确答案 C：</strong>CNAME 记录用于将一个域名映射到另一个域名。由于目标是外部托管商的域名（app.example.com），需要使用 CNAME 记录。</p>\n<p><strong>为什么其他选项错误：</strong></p>\n<ul>\n<li><strong>A:</strong> A 记录将域名映射到 IP 地址，不是另一个域名。</li>\n<li><strong>B:</strong> 别名记录用于指向 AWS 资源，不能指向外部域名。</li>\n<li><strong>D:</strong> PTR 记录用于反向 DNS 查询（IP 到域名）。</li>\n</ul>",
+        "en": "<p><strong>Correct Answer A:</strong> AWS Systems Manager Inventory collects metadata about your instances including installed applications, network configuration, and Windows updates. Data can be queried using Resource Data Sync.</p>\n<p><strong>Why other options are incorrect:</strong></p>\n<ul>\n<li><strong>B:</strong> CloudWatch agent collects metrics and logs, not inventory data.</li>\n<li><strong>C:</strong> Config records configuration changes, not detailed inventory.</li>\n<li><strong>D:</strong> EC2 describe commands provide basic instance info, not detailed software inventory.</li>\n</ul>",
+        "ja": "<p><strong>正解 A：</strong>AWS Systems Manager Inventory は、インストールされているアプリケーション、ネットワーク設定、Windows アップデートなど、インスタンスに関するメタデータを収集します。データは Resource Data Sync を使用してクエリできます。</p>\n<p><strong>他のオプションが不正解な理由：</strong></p>\n<ul>\n<li><strong>B:</strong> CloudWatch エージェントはメトリクスとログを収集しますが、インベントリデータは収集しません。</li>\n<li><strong>C:</strong> Config は設定変更を記録しますが、詳細なインベントリは記録しません。</li>\n<li><strong>D:</strong> EC2 describe コマンドは基本的なインスタンス情報を提供しますが、詳細なソフトウェアインベントリは提供しません。</li>\n</ul>"
       }
     },
     {
@@ -1209,7 +1253,9 @@
       "bookmarked": false,
       "hasNote": false,
       "explanations": {
-        "zh": "<p><strong>正确答案 C：</strong>创建读取副本并启用 Multi-AZ 可以在主节点故障时自动故障转移到副本，最大限度减少 RTO。这是提高弹性的最佳方案。</p>\n<p><strong>为什么其他选项错误：</strong></p>\n<ul>\n<li><strong>A:</strong> Memcached 不支持持久性和复制，不适合需要弹性的场景。</li>\n<li><strong>B:</strong> 每小时备份的恢复时间较长，不能最小化 RTO。</li>\n<li><strong>D:</strong> 自动备份恢复也需要较长时间，不如 Multi-AZ 故障转移快。</li>\n</ul>"
+        "zh": "<p><strong>正确答案 C：</strong>创建读取副本并启用 Multi-AZ 可以在主节点故障时自动故障转移到副本，最大限度减少 RTO。这是提高弹性的最佳方案。</p>\n<p><strong>为什么其他选项错误：</strong></p>\n<ul>\n<li><strong>A:</strong> Memcached 不支持持久性和复制，不适合需要弹性的场景。</li>\n<li><strong>B:</strong> 每小时备份的恢复时间较长，不能最小化 RTO。</li>\n<li><strong>D:</strong> 自动备份恢复也需要较长时间，不如 Multi-AZ 故障转移快。</li>\n</ul>",
+        "en": "<p><strong>Correct Answer C:</strong> AWS Personal Health Dashboard provides personalized alerts about AWS service health events that affect your resources. It integrates with EventBridge for automated responses.</p>\n<p><strong>Why other options are incorrect:</strong></p>\n<ul>\n<li><strong>A:</strong> Service Health Dashboard shows general AWS status, not personalized alerts.</li>\n<li><strong>B:</strong> CloudWatch monitors your resources, not AWS service health.</li>\n<li><strong>D:</strong> Trusted Advisor provides recommendations, not health alerts.</li>\n</ul>",
+        "ja": "<p><strong>正解 C：</strong>AWS Personal Health Dashboard は、リソースに影響を与える AWS サービスの健全性イベントに関するパーソナライズされたアラートを提供します。自動応答のために EventBridge と統合されています。</p>\n<p><strong>他のオプションが不正解な理由：</strong></p>\n<ul>\n<li><strong>A:</strong> Service Health Dashboard は一般的な AWS ステータスを表示しますが、パーソナライズされたアラートは表示しません。</li>\n<li><strong>B:</strong> CloudWatch はリソースを監視しますが、AWS サービスの健全性は監視しません。</li>\n<li><strong>D:</strong> Trusted Advisor は推奨事項を提供しますが、健全性アラートは提供しません。</li>\n</ul>"
       }
     },
     {
@@ -1245,7 +1291,9 @@
       "bookmarked": false,
       "hasNote": false,
       "explanations": {
-        "zh": "<p><strong>正确答案 B：</strong>使用 EventBridge 规则定期触发 Lambda 函数检查 CloudFormation 堆栈漂移，可以检测 IAM 策略在部署后的任何更改，并通过 SNS 发送通知。</p>\n<p><strong>为什么其他选项错误：</strong></p>\n<ul>\n<li><strong>A:</strong> CloudTrail 不能直接发送邮件通知。</li>\n<li><strong>C:</strong> IAM Access Analyzer 用于分析权限，不是检测策略更改。</li>\n<li><strong>D:</strong> 手动存储和比较 JSON 文档需要更多管理工作。</li>\n</ul>"
+        "zh": "<p><strong>正确答案 B：</strong>使用 EventBridge 规则定期触发 Lambda 函数检查 CloudFormation 堆栈漂移，可以检测 IAM 策略在部署后的任何更改，并通过 SNS 发送通知。</p>\n<p><strong>为什么其他选项错误：</strong></p>\n<ul>\n<li><strong>A:</strong> CloudTrail 不能直接发送邮件通知。</li>\n<li><strong>C:</strong> IAM Access Analyzer 用于分析权限，不是检测策略更改。</li>\n<li><strong>D:</strong> 手动存储和比较 JSON 文档需要更多管理工作。</li>\n</ul>",
+        "en": "<p><strong>Correct Answer B:</strong> AWS Fault Injection Simulator (FIS) allows you to run controlled chaos engineering experiments. You can inject faults like CPU stress, network latency, or stop instances to test resilience.</p>\n<p><strong>Why other options are incorrect:</strong></p>\n<ul>\n<li><strong>A:</strong> Manual failure injection is time-consuming and error-prone.</li>\n<li><strong>C:</strong> Third-party tools add complexity and may not integrate well with AWS.</li>\n<li><strong>D:</strong> Testing only in dev environments doesn't validate production resilience.</li>\n</ul>",
+        "ja": "<p><strong>正解 B：</strong>AWS Fault Injection Simulator (FIS) を使用すると、制御されたカオスエンジニアリング実験を実行できます。CPU ストレス、ネットワークレイテンシ、インスタンスの停止などの障害を注入して、回復力をテストできます。</p>\n<p><strong>他のオプションが不正解な理由：</strong></p>\n<ul>\n<li><strong>A:</strong> 手動の障害注入は時間がかかり、エラーが発生しやすいです。</li>\n<li><strong>C:</strong> サードパーティツールは複雑さを増し、AWS との統合がうまくいかない場合があります。</li>\n<li><strong>D:</strong> 開発環境のみでのテストでは、本番環境の回復力を検証できません。</li>\n</ul>"
       }
     },
     {
@@ -1281,7 +1329,9 @@
       "bookmarked": false,
       "hasNote": false,
       "explanations": {
-        "zh": "<p><strong>正确答案 A：</strong>使用 QuickSight 的 VPC 接口端点（通过 PrivateLink）可以确保所有流量保持在 VPC 网络边界内，同时 manifest 文件指向 S3 数据源。</p>\n<p><strong>为什么其他选项错误：</strong></p>\n<ul>\n<li><strong>B:</strong> 使用 EC2 代理增加了不必要的复杂性。</li>\n<li><strong>C:</strong> S3 网关端点不能确保 QuickSight 连接保持在 VPC 内。</li>\n<li><strong>D:</strong> NAT 网关使流量通过公共互联网，不满足网络边界要求。</li>\n</ul>"
+        "zh": "<p><strong>正确答案 A：</strong>使用 QuickSight 的 VPC 接口端点（通过 PrivateLink）可以确保所有流量保持在 VPC 网络边界内，同时 manifest 文件指向 S3 数据源。</p>\n<p><strong>为什么其他选项错误：</strong></p>\n<ul>\n<li><strong>B:</strong> 使用 EC2 代理增加了不必要的复杂性。</li>\n<li><strong>C:</strong> S3 网关端点不能确保 QuickSight 连接保持在 VPC 内。</li>\n<li><strong>D:</strong> NAT 网关使流量通过公共互联网，不满足网络边界要求。</li>\n</ul>",
+        "en": "<p><strong>Correct Answer A:</strong> AWS Resource Groups with Tag Editor allows you to organize resources using tags and perform bulk operations. Combined with Systems Manager, you can automate management tasks.</p>\n<p><strong>Why other options are incorrect:</strong></p>\n<ul>\n<li><strong>B:</strong> CloudFormation manages infrastructure but doesn't organize existing resources.</li>\n<li><strong>C:</strong> Service Catalog is for provisioning, not organizing existing resources.</li>\n<li><strong>D:</strong> Manual organization is not scalable.</li>\n</ul>",
+        "ja": "<p><strong>正解 A：</strong>タグエディターを備えた AWS Resource Groups を使用すると、タグを使用してリソースを整理し、一括操作を実行できます。Systems Manager と組み合わせることで、管理タスクを自動化できます。</p>\n<p><strong>他のオプションが不正解な理由：</strong></p>\n<ul>\n<li><strong>B:</strong> CloudFormation はインフラストラクチャを管理しますが、既存のリソースは整理しません。</li>\n<li><strong>C:</strong> Service Catalog はプロビジョニング用であり、既存のリソースの整理用ではありません。</li>\n<li><strong>D:</strong> 手動の整理はスケーラブルではありません。</li>\n</ul>"
       }
     },
     {
@@ -1317,7 +1367,9 @@
       "bookmarked": false,
       "hasNote": false,
       "explanations": {
-        "zh": "<p><strong>正确答案 B：</strong>FSx for Windows File Server Multi-AZ 文件系统提供跨可用区的高可用性，原生支持 SMB 协议和 Windows ACL，完美满足所有需求。</p>\n<p><strong>为什么其他选项错误：</strong></p>\n<ul>\n<li><strong>A:</strong> 单个文件网关不提供高可用性。</li>\n<li><strong>C:</strong> ALB 不能用于文件网关的负载均衡。</li>\n<li><strong>D:</strong> 两个 Single-AZ 文件系统配合 DFSR 比 Multi-AZ 更复杂。</li>\n</ul>"
+        "zh": "<p><strong>正确答案 B：</strong>FSx for Windows File Server Multi-AZ 文件系统提供跨可用区的高可用性，原生支持 SMB 协议和 Windows ACL，完美满足所有需求。</p>\n<p><strong>为什么其他选项错误：</strong></p>\n<ul>\n<li><strong>A:</strong> 单个文件网关不提供高可用性。</li>\n<li><strong>C:</strong> ALB 不能用于文件网关的负载均衡。</li>\n<li><strong>D:</strong> 两个 Single-AZ 文件系统配合 DFSR 比 Multi-AZ 更复杂。</li>\n</ul>",
+        "en": "<p><strong>Correct Answer C:</strong> AWS Trusted Advisor provides real-time guidance to help you provision your resources following AWS best practices. It checks for security, performance, cost optimization, and fault tolerance.</p>\n<p><strong>Why other options are incorrect:</strong></p>\n<ul>\n<li><strong>A:</strong> Config rules check compliance but don't provide optimization recommendations.</li>\n<li><strong>B:</strong> CloudWatch monitors metrics but doesn't provide best practice recommendations.</li>\n<li><strong>D:</strong> Inspector focuses on security vulnerabilities only.</li>\n</ul>",
+        "ja": "<p><strong>正解 C：</strong>AWS Trusted Advisor は、AWS のベストプラクティスに従ってリソースをプロビジョニングするためのリアルタイムガイダンスを提供します。セキュリティ、パフォーマンス、コスト最適化、耐障害性をチェックします。</p>\n<p><strong>他のオプションが不正解な理由：</strong></p>\n<ul>\n<li><strong>A:</strong> Config ルールはコンプライアンスをチェックしますが、最適化の推奨事項は提供しません。</li>\n<li><strong>B:</strong> CloudWatch はメトリクスを監視しますが、ベストプラクティスの推奨事項は提供しません。</li>\n<li><strong>D:</strong> Inspector はセキュリティの脆弱性のみに焦点を当てています。</li>\n</ul>"
       }
     },
     {
@@ -1353,7 +1405,9 @@
       "bookmarked": false,
       "hasNote": false,
       "explanations": {
-        "zh": "<p><strong>正确答案 A：</strong>CloudWatch Agent 的 procstat 插件可以收集进程级别的 CPU 指标，包括进程 ID (PID)，是最简单的解决方案。</p>\n<p><strong>为什么其他选项错误：</strong></p>\n<ul>\n<li><strong>B:</strong> Lambda 函数无法直接访问 EC2 实例内部的进程信息。</li>\n<li><strong>C:</strong> 每晚手动登录检查效率极低。</li>\n<li><strong>D:</strong> 默认的 CloudWatch CPU 指标不包含进程级别的信息。</li>\n</ul>"
+        "zh": "<p><strong>正确答案 A：</strong>CloudWatch Agent 的 procstat 插件可以收集进程级别的 CPU 指标，包括进程 ID (PID)，是最简单的解决方案。</p>\n<p><strong>为什么其他选项错误：</strong></p>\n<ul>\n<li><strong>B:</strong> Lambda 函数无法直接访问 EC2 实例内部的进程信息。</li>\n<li><strong>C:</strong> 每晚手动登录检查效率极低。</li>\n<li><strong>D:</strong> 默认的 CloudWatch CPU 指标不包含进程级别的信息。</li>\n</ul>",
+        "en": "<p><strong>Correct Answer B:</strong> Amazon Macie uses machine learning to automatically discover, classify, and protect sensitive data in S3. It can identify PII and alert on potential data exposure.</p>\n<p><strong>Why other options are incorrect:</strong></p>\n<ul>\n<li><strong>A:</strong> GuardDuty focuses on threat detection, not data classification.</li>\n<li><strong>C:</strong> S3 Inventory lists objects but doesn't classify data.</li>\n<li><strong>D:</strong> Manual inspection is not scalable.</li>\n</ul>",
+        "ja": "<p><strong>正解 B：</strong>Amazon Macie は機械学習を使用して、S3 内の機密データを自動的に検出、分類、保護します。PII を識別し、潜在的なデータ漏洩についてアラートを発することができます。</p>\n<p><strong>他のオプションが不正解な理由：</strong></p>\n<ul>\n<li><strong>A:</strong> GuardDuty は脅威検出に焦点を当てており、データ分類には焦点を当てていません。</li>\n<li><strong>C:</strong> S3 Inventory はオブジェクトをリストしますが、データを分類しません。</li>\n<li><strong>D:</strong> 手動検査はスケーラブルではありません。</li>\n</ul>"
       }
     },
     {
@@ -1389,7 +1443,9 @@
       "bookmarked": false,
       "hasNote": false,
       "explanations": {
-        "zh": "<p><strong>正确答案 C：</strong>CloudWatch Synthetics 心跳监控 canary 可以模拟用户访问，从用户角度准确监控网站可用性，并通过 SuccessPercent 指标触发警报。</p>\n<p><strong>为什么其他选项错误：</strong></p>\n<ul>\n<li><strong>A:</strong> 基于日志的警报不能提供准确的用户体验视图。</li>\n<li><strong>B:</strong> 异常检测不能设置具体的 99% 可用性阈值。</li>\n<li><strong>D:</strong> 断链检查器用于检查链接有效性，不是可用性监控。</li>\n</ul>"
+        "zh": "<p><strong>正确答案 C：</strong>CloudWatch Synthetics 心跳监控 canary 可以模拟用户访问，从用户角度准确监控网站可用性，并通过 SuccessPercent 指标触发警报。</p>\n<p><strong>为什么其他选项错误：</strong></p>\n<ul>\n<li><strong>A:</strong> 基于日志的警报不能提供准确的用户体验视图。</li>\n<li><strong>B:</strong> 异常检测不能设置具体的 99% 可用性阈值。</li>\n<li><strong>D:</strong> 断链检查器用于检查链接有效性，不是可用性监控。</li>\n</ul>",
+        "en": "<p><strong>Correct Answer A:</strong> AWS Application Migration Service (MGN) provides automated lift-and-shift migration for physical, virtual, and cloud servers to AWS. It minimizes downtime and simplifies the migration process.</p>\n<p><strong>Why other options are incorrect:</strong></p>\n<ul>\n<li><strong>B:</strong> VM Import/Export requires manual steps and more downtime.</li>\n<li><strong>C:</strong> CloudEndure is being deprecated in favor of MGN.</li>\n<li><strong>D:</strong> Manual migration is time-consuming and error-prone.</li>\n</ul>",
+        "ja": "<p><strong>正解 A：</strong>AWS Application Migration Service (MGN) は、物理、仮想、クラウドサーバーの AWS への自動リフトアンドシフト移行を提供します。ダウンタイムを最小限に抑え、移行プロセスを簡素化します。</p>\n<p><strong>他のオプションが不正解な理由：</strong></p>\n<ul>\n<li><strong>B:</strong> VM Import/Export は手動のステップが必要で、ダウンタイムが長くなります。</li>\n<li><strong>C:</strong> CloudEndure は MGN に置き換えられて非推奨になっています。</li>\n<li><strong>D:</strong> 手動移行は時間がかかり、エラーが発生しやすいです。</li>\n</ul>"
       }
     },
     {
@@ -1425,7 +1481,9 @@
       "bookmarked": false,
       "hasNote": false,
       "explanations": {
-        "zh": "<p><strong>正确答案 B：</strong>将私有子网路由表更新为通过现有 NAT 网关路由互联网流量。当 NAT 网关减少到一个后，需要确保所有私有子网的路由表都指向这个 NAT 网关。</p>\n<p><strong>为什么其他选项错误：</strong></p>\n<ul>\n<li><strong>A:</strong> 替换为 NAT 实例不能解决路由问题。</li>\n<li><strong>C:</strong> 直接路由到互联网网关会使私有子网变成公共子网。</li>\n<li><strong>D:</strong> NAT 网关不支持添加辅助 IP 地址。</li>\n</ul>"
+        "zh": "<p><strong>正确答案 B：</strong>将私有子网路由表更新为通过现有 NAT 网关路由互联网流量。当 NAT 网关减少到一个后，需要确保所有私有子网的路由表都指向这个 NAT 网关。</p>\n<p><strong>为什么其他选项错误：</strong></p>\n<ul>\n<li><strong>A:</strong> 替换为 NAT 实例不能解决路由问题。</li>\n<li><strong>C:</strong> 直接路由到互联网网关会使私有子网变成公共子网。</li>\n<li><strong>D:</strong> NAT 网关不支持添加辅助 IP 地址。</li>\n</ul>",
+        "en": "<p><strong>Correct Answer C:</strong> AWS License Manager helps track and manage software licenses across AWS and on-premises environments. It can enforce license rules and provide usage reports.</p>\n<p><strong>Why other options are incorrect:</strong></p>\n<ul>\n<li><strong>A:</strong> Systems Manager Inventory tracks installed software but doesn't manage licenses.</li>\n<li><strong>B:</strong> Cost Explorer shows costs but not license compliance.</li>\n<li><strong>D:</strong> Manual tracking is error-prone and doesn't scale.</li>\n</ul>",
+        "ja": "<p><strong>正解 C：</strong>AWS License Manager は、AWS とオンプレミス環境全体でソフトウェアライセンスを追跡および管理するのに役立ちます。ライセンスルールを適用し、使用状況レポートを提供できます。</p>\n<p><strong>他のオプションが不正解な理由：</strong></p>\n<ul>\n<li><strong>A:</strong> Systems Manager Inventory はインストールされているソフトウェアを追跡しますが、ライセンスは管理しません。</li>\n<li><strong>B:</strong> Cost Explorer はコストを表示しますが、ライセンスコンプライアンスは表示しません。</li>\n<li><strong>D:</strong> 手動追跡はエラーが発生しやすく、スケーラブルではありません。</li>\n</ul>"
       }
     },
     {
@@ -1461,7 +1519,9 @@
       "bookmarked": false,
       "hasNote": false,
       "explanations": {
-        "zh": "<p><strong>正确答案 D：</strong>将 DeletionPolicy 设置为 Retain 可以在堆栈删除时保留资源和数据。这是唯一能保留实例及其数据的方法。</p>\n<p><strong>为什么其他选项错误：</strong></p>\n<ul>\n<li><strong>A:</strong> Snapshot 策略对于 EC2 实例不起作用（只适用于 EBS 卷和 RDS）。</li>\n<li><strong>B:</strong> DLM 备份不能阻止堆栈删除时实例被删除。</li>\n<li><strong>C:</strong> AWS Backup 也不能阻止实例被删除。</li>\n</ul>"
+        "zh": "<p><strong>正确答案 D：</strong>将 DeletionPolicy 设置为 Retain 可以在堆栈删除时保留资源和数据。这是唯一能保留实例及其数据的方法。</p>\n<p><strong>为什么其他选项错误：</strong></p>\n<ul>\n<li><strong>A:</strong> Snapshot 策略对于 EC2 实例不起作用（只适用于 EBS 卷和 RDS）。</li>\n<li><strong>B:</strong> DLM 备份不能阻止堆栈删除时实例被删除。</li>\n<li><strong>C:</strong> AWS Backup 也不能阻止实例被删除。</li>\n</ul>",
+        "en": "<p><strong>Correct Answer B:</strong> AWS Resilience Hub helps you assess and improve the resilience of your applications. It provides recommendations based on your defined RTO and RPO objectives.</p>\n<p><strong>Why other options are incorrect:</strong></p>\n<ul>\n<li><strong>A:</strong> Well-Architected Tool provides general best practices, not specific resilience recommendations.</li>\n<li><strong>C:</strong> Trusted Advisor checks are more general and don't consider RTO/RPO.</li>\n<li><strong>D:</strong> Manual assessment is time-consuming and may miss issues.</li>\n</ul>",
+        "ja": "<p><strong>正解 B：</strong>AWS Resilience Hub は、アプリケーションの回復力を評価および改善するのに役立ちます。定義された RTO と RPO の目標に基づいて推奨事項を提供します。</p>\n<p><strong>他のオプションが不正解な理由：</strong></p>\n<ul>\n<li><strong>A:</strong> Well-Architected Tool は一般的なベストプラクティスを提供しますが、特定の回復力の推奨事項は提供しません。</li>\n<li><strong>C:</strong> Trusted Advisor のチェックはより一般的であり、RTO/RPO を考慮していません。</li>\n<li><strong>D:</strong> 手動評価は時間がかかり、問題を見逃す可能性があります。</li>\n</ul>"
       }
     },
     {
@@ -1497,7 +1557,9 @@
       "bookmarked": false,
       "hasNote": false,
       "explanations": {
-        "zh": "<p><strong>正确答案 C：</strong>EC2 Image Builder 支持创建自定义配方来安装应用和依赖，内置漏洞扫描功能，并可以按计划自动构建更新的 AMI。</p>\n<p><strong>为什么其他选项错误：</strong></p>\n<ul>\n<li><strong>A:</strong> Packer 脚本需要额外管理，且不内置漏洞扫描。</li>\n<li><strong>B:</strong> 手动创建 AMI 不能自动化更新过程。</li>\n<li><strong>D:</strong> CreateImage API 不能安装依赖或进行漏洞扫描。</li>\n</ul>"
+        "zh": "<p><strong>正确答案 C：</strong>EC2 Image Builder 支持创建自定义配方来安装应用和依赖，内置漏洞扫描功能，并可以按计划自动构建更新的 AMI。</p>\n<p><strong>为什么其他选项错误：</strong></p>\n<ul>\n<li><strong>A:</strong> Packer 脚本需要额外管理，且不内置漏洞扫描。</li>\n<li><strong>B:</strong> 手动创建 AMI 不能自动化更新过程。</li>\n<li><strong>D:</strong> CreateImage API 不能安装依赖或进行漏洞扫描。</li>\n</ul>",
+        "en": "<p><strong>Correct Answer A:</strong> AWS Transit Gateway connects VPCs and on-premises networks through a central hub. It simplifies network architecture and reduces operational overhead compared to VPC peering.</p>\n<p><strong>Why other options are incorrect:</strong></p>\n<ul>\n<li><strong>B:</strong> VPC peering requires many connections and doesn't support transitive routing.</li>\n<li><strong>C:</strong> VPN connections directly to each VPC don't scale well.</li>\n<li><strong>D:</strong> AWS PrivateLink is for service endpoints, not general connectivity.</li>\n</ul>",
+        "ja": "<p><strong>正解 A：</strong>AWS Transit Gateway は、中央ハブを介して VPC とオンプレミスネットワークを接続します。VPC ピアリングと比較して、ネットワークアーキテクチャを簡素化し、運用オーバーヘッドを削減します。</p>\n<p><strong>他のオプションが不正解な理由：</strong></p>\n<ul>\n<li><strong>B:</strong> VPC ピアリングは多くの接続が必要で、推移的ルーティングをサポートしていません。</li>\n<li><strong>C:</strong> 各 VPC への直接 VPN 接続はスケーラブルではありません。</li>\n<li><strong>D:</strong> AWS PrivateLink はサービスエンドポイント用であり、一般的な接続用ではありません。</li>\n</ul>"
       }
     },
     {
@@ -1533,7 +1595,9 @@
       "bookmarked": false,
       "hasNote": false,
       "explanations": {
-        "zh": "<p><strong>正确答案 D：</strong>Network Load Balancer 可以为每个可用区分配静态 IP 地址，能够处理每秒数百万请求，并且针对突发流量模式进行了优化。</p>\n<p><strong>为什么其他选项错误：</strong></p>\n<ul>\n<li><strong>A:</strong> SQS 队列不是负载均衡解决方案。</li>\n<li><strong>B:</strong> ALB 不支持静态 IP 地址。</li>\n<li><strong>C:</strong> Global Accelerator 提供静态 anycast IP，但不是每个可用区一个。</li>\n</ul>"
+        "zh": "<p><strong>正确答案 D：</strong>Network Load Balancer 可以为每个可用区分配静态 IP 地址，能够处理每秒数百万请求，并且针对突发流量模式进行了优化。</p>\n<p><strong>为什么其他选项错误：</strong></p>\n<ul>\n<li><strong>A:</strong> SQS 队列不是负载均衡解决方案。</li>\n<li><strong>B:</strong> ALB 不支持静态 IP 地址。</li>\n<li><strong>C:</strong> Global Accelerator 提供静态 anycast IP，但不是每个可用区一个。</li>\n</ul>",
+        "en": "<p><strong>Correct Answer C:</strong> AWS Network Firewall provides stateful inspection, intrusion prevention, and web filtering for VPC traffic. It can be deployed centrally in a Transit Gateway architecture.</p>\n<p><strong>Why other options are incorrect:</strong></p>\n<ul>\n<li><strong>A:</strong> Security groups don't provide IPS or domain filtering.</li>\n<li><strong>B:</strong> NACLs are stateless and don't have advanced filtering.</li>\n<li><strong>D:</strong> Third-party appliances require more management.</li>\n</ul>",
+        "ja": "<p><strong>正解 C：</strong>AWS Network Firewall は、VPC トラフィックのステートフル検査、侵入防止、ウェブフィルタリングを提供します。Transit Gateway アーキテクチャで一元的にデプロイできます。</p>\n<p><strong>他のオプションが不正解な理由：</strong></p>\n<ul>\n<li><strong>A:</strong> セキュリティグループは IPS やドメインフィルタリングを提供しません。</li>\n<li><strong>B:</strong> NACL はステートレスで、高度なフィルタリングがありません。</li>\n<li><strong>D:</strong> サードパーティアプライアンスはより多くの管理が必要です。</li>\n</ul>"
       }
     },
     {
@@ -1573,7 +1637,9 @@
       "bookmarked": false,
       "hasNote": false,
       "explanations": {
-        "zh": "<p><strong>正确答案 B 和 E：</strong>启用 ALB 目标组的粘性会话确保用户请求发送到同一实例，配置 CloudFront 转发 cookie 确保会话信息传递到 ALB。</p>\n<p><strong>为什么其他选项错误：</strong></p>\n<ul>\n<li><strong>A:</strong> 更改路由算法不能解决会话问题。</li>\n<li><strong>C:</strong> 头部转发与会话状态无关。</li>\n<li><strong>D:</strong> 监听器规则级别的粘性不存在。</li>\n</ul>"
+        "zh": "<p><strong>正确答案 B 和 E：</strong>启用 ALB 目标组的粘性会话确保用户请求发送到同一实例，配置 CloudFront 转发 cookie 确保会话信息传递到 ALB。</p>\n<p><strong>为什么其他选项错误：</strong></p>\n<ul>\n<li><strong>A:</strong> 更改路由算法不能解决会话问题。</li>\n<li><strong>C:</strong> 头部转发与会话状态无关。</li>\n<li><strong>D:</strong> 监听器规则级别的粘性不存在。</li>\n</ul>",
+        "en": "<p><strong>Correct Answer B:</strong> AWS Direct Connect provides dedicated, private connectivity from on-premises to AWS. Combined with VPN for encryption, it provides secure and consistent network performance.</p>\n<p><strong>Why other options are incorrect:</strong></p>\n<ul>\n<li><strong>A:</strong> VPN alone over internet has variable latency and throughput.</li>\n<li><strong>C:</strong> Public internet is not secure or reliable for enterprise workloads.</li>\n<li><strong>D:</strong> Multiple VPNs don't improve consistency as much as Direct Connect.</li>\n</ul>",
+        "ja": "<p><strong>正解 B：</strong>AWS Direct Connect は、オンプレミスから AWS への専用のプライベート接続を提供します。暗号化のための VPN と組み合わせると、安全で一貫したネットワークパフォーマンスを提供します。</p>\n<p><strong>他のオプションが不正解な理由：</strong></p>\n<ul>\n<li><strong>A:</strong> インターネット経由の VPN のみでは、レイテンシとスループットが変動します。</li>\n<li><strong>C:</strong> パブリックインターネットは、エンタープライズワークロードにとって安全でも信頼性もありません。</li>\n<li><strong>D:</strong> 複数の VPN は、Direct Connect ほど一貫性を改善しません。</li>\n</ul>"
       }
     },
     {
@@ -1609,7 +1675,9 @@
       "bookmarked": false,
       "hasNote": false,
       "explanations": {
-        "zh": "<p><strong>正确答案 B：</strong>由于工作负载分布在 5 个区域，需要在每个区域创建 Transit Gateway 并进行跨区域对等连接。Transit Gateway 可以在区域内共享，连接各个 VPC。</p>\n<p><strong>为什么其他选项错误：</strong></p>\n<ul>\n<li><strong>A:</strong> 单个 Transit Gateway 不能跨多个区域工作。</li>\n<li><strong>C:</strong> Site-to-Site VPN 用于连接本地数据中心，不是 VPC 之间。</li>\n<li><strong>D:</strong> VPC 对等不能传递路由，管理复杂性高。</li>\n</ul>"
+        "zh": "<p><strong>正确答案 B：</strong>由于工作负载分布在 5 个区域，需要在每个区域创建 Transit Gateway 并进行跨区域对等连接。Transit Gateway 可以在区域内共享，连接各个 VPC。</p>\n<p><strong>为什么其他选项错误：</strong></p>\n<ul>\n<li><strong>A:</strong> 单个 Transit Gateway 不能跨多个区域工作。</li>\n<li><strong>C:</strong> Site-to-Site VPN 用于连接本地数据中心，不是 VPC 之间。</li>\n<li><strong>D:</strong> VPC 对等不能传递路由，管理复杂性高。</li>\n</ul>",
+        "en": "<p><strong>Correct Answer A:</strong> Amazon Route 53 Resolver DNS Firewall allows you to filter outbound DNS queries from your VPCs. You can create domain lists to block access to malicious domains.</p>\n<p><strong>Why other options are incorrect:</strong></p>\n<ul>\n<li><strong>B:</strong> Network ACLs can't filter based on domain names.</li>\n<li><strong>C:</strong> Security groups don't filter DNS queries.</li>\n<li><strong>D:</strong> Third-party DNS servers require additional infrastructure.</li>\n</ul>",
+        "ja": "<p><strong>正解 A：</strong>Amazon Route 53 Resolver DNS Firewall を使用すると、VPC からの送信 DNS クエリをフィルタリングできます。ドメインリストを作成して、悪意のあるドメインへのアクセスをブロックできます。</p>\n<p><strong>他のオプションが不正解な理由：</strong></p>\n<ul>\n<li><strong>B:</strong> ネットワーク ACL はドメイン名に基づいてフィルタリングできません。</li>\n<li><strong>C:</strong> セキュリティグループは DNS クエリをフィルタリングしません。</li>\n<li><strong>D:</strong> サードパーティ DNS サーバーには追加のインフラストラクチャが必要です。</li>\n</ul>"
       }
     },
     {
@@ -1649,7 +1717,9 @@
       "bookmarked": false,
       "hasNote": false,
       "explanations": {
-        "zh": "<p><strong>正确答案 A 和 E：</strong>RDS Performance Insights 可以识别影响性能的 SQL 查询，RDS Proxy 提供连接池来处理连接激增，两者结合解决性能和连接问题。</p>\n<p><strong>为什么其他选项错误：</strong></p>\n<ul>\n<li><strong>B:</strong> CloudWatch Logs Insights 不是分析数据库查询的工具。</li>\n<li><strong>C:</strong> 单可用区不能提高性能。</li>\n<li><strong>D:</strong> 禁用连接池会加剧连接问题。</li>\n</ul>"
+        "zh": "<p><strong>正确答案 A 和 E：</strong>RDS Performance Insights 可以识别影响性能的 SQL 查询，RDS Proxy 提供连接池来处理连接激增，两者结合解决性能和连接问题。</p>\n<p><strong>为什么其他选项错误：</strong></p>\n<ul>\n<li><strong>B:</strong> CloudWatch Logs Insights 不是分析数据库查询的工具。</li>\n<li><strong>C:</strong> 单可用区不能提高性能。</li>\n<li><strong>D:</strong> 禁用连接池会加剧连接问题。</li>\n</ul>",
+        "en": "<p><strong>Correct Answer C:</strong> AWS Global Accelerator provides static IP addresses and routes traffic through AWS global network to optimal endpoints. It improves performance and availability for global applications.</p>\n<p><strong>Why other options are incorrect:</strong></p>\n<ul>\n<li><strong>A:</strong> CloudFront is for content caching, not TCP/UDP application acceleration.</li>\n<li><strong>B:</strong> Route 53 latency routing doesn't provide static IPs or use AWS backbone.</li>\n<li><strong>D:</strong> Direct Connect is for dedicated connectivity, not global application acceleration.</li>\n</ul>",
+        "ja": "<p><strong>正解 C：</strong>AWS Global Accelerator は静的 IP アドレスを提供し、AWS グローバルネットワークを介して最適なエンドポイントにトラフィックをルーティングします。グローバルアプリケーションのパフォーマンスと可用性を向上させます。</p>\n<p><strong>他のオプションが不正解な理由：</strong></p>\n<ul>\n<li><strong>A:</strong> CloudFront はコンテンツキャッシング用であり、TCP/UDP アプリケーションアクセラレーション用ではありません。</li>\n<li><strong>B:</strong> Route 53 レイテンシルーティングは静的 IP を提供せず、AWS バックボーンを使用しません。</li>\n<li><strong>D:</strong> Direct Connect は専用接続用であり、グローバルアプリケーションアクセラレーション用ではありません。</li>\n</ul>"
       }
     },
     {
@@ -1685,7 +1755,9 @@
       "bookmarked": false,
       "hasNote": false,
       "explanations": {
-        "zh": "<p><strong>正确答案 C：</strong>使用目标跟踪扩展策略的 Auto Scaling 组可以根据指标（如 CPU 使用率或请求数）自动调整容量，这是处理随机流量波动的最佳方案。</p>\n<p><strong>为什么其他选项错误：</strong></p>\n<ul>\n<li><strong>A:</strong> CloudWatch 警报不能自动增加实例大小。</li>\n<li><strong>B:</strong> EventBridge 规则不能直接向 ALB 添加实例。</li>\n<li><strong>D:</strong> 计划扩展适用于可预测的流量，不适合随机流量。</li>\n</ul>"
+        "zh": "<p><strong>正确答案 C：</strong>使用目标跟踪扩展策略的 Auto Scaling 组可以根据指标（如 CPU 使用率或请求数）自动调整容量，这是处理随机流量波动的最佳方案。</p>\n<p><strong>为什么其他选项错误：</strong></p>\n<ul>\n<li><strong>A:</strong> CloudWatch 警报不能自动增加实例大小。</li>\n<li><strong>B:</strong> EventBridge 规则不能直接向 ALB 添加实例。</li>\n<li><strong>D:</strong> 计划扩展适用于可预测的流量，不适合随机流量。</li>\n</ul>",
+        "en": "<p><strong>Correct Answer B:</strong> VPC endpoints (Gateway and Interface) allow private connectivity to AWS services without using public IPs or NAT gateways. This reduces data transfer costs and improves security.</p>\n<p><strong>Why other options are incorrect:</strong></p>\n<ul>\n<li><strong>A:</strong> NAT Gateway incurs additional costs for data processing.</li>\n<li><strong>C:</strong> Internet Gateway exposes traffic to the public internet.</li>\n<li><strong>D:</strong> VPN connections are for on-premises connectivity.</li>\n</ul>",
+        "ja": "<p><strong>正解 B：</strong>VPC エンドポイント（ゲートウェイとインターフェイス）を使用すると、パブリック IP や NAT ゲートウェイを使用せずに AWS サービスへのプライベート接続が可能になります。これにより、データ転送コストが削減され、セキュリティが向上します。</p>\n<p><strong>他のオプションが不正解な理由：</strong></p>\n<ul>\n<li><strong>A:</strong> NAT Gateway はデータ処理に追加コストが発生します。</li>\n<li><strong>C:</strong> インターネットゲートウェイはトラフィックをパブリックインターネットに公開します。</li>\n<li><strong>D:</strong> VPN 接続はオンプレミス接続用です。</li>\n</ul>"
       }
     },
     {
@@ -1721,7 +1793,9 @@
       "bookmarked": false,
       "hasNote": false,
       "explanations": {
-        "zh": "<p><strong>正确答案 B：</strong>RDS 读取副本可以分担读取流量，减轻主数据库的负载。报告作业是读取密集型的，应该从读取副本查询数据。</p>\n<p><strong>为什么其他选项错误：</strong></p>\n<ul>\n<li><strong>A:</strong> ElastiCache 更适合频繁访问的数据缓存，不适合报告查询。</li>\n<li><strong>C:</strong> CloudFront 不能直接连接 RDS 数据库。</li>\n<li><strong>D:</strong> 增加实例大小成本更高，不如读取副本高效。</li>\n</ul>"
+        "zh": "<p><strong>正确答案 B：</strong>RDS 读取副本可以分担读取流量，减轻主数据库的负载。报告作业是读取密集型的，应该从读取副本查询数据。</p>\n<p><strong>为什么其他选项错误：</strong></p>\n<ul>\n<li><strong>A:</strong> ElastiCache 更适合频繁访问的数据缓存，不适合报告查询。</li>\n<li><strong>C:</strong> CloudFront 不能直接连接 RDS 数据库。</li>\n<li><strong>D:</strong> 增加实例大小成本更高，不如读取副本高效。</li>\n</ul>",
+        "en": "<p><strong>Correct Answer A:</strong> Amazon CloudWatch Synthetics allows you to create canaries that continuously monitor your endpoints. Canaries can test APIs, check content, and measure latency to detect issues before users are affected.</p>\n<p><strong>Why other options are incorrect:</strong></p>\n<ul>\n<li><strong>B:</strong> X-Ray traces actual requests but doesn't proactively test endpoints.</li>\n<li><strong>C:</strong> Route 53 health checks only verify basic connectivity.</li>\n<li><strong>D:</strong> Third-party tools require additional setup and cost.</li>\n</ul>",
+        "ja": "<p><strong>正解 A：</strong>Amazon CloudWatch Synthetics を使用すると、エンドポイントを継続的に監視するカナリアを作成できます。カナリアは API をテストし、コンテンツをチェックし、レイテンシを測定して、ユーザーに影響が出る前に問題を検出できます。</p>\n<p><strong>他のオプションが不正解な理由：</strong></p>\n<ul>\n<li><strong>B:</strong> X-Ray は実際のリクエストをトレースしますが、エンドポイントを事前にテストしません。</li>\n<li><strong>C:</strong> Route 53 ヘルスチェックは基本的な接続性のみを検証します。</li>\n<li><strong>D:</strong> サードパーティツールは追加の設定とコストが必要です。</li>\n</ul>"
       }
     },
     {
@@ -1757,7 +1831,9 @@
       "bookmarked": false,
       "hasNote": false,
       "explanations": {
-        "zh": "<p><strong>正确答案 C：</strong>Route 53 Resolver DNS Firewall 专门设计用于检测和过滤 DNS 级别的威胁，可以阻止对已知恶意域名的 DNS 查询。</p>\n<p><strong>为什么其他选项错误：</strong></p>\n<ul>\n<li><strong>A:</strong> Shield Advanced 防护 DDoS 攻击，不是 DNS 威胁。</li>\n<li><strong>B:</strong> WAF 检查 HTTP/HTTPS 流量，不是 DNS 流量。</li>\n<li><strong>D:</strong> AWS Config 用于配置合规性，不是 DNS 威胁检测。</li>\n</ul>"
+        "zh": "<p><strong>正确答案 C：</strong>Route 53 Resolver DNS Firewall 专门设计用于检测和过滤 DNS 级别的威胁，可以阻止对已知恶意域名的 DNS 查询。</p>\n<p><strong>为什么其他选项错误：</strong></p>\n<ul>\n<li><strong>A:</strong> Shield Advanced 防护 DDoS 攻击，不是 DNS 威胁。</li>\n<li><strong>B:</strong> WAF 检查 HTTP/HTTPS 流量，不是 DNS 流量。</li>\n<li><strong>D:</strong> AWS Config 用于配置合规性，不是 DNS 威胁检测。</li>\n</ul>",
+        "en": "<p><strong>Correct Answer C:</strong> AWS AppConfig allows you to deploy application configuration changes safely with validation and rollback capabilities. It integrates with Lambda, ECS, and EC2 applications.</p>\n<p><strong>Why other options are incorrect:</strong></p>\n<ul>\n<li><strong>A:</strong> Parameter Store doesn't have deployment validation or rollback.</li>\n<li><strong>B:</strong> Secrets Manager is for credentials, not general configuration.</li>\n<li><strong>D:</strong> Environment variables require redeployment to change.</li>\n</ul>",
+        "ja": "<p><strong>正解 C：</strong>AWS AppConfig を使用すると、検証とロールバック機能を備えたアプリケーション設定変更を安全にデプロイできます。Lambda、ECS、EC2 アプリケーションと統合されています。</p>\n<p><strong>他のオプションが不正解な理由：</strong></p>\n<ul>\n<li><strong>A:</strong> Parameter Store にはデプロイ検証やロールバックがありません。</li>\n<li><strong>B:</strong> Secrets Manager は認証情報用であり、一般的な設定用ではありません。</li>\n<li><strong>D:</strong> 環境変数は変更に再デプロイが必要です。</li>\n</ul>"
       }
     },
     {
@@ -1793,7 +1869,9 @@
       "bookmarked": false,
       "hasNote": false,
       "explanations": {
-        "zh": "<p><strong>正确答案 A：</strong>拍摄 RDS 快照，修改 KMS 密钥策略允许迁移账户访问，然后共享快照。这是最少管理开销的跨账户共享加密数据库的方法。</p>\n<p><strong>为什么其他选项错误：</strong></p>\n<ul>\n<li><strong>B:</strong> RDS 读取副本不能直接跨账户创建。</li>\n<li><strong>C:</strong> 创建相同别名的新 KMS 密钥不能解密原来的快照。</li>\n<li><strong>D:</strong> 手动导出/导入数据库管理开销最大。</li>\n</ul>"
+        "zh": "<p><strong>正确答案 A：</strong>拍摄 RDS 快照，修改 KMS 密钥策略允许迁移账户访问，然后共享快照。这是最少管理开销的跨账户共享加密数据库的方法。</p>\n<p><strong>为什么其他选项错误：</strong></p>\n<ul>\n<li><strong>B:</strong> RDS 读取副本不能直接跨账户创建。</li>\n<li><strong>C:</strong> 创建相同别名的新 KMS 密钥不能解密原来的快照。</li>\n<li><strong>D:</strong> 手动导出/导入数据库管理开销最大。</li>\n</ul>",
+        "en": "<p><strong>Correct Answer B:</strong> AWS Systems Manager OpsCenter aggregates and organizes operational issues. It integrates with CloudWatch, Config, and other services to provide a unified view of operations.</p>\n<p><strong>Why other options are incorrect:</strong></p>\n<ul>\n<li><strong>A:</strong> CloudWatch dashboards show metrics but don't track issues.</li>\n<li><strong>C:</strong> SNS only provides notifications.</li>\n<li><strong>D:</strong> Manual tracking is not scalable.</li>\n</ul>",
+        "ja": "<p><strong>正解 B：</strong>AWS Systems Manager OpsCenter は運用上の問題を集約して整理します。CloudWatch、Config、その他のサービスと統合して、運用の統一されたビューを提供します。</p>\n<p><strong>他のオプションが不正解な理由：</strong></p>\n<ul>\n<li><strong>A:</strong> CloudWatch ダッシュボードはメトリクスを表示しますが、問題を追跡しません。</li>\n<li><strong>C:</strong> SNS は通知のみを提供します。</li>\n<li><strong>D:</strong> 手動追跡はスケーラブルではありません。</li>\n</ul>"
       }
     },
     {
@@ -1829,7 +1907,9 @@
       "bookmarked": false,
       "hasNote": false,
       "explanations": {
-        "zh": "<p><strong>正确答案 A：</strong>CloudWatch Logs Insights 支持跨多个日志组查询，stats 命令和 count 函数可以统计和分组错误类型。</p>\n<p><strong>为什么其他选项错误：</strong></p>\n<ul>\n<li><strong>B:</strong> CloudWatch Logs 搜索没有 groupby 关键字。</li>\n<li><strong>C:</strong> 使用 Athena 需要先将日志导出到 S3，增加复杂性。</li>\n<li><strong>D:</strong> RDS 与 Lambda 日志分析无关。</li>\n</ul>"
+        "zh": "<p><strong>正确答案 A：</strong>CloudWatch Logs Insights 支持跨多个日志组查询，stats 命令和 count 函数可以统计和分组错误类型。</p>\n<p><strong>为什么其他选项错误：</strong></p>\n<ul>\n<li><strong>B:</strong> CloudWatch Logs 搜索没有 groupby 关键字。</li>\n<li><strong>C:</strong> 使用 Athena 需要先将日志导出到 S3，增加复杂性。</li>\n<li><strong>D:</strong> RDS 与 Lambda 日志分析无关。</li>\n</ul>",
+        "en": "<p><strong>Correct Answer A:</strong> AWS Control Tower provides the easiest way to set up and govern a secure, multi-account AWS environment based on AWS best practices. It automates account provisioning and applies guardrails.</p>\n<p><strong>Why other options are incorrect:</strong></p>\n<ul>\n<li><strong>B:</strong> Organizations alone requires manual setup of guardrails.</li>\n<li><strong>C:</strong> CloudFormation StackSets don't provide governance features.</li>\n<li><strong>D:</strong> Manual setup is complex and error-prone.</li>\n</ul>",
+        "ja": "<p><strong>正解 A：</strong>AWS Control Tower は、AWS のベストプラクティスに基づいて、安全なマルチアカウント AWS 環境をセットアップおよび管理する最も簡単な方法を提供します。アカウントのプロビジョニングを自動化し、ガードレールを適用します。</p>\n<p><strong>他のオプションが不正解な理由：</strong></p>\n<ul>\n<li><strong>B:</strong> Organizations だけでは、ガードレールの手動設定が必要です。</li>\n<li><strong>C:</strong> CloudFormation StackSets はガバナンス機能を提供しません。</li>\n<li><strong>D:</strong> 手動設定は複雑でエラーが発生しやすいです。</li>\n</ul>"
       }
     },
     {
@@ -1865,7 +1945,9 @@
       "bookmarked": false,
       "hasNote": false,
       "explanations": {
-        "zh": "<p><strong>正确答案 B：</strong>CloudWatch 警报可以配置 EC2 操作直接重启实例，同时发布 SNS 通知。这是最简单的方案，无需额外的 Lambda 函数。</p>\n<p><strong>为什么其他选项错误：</strong></p>\n<ul>\n<li><strong>A:</strong> 使用 Lambda 函数增加了不必要的复杂性。</li>\n<li><strong>C:</strong> Incident Manager 用于事件响应，不是自动重启。</li>\n<li><strong>D:</strong> 创建 SSM runbook 比直接使用 CloudWatch 操作更复杂。</li>\n</ul>"
+        "zh": "<p><strong>正确答案 B：</strong>CloudWatch 警报可以配置 EC2 操作直接重启实例，同时发布 SNS 通知。这是最简单的方案，无需额外的 Lambda 函数。</p>\n<p><strong>为什么其他选项错误：</strong></p>\n<ul>\n<li><strong>A:</strong> 使用 Lambda 函数增加了不必要的复杂性。</li>\n<li><strong>C:</strong> Incident Manager 用于事件响应，不是自动重启。</li>\n<li><strong>D:</strong> 创建 SSM runbook 比直接使用 CloudWatch 操作更复杂。</li>\n</ul>",
+        "en": "<p><strong>Correct Answer C:</strong> AWS CloudFormation change sets allow you to preview how proposed changes will affect your running resources before executing them. This reduces the risk of unexpected changes.</p>\n<p><strong>Why other options are incorrect:</strong></p>\n<ul>\n<li><strong>A:</strong> Direct updates don't show what will change before execution.</li>\n<li><strong>B:</strong> Creating new stacks duplicates resources.</li>\n<li><strong>D:</strong> Manual review is error-prone.</li>\n</ul>",
+        "ja": "<p><strong>正解 C：</strong>AWS CloudFormation 変更セットを使用すると、提案された変更が実行中のリソースにどのように影響するかを実行前にプレビューできます。これにより、予期しない変更のリスクが軽減されます。</p>\n<p><strong>他のオプションが不正解な理由：</strong></p>\n<ul>\n<li><strong>A:</strong> 直接更新では、実行前に何が変更されるかが表示されません。</li>\n<li><strong>B:</strong> 新しいスタックを作成するとリソースが重複します。</li>\n<li><strong>D:</strong> 手動レビューはエラーが発生しやすいです。</li>\n</ul>"
       }
     },
     {
@@ -1901,7 +1983,9 @@
       "bookmarked": false,
       "hasNote": false,
       "explanations": {
-        "zh": "<p><strong>正确答案 C：</strong>别名记录（Alias Record）是 Route 53 特有的功能，可以将域名顶点（如 example.com）映射到 AWS 资源（如 ALB），且不产生额外的 DNS 查询费用。</p>\n<p><strong>为什么其他选项错误：</strong></p>\n<ul>\n<li><strong>A:</strong> A 记录需要 IP 地址，但 ALB 的 IP 可能会变化。</li>\n<li><strong>B:</strong> AAAA 记录用于 IPv6 地址。</li>\n<li><strong>D:</strong> CNAME 记录不能用于域名顶点（zone apex）。</li>\n</ul>"
+        "zh": "<p><strong>正确答案 C：</strong>别名记录（Alias Record）是 Route 53 特有的功能，可以将域名顶点（如 example.com）映射到 AWS 资源（如 ALB），且不产生额外的 DNS 查询费用。</p>\n<p><strong>为什么其他选项错误：</strong></p>\n<ul>\n<li><strong>A:</strong> A 记录需要 IP 地址，但 ALB 的 IP 可能会变化。</li>\n<li><strong>B:</strong> AAAA 记录用于 IPv6 地址。</li>\n<li><strong>D:</strong> CNAME 记录不能用于域名顶点（zone apex）。</li>\n</ul>",
+        "en": "<p><strong>Correct Answer B:</strong> Amazon RDS Performance Insights provides a dashboard to quickly identify database performance issues. It shows which SQL queries are causing the most load and resource utilization.</p>\n<p><strong>Why other options are incorrect:</strong></p>\n<ul>\n<li><strong>A:</strong> Enhanced Monitoring shows OS metrics but not query-level analysis.</li>\n<li><strong>C:</strong> CloudWatch metrics are high-level and don't show query details.</li>\n<li><strong>D:</strong> Manual log analysis is time-consuming.</li>\n</ul>",
+        "ja": "<p><strong>正解 B：</strong>Amazon RDS Performance Insights は、データベースのパフォーマンス問題を迅速に特定するためのダッシュボードを提供します。どの SQL クエリが最も負荷とリソース使用率を引き起こしているかを表示します。</p>\n<p><strong>他のオプションが不正解な理由：</strong></p>\n<ul>\n<li><strong>A:</strong> Enhanced Monitoring は OS メトリクスを表示しますが、クエリレベルの分析は行いません。</li>\n<li><strong>C:</strong> CloudWatch メトリクスは高レベルであり、クエリの詳細は表示されません。</li>\n<li><strong>D:</strong> 手動のログ分析は時間がかかります。</li>\n</ul>"
       }
     },
     {
@@ -1937,7 +2021,9 @@
       "bookmarked": false,
       "hasNote": false,
       "explanations": {
-        "zh": "<p><strong>正确答案 A：</strong>slow_start.duration_seconds 属性可以让新注册的目标在指定时间内逐渐接收流量，非常适合需要预热的应用。设置为 120 秒匹配缓存填充时间。</p>\n<p><strong>为什么其他选项错误：</strong></p>\n<ul>\n<li><strong>B:</strong> HealthCheckTimeoutSeconds 控制健康检查超时，不是流量分配。</li>\n<li><strong>C:</strong> weighted_random 算法不能实现慢启动。</li>\n<li><strong>D:</strong> 生命周期钩子需要修改应用代码，更复杂。</li>\n</ul>"
+        "zh": "<p><strong>正确答案 A：</strong>slow_start.duration_seconds 属性可以让新注册的目标在指定时间内逐渐接收流量，非常适合需要预热的应用。设置为 120 秒匹配缓存填充时间。</p>\n<p><strong>为什么其他选项错误：</strong></p>\n<ul>\n<li><strong>B:</strong> HealthCheckTimeoutSeconds 控制健康检查超时，不是流量分配。</li>\n<li><strong>C:</strong> weighted_random 算法不能实现慢启动。</li>\n<li><strong>D:</strong> 生命周期钩子需要修改应用代码，更复杂。</li>\n</ul>",
+        "en": "<p><strong>Correct Answer A:</strong> Amazon EFS (Elastic File System) provides a fully managed, scalable file system that can be mounted by multiple EC2 instances simultaneously. It automatically scales capacity as files are added.</p>\n<p><strong>Why other options are incorrect:</strong></p>\n<ul>\n<li><strong>B:</strong> EBS volumes can only be attached to one instance at a time (except io1/io2 multi-attach).</li>\n<li><strong>C:</strong> S3 is object storage, not a file system.</li>\n<li><strong>D:</strong> Instance store is ephemeral and local to one instance.</li>\n</ul>",
+        "ja": "<p><strong>正解 A：</strong>Amazon EFS（Elastic File System）は、複数の EC2 インスタンスが同時にマウントできる、フルマネージドでスケーラブルなファイルシステムを提供します。ファイルが追加されると容量が自動的にスケールします。</p>\n<p><strong>他のオプションが不正解な理由：</strong></p>\n<ul>\n<li><strong>B:</strong> EBS ボリュームは一度に 1 つのインスタンスにのみアタッチできます（io1/io2 マルチアタッチを除く）。</li>\n<li><strong>C:</strong> S3 はオブジェクトストレージであり、ファイルシステムではありません。</li>\n<li><strong>D:</strong> インスタンスストアはエフェメラルで、1 つのインスタンスにローカルです。</li>\n</ul>"
       }
     },
     {
@@ -1973,7 +2059,9 @@
       "bookmarked": false,
       "hasNote": false,
       "explanations": {
-        "zh": "<p><strong>正确答案 C：</strong>Aurora PostgreSQL 不支持 Backtrack（仅 MySQL 兼容版支持）。时间点恢复会创建新的数据库集群，需要重新配置应用程序端点。</p>\n<p><strong>为什么其他选项错误：</strong></p>\n<ul>\n<li><strong>A:</strong> Backtrack 功能仅适用于 Aurora MySQL，不适用于 PostgreSQL。</li>\n<li><strong>B:</strong> 时间点恢复不能在现有数据库上执行，会创建新集群。</li>\n<li><strong>D:</strong> 从 S3 恢复需要先有 S3 导出，不是标准恢复方法。</li>\n</ul>"
+        "zh": "<p><strong>正确答案 C：</strong>Aurora PostgreSQL 不支持 Backtrack（仅 MySQL 兼容版支持）。时间点恢复会创建新的数据库集群，需要重新配置应用程序端点。</p>\n<p><strong>为什么其他选项错误：</strong></p>\n<ul>\n<li><strong>A:</strong> Backtrack 功能仅适用于 Aurora MySQL，不适用于 PostgreSQL。</li>\n<li><strong>B:</strong> 时间点恢复不能在现有数据库上执行，会创建新集群。</li>\n<li><strong>D:</strong> 从 S3 恢复需要先有 S3 导出，不是标准恢复方法。</li>\n</ul>",
+        "en": "<p><strong>Correct Answer C:</strong> AWS DataSync automates moving data between on-premises storage and AWS services like S3, EFS, and FSx. It handles scheduling, monitoring, and data validation automatically.</p>\n<p><strong>Why other options are incorrect:</strong></p>\n<ul>\n<li><strong>A:</strong> AWS CLI sync requires manual scripting and monitoring.</li>\n<li><strong>B:</strong> Storage Gateway is for hybrid storage, not data migration.</li>\n<li><strong>D:</strong> Snowball is for large one-time transfers, not ongoing sync.</li>\n</ul>",
+        "ja": "<p><strong>正解 C：</strong>AWS DataSync は、オンプレミスストレージと S3、EFS、FSx などの AWS サービス間のデータ移動を自動化します。スケジューリング、監視、データ検証を自動的に処理します。</p>\n<p><strong>他のオプションが不正解な理由：</strong></p>\n<ul>\n<li><strong>A:</strong> AWS CLI sync は手動のスクリプトと監視が必要です。</li>\n<li><strong>B:</strong> Storage Gateway はハイブリッドストレージ用であり、データ移行用ではありません。</li>\n<li><strong>D:</strong> Snowball は大規模な一回限りの転送用であり、継続的な同期用ではありません。</li>\n</ul>"
       }
     },
     {
@@ -2009,7 +2097,9 @@
       "bookmarked": false,
       "hasNote": false,
       "explanations": {
-        "zh": "<p><strong>正确答案 A：</strong>CloudWatch 警报可以监控 Trusted Advisor 服务配额指标，当使用量超过阈值时通过 SNS 发送邮件通知。</p>\n<p><strong>为什么其他选项错误：</strong></p>\n<ul>\n<li><strong>B:</strong> SQS 队列不能直接发送邮件通知。</li>\n<li><strong>C:</strong> Health Dashboard 不监控服务配额使用情况。</li>\n<li><strong>D:</strong> Health Dashboard 不适用于此监控场景。</li>\n</ul>"
+        "zh": "<p><strong>正确答案 A：</strong>CloudWatch 警报可以监控 Trusted Advisor 服务配额指标，当使用量超过阈值时通过 SNS 发送邮件通知。</p>\n<p><strong>为什么其他选项错误：</strong></p>\n<ul>\n<li><strong>B:</strong> SQS 队列不能直接发送邮件通知。</li>\n<li><strong>C:</strong> Health Dashboard 不监控服务配额使用情况。</li>\n<li><strong>D:</strong> Health Dashboard 不适用于此监控场景。</li>\n</ul>",
+        "en": "<p><strong>Correct Answer B:</strong> Amazon Aurora Serverless automatically starts, stops, and scales capacity based on application needs. It's ideal for variable or unpredictable workloads.</p>\n<p><strong>Why other options are incorrect:</strong></p>\n<ul>\n<li><strong>A:</strong> Provisioned Aurora requires manual scaling configuration.</li>\n<li><strong>C:</strong> RDS with Auto Scaling has more limitations than Aurora Serverless.</li>\n<li><strong>D:</strong> DynamoDB is a NoSQL database, not a relational database.</li>\n</ul>",
+        "ja": "<p><strong>正解 B：</strong>Amazon Aurora Serverless は、アプリケーションのニーズに基づいて自動的に起動、停止、容量をスケールします。変動するまたは予測不可能なワークロードに最適です。</p>\n<p><strong>他のオプションが不正解な理由：</strong></p>\n<ul>\n<li><strong>A:</strong> プロビジョニングされた Aurora は手動でスケーリング設定が必要です。</li>\n<li><strong>C:</strong> Auto Scaling を使用した RDS は、Aurora Serverless よりも制限が多いです。</li>\n<li><strong>D:</strong> DynamoDB は NoSQL データベースであり、リレーショナルデータベースではありません。</li>\n</ul>"
       }
     },
     {
@@ -2045,7 +2135,9 @@
       "bookmarked": false,
       "hasNote": false,
       "explanations": {
-        "zh": "<p><strong>正确答案 D：</strong>在无互联网访问的私有 VPC 中运行 Synthetics，需要：启用 DNS 选项、创建 CloudWatch 接口端点和 S3 网关端点，并授予适当权限。</p>\n<p><strong>为什么其他选项错误：</strong></p>\n<ul>\n<li><strong>A:</strong> 需要端点而非 VPC 设置和权限调整。</li>\n<li><strong>B:</strong> DNS 选项应该开启，不是关闭。</li>\n<li><strong>C:</strong> DNS 选项应该开启，仅安全组规则不够。</li>\n</ul>"
+        "zh": "<p><strong>正确答案 D：</strong>在无互联网访问的私有 VPC 中运行 Synthetics，需要：启用 DNS 选项、创建 CloudWatch 接口端点和 S3 网关端点，并授予适当权限。</p>\n<p><strong>为什么其他选项错误：</strong></p>\n<ul>\n<li><strong>A:</strong> 需要端点而非 VPC 设置和权限调整。</li>\n<li><strong>B:</strong> DNS 选项应该开启，不是关闭。</li>\n<li><strong>C:</strong> DNS 选项应该开启，仅安全组规则不够。</li>\n</ul>",
+        "en": "<p><strong>Correct Answer A:</strong> Amazon Kinesis Data Streams can ingest high volumes of real-time data from multiple sources. Combined with Kinesis Data Analytics for processing and Kinesis Data Firehose for delivery.</p>\n<p><strong>Why other options are incorrect:</strong></p>\n<ul>\n<li><strong>B:</strong> SQS is for message queuing, not real-time streaming analytics.</li>\n<li><strong>C:</strong> SNS is for pub/sub notifications, not data streaming.</li>\n<li><strong>D:</strong> Batch processing doesn't meet real-time requirements.</li>\n</ul>",
+        "ja": "<p><strong>正解 A：</strong>Amazon Kinesis Data Streams は、複数のソースから大量のリアルタイムデータを取り込むことができます。処理には Kinesis Data Analytics、配信には Kinesis Data Firehose と組み合わせます。</p>\n<p><strong>他のオプションが不正解な理由：</strong></p>\n<ul>\n<li><strong>B:</strong> SQS はメッセージキューイング用であり、リアルタイムストリーミング分析用ではありません。</li>\n<li><strong>C:</strong> SNS はパブ/サブ通知用であり、データストリーミング用ではありません。</li>\n<li><strong>D:</strong> バッチ処理はリアルタイム要件を満たしません。</li>\n</ul>"
       }
     },
     {
@@ -2085,7 +2177,9 @@
       "bookmarked": false,
       "hasNote": false,
       "explanations": {
-        "zh": "<p><strong>正确答案 C 和 D：</strong>私有子网中的 Lambda 需要访问 SQS，可以通过 NAT 网关访问公共 SQS 端点，或通过创建 SQS 的接口端点直接在 VPC 内访问。</p>\n<p><strong>为什么其他选项错误：</strong></p>\n<ul>\n<li><strong>A:</strong> 断开 VPC 连接会破坏与 RDS 的连接。</li>\n<li><strong>B:</strong> RDS Proxy 与 SQS 访问无关。</li>\n<li><strong>E:</strong> SQS 使用接口端点，不是网关端点。</li>\n</ul>"
+        "zh": "<p><strong>正确答案 C 和 D：</strong>私有子网中的 Lambda 需要访问 SQS，可以通过 NAT 网关访问公共 SQS 端点，或通过创建 SQS 的接口端点直接在 VPC 内访问。</p>\n<p><strong>为什么其他选项错误：</strong></p>\n<ul>\n<li><strong>A:</strong> 断开 VPC 连接会破坏与 RDS 的连接。</li>\n<li><strong>B:</strong> RDS Proxy 与 SQS 访问无关。</li>\n<li><strong>E:</strong> SQS 使用接口端点，不是网关端点。</li>\n</ul>",
+        "en": "<p><strong>Correct Answer C:</strong> Amazon ElastiCache provides in-memory caching for frequently accessed data, reducing database load and improving application response times significantly.</p>\n<p><strong>Why other options are incorrect:</strong></p>\n<ul>\n<li><strong>A:</strong> Read replicas help but have higher latency than in-memory cache.</li>\n<li><strong>B:</strong> Larger instance types don't address caching needs.</li>\n<li><strong>D:</strong> DAX is for DynamoDB only.</li>\n</ul>",
+        "ja": "<p><strong>正解 C：</strong>Amazon ElastiCache は、頻繁にアクセスされるデータのインメモリキャッシングを提供し、データベースの負荷を軽減し、アプリケーションの応答時間を大幅に改善します。</p>\n<p><strong>他のオプションが不正解な理由：</strong></p>\n<ul>\n<li><strong>A:</strong> リードレプリカは役立ちますが、インメモリキャッシュよりもレイテンシが高くなります。</li>\n<li><strong>B:</strong> より大きなインスタンスタイプはキャッシングのニーズに対応しません。</li>\n<li><strong>D:</strong> DAX は DynamoDB 専用です。</li>\n</ul>"
       }
     },
     {
@@ -2121,7 +2215,9 @@
       "bookmarked": false,
       "hasNote": false,
       "explanations": {
-        "zh": "<p><strong>正确答案 B：</strong>AWS Config 支持自动修复操作，AWS-DisableIncomingSSHOnPort22 是预定义的修复动作，可以自动移除不合规的 SSH 规则。</p>\n<p><strong>为什么其他选项错误：</strong></p>\n<ul>\n<li><strong>A:</strong> CloudWatch 警报方案更复杂。</li>\n<li><strong>C:</strong> EventBridge 方案需要编写 Lambda 代码。</li>\n<li><strong>D:</strong> 每小时检查不如实时修复高效。</li>\n</ul>"
+        "zh": "<p><strong>正确答案 B：</strong>AWS Config 支持自动修复操作，AWS-DisableIncomingSSHOnPort22 是预定义的修复动作，可以自动移除不合规的 SSH 规则。</p>\n<p><strong>为什么其他选项错误：</strong></p>\n<ul>\n<li><strong>A:</strong> CloudWatch 警报方案更复杂。</li>\n<li><strong>C:</strong> EventBridge 方案需要编写 Lambda 代码。</li>\n<li><strong>D:</strong> 每小时检查不如实时修复高效。</li>\n</ul>",
+        "en": "<p><strong>Correct Answer B:</strong> AWS CodePipeline provides continuous delivery automation. It integrates with CodeCommit, CodeBuild, and CodeDeploy to automate the build, test, and deployment process.</p>\n<p><strong>Why other options are incorrect:</strong></p>\n<ul>\n<li><strong>A:</strong> CodeBuild is for building, not orchestrating the full pipeline.</li>\n<li><strong>C:</strong> Jenkins requires self-management of infrastructure.</li>\n<li><strong>D:</strong> Manual deployment doesn't provide automation.</li>\n</ul>",
+        "ja": "<p><strong>正解 B：</strong>AWS CodePipeline は継続的デリバリーの自動化を提供します。CodeCommit、CodeBuild、CodeDeploy と統合して、ビルド、テスト、デプロイプロセスを自動化します。</p>\n<p><strong>他のオプションが不正解な理由：</strong></p>\n<ul>\n<li><strong>A:</strong> CodeBuild はビルド用であり、完全なパイプラインのオーケストレーション用ではありません。</li>\n<li><strong>C:</strong> Jenkins にはインフラストラクチャの自己管理が必要です。</li>\n<li><strong>D:</strong> 手動デプロイは自動化を提供しません。</li>\n</ul>"
       }
     },
     {
@@ -2161,7 +2257,9 @@
       "bookmarked": false,
       "hasNote": false,
       "explanations": {
-        "zh": "<p><strong>正确答案 C 和 D：</strong>HTTP Layer 7 状态码包含在 ALB 访问日志和 CloudFront 访问日志中，这两个日志记录 HTTP 请求和响应信息。</p>\n<p><strong>为什么其他选项错误：</strong></p>\n<ul>\n<li><strong>A:</strong> VPC Flow Logs 只记录 Layer 3/4 信息，不包含 HTTP 状态码。</li>\n<li><strong>B:</strong> CloudTrail 记录 API 调用，不是 HTTP 流量。</li>\n<li><strong>E:</strong> RDS 日志记录数据库操作，不是 HTTP 状态码。</li>\n</ul>"
+        "zh": "<p><strong>正确答案 C 和 D：</strong>HTTP Layer 7 状态码包含在 ALB 访问日志和 CloudFront 访问日志中，这两个日志记录 HTTP 请求和响应信息。</p>\n<p><strong>为什么其他选项错误：</strong></p>\n<ul>\n<li><strong>A:</strong> VPC Flow Logs 只记录 Layer 3/4 信息，不包含 HTTP 状态码。</li>\n<li><strong>B:</strong> CloudTrail 记录 API 调用，不是 HTTP 流量。</li>\n<li><strong>E:</strong> RDS 日志记录数据库操作，不是 HTTP 状态码。</li>\n</ul>",
+        "en": "<p><strong>Correct Answer C and D:</strong> HTTP Layer 7 status codes are included in ALB access logs and CloudFront access logs. These logs record HTTP request and response information.</p>\n<p><strong>Why other options are incorrect:</strong></p>\n<ul>\n<li><strong>A:</strong> VPC Flow Logs only record Layer 3/4 information, not HTTP status codes.</li>\n<li><strong>B:</strong> CloudTrail records API calls, not HTTP traffic.</li>\n<li><strong>E:</strong> RDS logs record database operations, not HTTP status codes.</li>\n</ul>",
+        "ja": "<p><strong>正解 C と D：</strong>HTTP レイヤー 7 ステータスコードは、ALB アクセスログと CloudFront アクセスログに含まれています。これらのログは HTTP リクエストとレスポンスの情報を記録します。</p>\n<p><strong>他のオプションが不正解な理由：</strong></p>\n<ul>\n<li><strong>A:</strong> VPC Flow Logs はレイヤー 3/4 の情報のみを記録し、HTTP ステータスコードは記録しません。</li>\n<li><strong>B:</strong> CloudTrail は API 呼び出しを記録し、HTTP トラフィックは記録しません。</li>\n<li><strong>E:</strong> RDS ログはデータベース操作を記録し、HTTP ステータスコードは記録しません。</li>\n</ul>"
       }
     },
     {
@@ -2197,7 +2295,9 @@
       "bookmarked": false,
       "hasNote": false,
       "explanations": {
-        "zh": "<p><strong>正确答案 B：</strong>详细监控（1 分钟间隔）允许创建 2 分钟持续时间的警报。基本监控（5 分钟间隔）无法检测 2 分钟的条件。</p>\n<p><strong>为什么其他选项错误：</strong></p>\n<ul>\n<li><strong>A:</strong> 基本监控的 5 分钟间隔无法检测 2 分钟的 CPU 峰值。</li>\n<li><strong>C:</strong> 每 2 分钟检查一次可能会错过实际的 CPU 峰值时间。</li>\n<li><strong>D:</strong> EC2 健康检查不检测 CPU 使用率。</li>\n</ul>"
+        "zh": "<p><strong>正确答案 B：</strong>详细监控（1 分钟间隔）允许创建 2 分钟持续时间的警报。基本监控（5 分钟间隔）无法检测 2 分钟的条件。</p>\n<p><strong>为什么其他选项错误：</strong></p>\n<ul>\n<li><strong>A:</strong> 基本监控的 5 分钟间隔无法检测 2 分钟的 CPU 峰值。</li>\n<li><strong>C:</strong> 每 2 分钟检查一次可能会错过实际的 CPU 峰值时间。</li>\n<li><strong>D:</strong> EC2 健康检查不检测 CPU 使用率。</li>\n</ul>",
+        "en": "<p><strong>Correct Answer B:</strong> Detailed monitoring (1-minute interval) allows creating alarms for 2-minute duration conditions. Basic monitoring (5-minute interval) cannot detect 2-minute conditions.</p>\n<p><strong>Why other options are incorrect:</strong></p>\n<ul>\n<li><strong>A:</strong> Basic monitoring's 5-minute interval cannot detect 2-minute CPU spikes.</li>\n<li><strong>C:</strong> Checking every 2 minutes may miss actual CPU spike timing.</li>\n<li><strong>D:</strong> EC2 health checks don't detect CPU utilization.</li>\n</ul>",
+        "ja": "<p><strong>正解 B：</strong>詳細モニタリング（1 分間隔）では、2 分間の条件のアラームを作成できます。基本モニタリング（5 分間隔）では 2 分間の条件を検出できません。</p>\n<p><strong>他のオプションが不正解な理由：</strong></p>\n<ul>\n<li><strong>A:</strong> 基本モニタリングの 5 分間隔では、2 分間の CPU スパイクを検出できません。</li>\n<li><strong>C:</strong> 2 分ごとにチェックすると、実際の CPU スパイクのタイミングを見逃す可能性があります。</li>\n<li><strong>D:</strong> EC2 ヘルスチェックは CPU 使用率を検出しません。</li>\n</ul>"
       }
     },
     {
@@ -2237,7 +2337,9 @@
       "bookmarked": false,
       "hasNote": false,
       "explanations": {
-        "zh": "<p><strong>正确答案 B 和 D：</strong>将用户添加到 IAM 用户组可以集中管理策略，客户托管策略支持版本控制和跨多个实体共享。</p>\n<p><strong>为什么其他选项错误：</strong></p>\n<ul>\n<li><strong>A:</strong> 服务链接角色由 AWS 服务创建和管理，不能用于用户访问。</li>\n<li><strong>C:</strong> AWS 托管策略不能被修改或版本化。</li>\n<li><strong>E:</strong> 内联策略不能跨多个实体共享。</li>\n</ul>"
+        "zh": "<p><strong>正确答案 B 和 D：</strong>将用户添加到 IAM 用户组可以集中管理策略，客户托管策略支持版本控制和跨多个实体共享。</p>\n<p><strong>为什么其他选项错误：</strong></p>\n<ul>\n<li><strong>A:</strong> 服务链接角色由 AWS 服务创建和管理，不能用于用户访问。</li>\n<li><strong>C:</strong> AWS 托管策略不能被修改或版本化。</li>\n<li><strong>E:</strong> 内联策略不能跨多个实体共享。</li>\n</ul>",
+        "en": "<p><strong>Correct Answer B and D:</strong> Adding users to IAM user groups allows centralized policy management, and customer managed policies support versioning and sharing across multiple entities.</p>\n<p><strong>Why other options are incorrect:</strong></p>\n<ul>\n<li><strong>A:</strong> Service-linked roles are created and managed by AWS services and cannot be used for user access.</li>\n<li><strong>C:</strong> AWS managed policies cannot be modified or versioned.</li>\n<li><strong>E:</strong> Inline policies cannot be shared across multiple entities.</li>\n</ul>",
+        "ja": "<p><strong>正解 B と D：</strong>ユーザーを IAM ユーザーグループに追加すると、ポリシーを一元管理でき、カスタマー管理ポリシーはバージョニングと複数のエンティティ間での共有をサポートします。</p>\n<p><strong>他のオプションが不正解な理由：</strong></p>\n<ul>\n<li><strong>A:</strong> サービスリンクロールは AWS サービスによって作成および管理され、ユーザーアクセスには使用できません。</li>\n<li><strong>C:</strong> AWS 管理ポリシーは変更またはバージョン管理できません。</li>\n<li><strong>E:</strong> インラインポリシーは複数のエンティティ間で共有できません。</li>\n</ul>"
       }
     },
     {
@@ -2273,7 +2375,9 @@
       "bookmarked": false,
       "hasNote": false,
       "explanations": {
-        "zh": "<p><strong>正确答案 D：</strong>Warm Pool 预先启动实例并保持在停止状态，当需要扩展时可以快速启动，避免长时间的引导脚本等待。</p>\n<p><strong>为什么其他选项错误：</strong></p>\n<ul>\n<li><strong>A:</strong> 更大的实例不能减少引导脚本时间。</li>\n<li><strong>B:</strong> 增加最小实例数会导致过度配置。</li>\n<li><strong>C:</strong> 预测扩展基于历史模式，不能解决引导时间问题。</li>\n</ul>"
+        "zh": "<p><strong>正确答案 D：</strong>Warm Pool 预先启动实例并保持在停止状态，当需要扩展时可以快速启动，避免长时间的引导脚本等待。</p>\n<p><strong>为什么其他选项错误：</strong></p>\n<ul>\n<li><strong>A:</strong> 更大的实例不能减少引导脚本时间。</li>\n<li><strong>B:</strong> 增加最小实例数会导致过度配置。</li>\n<li><strong>C:</strong> 预测扩展基于历史模式，不能解决引导时间问题。</li>\n</ul>",
+        "en": "<p><strong>Correct Answer D:</strong> Warm Pool pre-launches instances and keeps them in a stopped state. When scaling is needed, they can be started quickly, avoiding long bootstrap script waits.</p>\n<p><strong>Why other options are incorrect:</strong></p>\n<ul>\n<li><strong>A:</strong> Larger instances cannot reduce bootstrap script time.</li>\n<li><strong>B:</strong> Increasing minimum instances causes over-provisioning.</li>\n<li><strong>C:</strong> Predictive scaling is based on historical patterns and cannot solve bootstrap time issues.</li>\n</ul>",
+        "ja": "<p><strong>正解 D：</strong>Warm Pool はインスタンスを事前に起動し、停止状態で保持します。スケーリングが必要な場合、すぐに起動でき、長いブートストラップスクリプトの待機を回避できます。</p>\n<p><strong>他のオプションが不正解な理由：</strong></p>\n<ul>\n<li><strong>A:</strong> より大きなインスタンスはブートストラップスクリプトの時間を短縮できません。</li>\n<li><strong>B:</strong> 最小インスタンス数を増やすと過剰プロビジョニングになります。</li>\n<li><strong>C:</strong> 予測スケーリングは履歴パターンに基づいており、ブートストラップ時間の問題を解決できません。</li>\n</ul>"
       }
     },
     {
@@ -2309,7 +2413,9 @@
       "bookmarked": false,
       "hasNote": false,
       "explanations": {
-        "zh": "<p><strong>正确答案 D：</strong>子网 CIDR 块创建后不能修改。要部署更多实例，需要创建一个新的子网。11 个实例说明当前子网可能使用了 /28 CIDR（16 个 IP，AWS 保留 5 个）。</p>\n<p><strong>为什么其他选项错误：</strong></p>\n<ul>\n<li><strong>A:</strong> 子网 CIDR 不能被编辑或扩展。</li>\n<li><strong>B:</strong> 子网不能跨可用区。</li>\n<li><strong>C:</strong> 弹性 IP 与私有子网可用 IP 数量无关。</li>\n</ul>"
+        "zh": "<p><strong>正确答案 D：</strong>子网 CIDR 块创建后不能修改。要部署更多实例，需要创建一个新的子网。11 个实例说明当前子网可能使用了 /28 CIDR（16 个 IP，AWS 保留 5 个）。</p>\n<p><strong>为什么其他选项错误：</strong></p>\n<ul>\n<li><strong>A:</strong> 子网 CIDR 不能被编辑或扩展。</li>\n<li><strong>B:</strong> 子网不能跨可用区。</li>\n<li><strong>C:</strong> 弹性 IP 与私有子网可用 IP 数量无关。</li>\n</ul>",
+        "en": "<p><strong>Correct Answer D:</strong> Subnet CIDR blocks cannot be modified after creation. To deploy more instances, you need to create a new subnet. 11 instances suggests the current subnet may use a /28 CIDR (16 IPs, AWS reserves 5).</p>\n<p><strong>Why other options are incorrect:</strong></p>\n<ul>\n<li><strong>A:</strong> Subnet CIDR cannot be edited or expanded.</li>\n<li><strong>B:</strong> Subnets cannot span availability zones.</li>\n<li><strong>C:</strong> Elastic IPs are unrelated to private subnet available IP count.</li>\n</ul>",
+        "ja": "<p><strong>正解 D：</strong>サブネット CIDR ブロックは作成後に変更できません。より多くのインスタンスをデプロイするには、新しいサブネットを作成する必要があります。11 個のインスタンスは、現在のサブネットが /28 CIDR（16 IP、AWS が 5 つ予約）を使用している可能性を示唆しています。</p>\n<p><strong>他のオプションが不正解な理由：</strong></p>\n<ul>\n<li><strong>A:</strong> サブネット CIDR は編集または拡張できません。</li>\n<li><strong>B:</strong> サブネットはアベイラビリティゾーンにまたがることができません。</li>\n<li><strong>C:</strong> Elastic IP はプライベートサブネットの使用可能な IP 数とは関係ありません。</li>\n</ul>"
       }
     },
     {
@@ -2345,7 +2451,9 @@
       "bookmarked": false,
       "hasNote": false,
       "explanations": {
-        "zh": "<p><strong>正确答案 A：</strong>自定义事件总线用于应用特定事件，存档功能可以记录事件以便稍后按类型或时间重放。规则将事件发送到 Lambda 处理。</p>\n<p><strong>为什么其他选项错误：</strong></p>\n<ul>\n<li><strong>B:</strong> 默认事件总线用于 AWS 服务事件，不适合自定义应用事件。</li>\n<li><strong>C:</strong> EventBridge Pipes 不用于存档事件。</li>\n<li><strong>D:</strong> CloudWatch Logs 不支持按事件类型或时间重放事件。</li>\n</ul>"
+        "zh": "<p><strong>正确答案 A：</strong>自定义事件总线用于应用特定事件，存档功能可以记录事件以便稍后按类型或时间重放。规则将事件发送到 Lambda 处理。</p>\n<p><strong>为什么其他选项错误：</strong></p>\n<ul>\n<li><strong>B:</strong> 默认事件总线用于 AWS 服务事件，不适合自定义应用事件。</li>\n<li><strong>C:</strong> EventBridge Pipes 不用于存档事件。</li>\n<li><strong>D:</strong> CloudWatch Logs 不支持按事件类型或时间重放事件。</li>\n</ul>",
+        "en": "<p><strong>Correct Answer A:</strong> Custom event bus is for application-specific events. Archive feature can record events for later replay by type or time. Rules send events to Lambda for processing.</p>\n<p><strong>Why other options are incorrect:</strong></p>\n<ul>\n<li><strong>B:</strong> Default event bus is for AWS service events, not suitable for custom application events.</li>\n<li><strong>C:</strong> EventBridge Pipes is not for archiving events.</li>\n<li><strong>D:</strong> CloudWatch Logs doesn't support replaying events by type or time.</li>\n</ul>",
+        "ja": "<p><strong>正解 A：</strong>カスタムイベントバスはアプリケーション固有のイベント用です。アーカイブ機能は、タイプまたは時間で後で再生するためにイベントを記録できます。ルールは処理のためにイベントを Lambda に送信します。</p>\n<p><strong>他のオプションが不正解な理由：</strong></p>\n<ul>\n<li><strong>B:</strong> デフォルトのイベントバスは AWS サービスイベント用であり、カスタムアプリケーションイベントには適していません。</li>\n<li><strong>C:</strong> EventBridge Pipes はイベントのアーカイブ用ではありません。</li>\n<li><strong>D:</strong> CloudWatch Logs はタイプまたは時間でイベントを再生することをサポートしていません。</li>\n</ul>"
       }
     },
     {
@@ -2385,7 +2493,9 @@
       "bookmarked": false,
       "hasNote": false,
       "explanations": {
-        "zh": "<p><strong>正确答案 B 和 D：</strong>CloudFormation 模板跨区域部署失败的常见原因：AMI ID 是区域特定的，不能跨区域使用；某些 AWS 服务可能在某些区域不可用。</p>\n<p><strong>为什么其他选项错误：</strong></p>\n<ul>\n<li><strong>A:</strong> IAM 用户是全局资源，在所有区域可用。</li>\n<li><strong>C:</strong> 权限问题会在部署开始时就失败，不会部分部署。</li>\n<li><strong>E:</strong> CloudFormation 模板可以用于创建新堆栈。</li>\n</ul>"
+        "zh": "<p><strong>正确答案 B 和 D：</strong>CloudFormation 模板跨区域部署失败的常见原因：AMI ID 是区域特定的，不能跨区域使用；某些 AWS 服务可能在某些区域不可用。</p>\n<p><strong>为什么其他选项错误：</strong></p>\n<ul>\n<li><strong>A:</strong> IAM 用户是全局资源，在所有区域可用。</li>\n<li><strong>C:</strong> 权限问题会在部署开始时就失败，不会部分部署。</li>\n<li><strong>E:</strong> CloudFormation 模板可以用于创建新堆栈。</li>\n</ul>",
+        "en": "<p><strong>Correct Answer B and D:</strong> Common reasons CloudFormation templates fail across regions: AMI IDs are region-specific and cannot be used across regions; some AWS services may not be available in certain regions.</p>\n<p><strong>Why other options are incorrect:</strong></p>\n<ul>\n<li><strong>A:</strong> IAM users are global resources and available in all regions.</li>\n<li><strong>C:</strong> Permission issues would cause failure at deployment start, not partial deployment.</li>\n<li><strong>E:</strong> CloudFormation templates can be used to create new stacks.</li>\n</ul>",
+        "ja": "<p><strong>正解 B と D：</strong>CloudFormation テンプレートがリージョン間で失敗する一般的な理由：AMI ID はリージョン固有であり、リージョン間で使用できません。一部の AWS サービスは特定のリージョンで利用できない場合があります。</p>\n<p><strong>他のオプションが不正解な理由：</strong></p>\n<ul>\n<li><strong>A:</strong> IAM ユーザーはグローバルリソースであり、すべてのリージョンで利用可能です。</li>\n<li><strong>C:</strong> 権限の問題はデプロイ開始時に失敗を引き起こし、部分的なデプロイではありません。</li>\n<li><strong>E:</strong> CloudFormation テンプレートは新しいスタックを作成するために使用できます。</li>\n</ul>"
       }
     }
   ]
