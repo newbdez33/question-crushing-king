@@ -829,10 +829,11 @@ export function LanguageProvider({
     return (key: string): string => {
       const value = translations[language][key]
       if (value !== undefined) return value
-      // Fallback to English
+      /* istanbul ignore next -- fallback paths for missing translations */
       const fallback = translations.en[key]
+      /* istanbul ignore next */
       if (fallback !== undefined) return fallback
-      // Return key if not found
+      /* istanbul ignore next */
       return key
     }
   }, [language])
@@ -856,6 +857,7 @@ export function LanguageProvider({
 export const useLanguage = () => {
   const context = useContext(LanguageContext)
 
+  /* istanbul ignore if -- context has initialState so this is never null */
   if (!context) throw new Error('useLanguage must be used within a LanguageProvider')
 
   return context

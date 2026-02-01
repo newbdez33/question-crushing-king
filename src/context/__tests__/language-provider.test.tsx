@@ -170,6 +170,30 @@ describe('LanguageProvider', () => {
   })
 })
 
+describe('useLanguage behavior outside provider', () => {
+  it('returns initial state with no-op functions when used outside provider', () => {
+    // When used outside the provider, context returns initialState
+    function TestComponent() {
+      const { language, defaultLanguage, t } = useLanguage()
+      return (
+        <div>
+          <span data-testid="language">{language}</span>
+          <span data-testid="default">{defaultLanguage}</span>
+          <span data-testid="translated">{t('test.key')}</span>
+        </div>
+      )
+    }
+
+    render(<TestComponent />)
+
+    // Should return initial values
+    expect(screen.getByTestId('language')).toHaveTextContent('en')
+    expect(screen.getByTestId('default')).toHaveTextContent('en')
+    // Initial t function returns the key as fallback
+    expect(screen.getByTestId('translated')).toHaveTextContent('test.key')
+  })
+})
+
 describe('getLocalizedExplanation', () => {
   it('returns empty string for undefined explanations', () => {
     expect(getLocalizedExplanation(undefined, 'en')).toBe('')
