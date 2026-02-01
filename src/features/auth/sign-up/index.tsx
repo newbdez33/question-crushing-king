@@ -1,4 +1,5 @@
 import { Link } from '@tanstack/react-router'
+import { useLanguage } from '@/context/language-provider'
 import {
   Card,
   CardContent,
@@ -11,21 +12,23 @@ import { AuthLayout } from '../auth-layout'
 import { SignUpForm } from './components/sign-up-form'
 
 export function SignUp() {
+  const { t } = useLanguage()
+
   return (
     <AuthLayout>
       <Card className='gap-4'>
         <CardHeader>
           <CardTitle className='text-lg tracking-tight'>
-            Create an account
+            {t('auth.signUpTitle')}
           </CardTitle>
           <CardDescription>
-            Enter your email and password to create an account. <br />
-            Already have an account?{' '}
+            {t('auth.signUpDesc')}{' '}
+            {t('auth.haveAccount')}{' '}
             <Link
               to='/sign-in'
               className='underline underline-offset-4 hover:text-primary'
             >
-              Sign In
+              {t('auth.signIn')}
             </Link>
           </CardDescription>
         </CardHeader>
@@ -34,21 +37,20 @@ export function SignUp() {
         </CardContent>
         <CardFooter>
           <p className='px-8 text-center text-sm text-muted-foreground'>
-            By creating an account, you agree to our{' '}
+            {t('auth.termsAgree')}{' '}
             <a
               href='/terms'
               className='underline underline-offset-4 hover:text-primary'
             >
-              Terms of Service
+              {t('auth.termsOfService')}
             </a>{' '}
-            and{' '}
+            {t('auth.and')}{' '}
             <a
               href='/privacy'
               className='underline underline-offset-4 hover:text-primary'
             >
-              Privacy Policy
+              {t('auth.privacyPolicy')}
             </a>
-            .
           </p>
         </CardFooter>
       </Card>
