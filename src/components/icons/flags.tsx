@@ -122,30 +122,23 @@ export function FlagTC({ className, ...props }: FlagProps) {
       {...props}
     >
       <rect width="32" height="24" fill="#DE2110" />
-      {/* Bauhinia flower - larger and more visible */}
+      {/* Bauhinia flower - with rounded petal shape */}
       <g fill="#fff" transform="translate(16, 12)">
-        <circle cx="0" cy="0" r="1.5" />
-        {/* 5 petals - larger */}
-        <path d="M0,-8 C2,-5.5 2,-2.5 0,0 C-2,-2.5 -2,-5.5 0,-8" transform="rotate(0)" />
-        <path d="M0,-8 C2,-5.5 2,-2.5 0,0 C-2,-2.5 -2,-5.5 0,-8" transform="rotate(72)" />
-        <path d="M0,-8 C2,-5.5 2,-2.5 0,0 C-2,-2.5 -2,-5.5 0,-8" transform="rotate(144)" />
-        <path d="M0,-8 C2,-5.5 2,-2.5 0,0 C-2,-2.5 -2,-5.5 0,-8" transform="rotate(216)" />
-        <path d="M0,-8 C2,-5.5 2,-2.5 0,0 C-2,-2.5 -2,-5.5 0,-8" transform="rotate(288)" />
-        {/* Red veins/stars on petals */}
+        {/* Center of flower */}
+        <circle cx="0" cy="0" r="1.8" />
+        {/* 5 rounded petals - heart/teardrop shaped */}
+        <path d="M0,-2 Q-3,-4 -2.5,-7 Q0,-9 2.5,-7 Q3,-4 0,-2" transform="rotate(0)" />
+        <path d="M0,-2 Q-3,-4 -2.5,-7 Q0,-9 2.5,-7 Q3,-4 0,-2" transform="rotate(72)" />
+        <path d="M0,-2 Q-3,-4 -2.5,-7 Q0,-9 2.5,-7 Q3,-4 0,-2" transform="rotate(144)" />
+        <path d="M0,-2 Q-3,-4 -2.5,-7 Q0,-9 2.5,-7 Q3,-4 0,-2" transform="rotate(216)" />
+        <path d="M0,-2 Q-3,-4 -2.5,-7 Q0,-9 2.5,-7 Q3,-4 0,-2" transform="rotate(288)" />
+        {/* Red five-pointed stars on each petal */}
         <g fill="#DE2110">
-          <ellipse cx="0" cy="-5" rx="0.4" ry="1.2" transform="rotate(0)" />
-          <ellipse cx="0" cy="-5" rx="0.4" ry="1.2" transform="rotate(72)" />
-          <ellipse cx="0" cy="-5" rx="0.4" ry="1.2" transform="rotate(144)" />
-          <ellipse cx="0" cy="-5" rx="0.4" ry="1.2" transform="rotate(216)" />
-          <ellipse cx="0" cy="-5" rx="0.4" ry="1.2" transform="rotate(288)" />
-        </g>
-        {/* Small red stars at petal tips */}
-        <g fill="#DE2110">
-          <circle cx="0" cy="-6.5" r="0.6" transform="rotate(0)" />
-          <circle cx="0" cy="-6.5" r="0.6" transform="rotate(72)" />
-          <circle cx="0" cy="-6.5" r="0.6" transform="rotate(144)" />
-          <circle cx="0" cy="-6.5" r="0.6" transform="rotate(216)" />
-          <circle cx="0" cy="-6.5" r="0.6" transform="rotate(288)" />
+          <path d="M0,-5.5 L0.5,-4.3 L1.7,-4.3 L0.7,-3.5 L1.1,-2.3 L0,-3 L-1.1,-2.3 L-0.7,-3.5 L-1.7,-4.3 L-0.5,-4.3 Z" transform="rotate(0) scale(0.5)" />
+          <path d="M0,-5.5 L0.5,-4.3 L1.7,-4.3 L0.7,-3.5 L1.1,-2.3 L0,-3 L-1.1,-2.3 L-0.7,-3.5 L-1.7,-4.3 L-0.5,-4.3 Z" transform="rotate(72) scale(0.5)" />
+          <path d="M0,-5.5 L0.5,-4.3 L1.7,-4.3 L0.7,-3.5 L1.1,-2.3 L0,-3 L-1.1,-2.3 L-0.7,-3.5 L-1.7,-4.3 L-0.5,-4.3 Z" transform="rotate(144) scale(0.5)" />
+          <path d="M0,-5.5 L0.5,-4.3 L1.7,-4.3 L0.7,-3.5 L1.1,-2.3 L0,-3 L-1.1,-2.3 L-0.7,-3.5 L-1.7,-4.3 L-0.5,-4.3 Z" transform="rotate(216) scale(0.5)" />
+          <path d="M0,-5.5 L0.5,-4.3 L1.7,-4.3 L0.7,-3.5 L1.1,-2.3 L0,-3 L-1.1,-2.3 L-0.7,-3.5 L-1.7,-4.3 L-0.5,-4.3 Z" transform="rotate(288) scale(0.5)" />
         </g>
       </g>
     </svg>
