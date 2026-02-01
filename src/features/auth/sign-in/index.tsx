@@ -1,4 +1,5 @@
 import { Link, useSearch } from '@tanstack/react-router'
+import { useLanguage } from '@/context/language-provider'
 import {
   Card,
   CardContent,
@@ -12,15 +13,15 @@ import { UserAuthForm } from './components/user-auth-form'
 
 export function SignIn() {
   const { redirect } = useSearch({ from: '/(auth)/sign-in' })
+  const { t } = useLanguage()
 
   return (
     <AuthLayout>
       <Card className='gap-4'>
         <CardHeader>
-          <CardTitle className='text-lg tracking-tight'>Sign in</CardTitle>
+          <CardTitle className='text-lg tracking-tight'>{t('auth.signInTitle')}</CardTitle>
           <CardDescription>
-            Enter your email and password below to <br />
-            log into your account
+            {t('auth.signInDesc')}
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -28,14 +29,13 @@ export function SignIn() {
         </CardContent>
         <CardFooter>
           <p className='px-8 text-center text-sm text-muted-foreground'>
-            Don&apos;t have an account?{' '}
+            {t('auth.noAccount')}{' '}
             <Link
               to='/sign-up'
               className='underline underline-offset-4 hover:text-primary'
             >
-              Sign up
+              {t('auth.signUp')}
             </Link>
-            .
           </p>
         </CardFooter>
       </Card>
