@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect, useState, useMemo } from 'react'
 import { getCookie, setCookie, removeCookie } from '@/lib/cookies'
 
-export type Language = 'en' | 'zh' | 'ja'
+export type Language = 'en' | 'zh' | 'zh-TW' | 'ja'
 
 const DEFAULT_LANGUAGE: Language = 'en'
 const LANGUAGE_COOKIE_NAME = 'app-language'
@@ -131,7 +131,8 @@ const translations: Record<Language, Record<string, string>> = {
     // Language selector
     'language.select': 'Language',
     'language.en': 'English',
-    'language.zh': '中文',
+    'language.zh': '简体中文',
+    'language.zh-TW': '繁體中文',
     'language.ja': '日本語',
 
     // Sidebar
@@ -383,7 +384,8 @@ const translations: Record<Language, Record<string, string>> = {
     // Language selector
     'language.select': '语言',
     'language.en': 'English',
-    'language.zh': '中文',
+    'language.zh': '简体中文',
+    'language.zh-TW': '繁體中文',
     'language.ja': '日本語',
 
     // Sidebar
@@ -635,7 +637,8 @@ const translations: Record<Language, Record<string, string>> = {
     // Language selector
     'language.select': '言語',
     'language.en': 'English',
-    'language.zh': '中文',
+    'language.zh': '简体中文',
+    'language.zh-TW': '繁體中文',
     'language.ja': '日本語',
 
     // Sidebar
@@ -779,6 +782,259 @@ const translations: Record<Language, Record<string, string>> = {
     'signOut.description': 'ログアウトしてもよろしいですか？アカウントにアクセスするには再度ログインが必要です。',
     'signOut.confirm': 'ログアウト',
   },
+  'zh-TW': {
+    // Common
+    'common.loading': '載入中...',
+    'common.error': '錯誤',
+    'common.cancel': '取消',
+    'common.continue': '繼續',
+    'common.save': '儲存',
+    'common.back': '返回',
+    'common.questions': '題目',
+    'common.progress': '進度',
+    'common.accuracy': '正確率',
+
+    // Dashboard
+    'dashboard.title': '儀表板',
+    'dashboard.totalQuestionsAnswered': '已答題目總數',
+    'dashboard.correctAnswers': '正確答案',
+    'dashboard.overallAccuracy': '整體正確率',
+    'dashboard.examsStarted': '已開始考試',
+    'dashboard.recentActivity': '最近活動',
+    'dashboard.noHistory': '還沒有練習記錄。開始一場考試來查看您的統計數據！',
+    'dashboard.allExams': '所有可用考試',
+    'dashboard.loadingExams': '正在載入考試...',
+    'dashboard.syncPromptTitle': '登入以同步學習進度',
+    'dashboard.syncPromptDesc': '登入後可自動在不同裝置間同步練習進度。',
+    'dashboard.lastStudied': '上次學習',
+
+    // Exams list
+    'exams.myExams': '我的考試',
+    'exams.noExams': '還沒有考試',
+    'exams.noExamsDesc': '您還沒有加入任何考試。前往儀表板探索並加入考試吧。',
+    'exams.goToDashboard': '前往儀表板',
+
+    // Exam details
+    'examDetails.join': '加入考試',
+    'examDetails.joined': '已加入',
+    'examDetails.practice': '練習',
+    'examDetails.study': '學習',
+    'examDetails.exam': '考試',
+    'examDetails.questionsAnswered': '已答題目',
+    'examDetails.correctRate': '正確率',
+    'examDetails.bookmarked': '已收藏',
+    'examDetails.mistakes': '錯題',
+    'examDetails.startExam': '開始考試',
+    'examDetails.examSettings': '考試設定',
+    'examDetails.numberOfQuestions': '題目數量',
+    'examDetails.randomSeed': '隨機種子（選填）',
+    'examDetails.startExamBtn': '開始考試',
+    'examDetails.loadingExam': '正在載入考試...',
+    'examDetails.addedToMyExams': '已新增到我的考試',
+
+    // Practice mode
+    'practice.title': '練習',
+    'practice.myMistakes': '我的錯題',
+    'practice.myBookmarks': '我的收藏',
+    'practice.question': '題目',
+    'practice.of': '/',
+    'practice.single': '單選',
+    'practice.multiple': '多選',
+    'practice.submitAnswer': '提交答案',
+    'practice.correctAnswer': '回答正確！',
+    'practice.incorrectAnswer': '回答錯誤',
+    'practice.correct': '正確答案',
+    'practice.yourAnswer': '您的答案',
+    'practice.explanation': '解釋',
+    'practice.loadingQuestions': '正在載入題目...',
+    'practice.noMistakes': '沒有錯題需要複習！',
+    'practice.noMistakesDesc': '太棒了！您還沒有答錯的題目。',
+    'practice.noBookmarks': '沒有收藏的題目！',
+    'practice.noBookmarksDesc': '在練習時收藏題目，稍後可以在這裡複習。',
+    'practice.backToExam': '返回考試',
+    'practice.clearProgress': '清除進度',
+    'practice.clearProgressTitle': '您確定嗎？',
+    'practice.clearProgressDesc': '此操作無法復原。這將永久刪除您在此考試中的進度。',
+    'practice.graduated': '太棒了！這道題已從錯題本中移除。',
+    'practice.graduatedDesc': '您連續答對了 {count} 次。',
+    'practice.savedLocally': '已儲存到本機。登入以同步到雲端',
+    'practice.bookmarkSavedLocally': '收藏已儲存到本機。登入以同步到雲端',
+
+    // Study mode
+    'study.title': '學習模式',
+    'study.showAnswer': '顯示答案',
+
+    // Exam mode
+    'exam.title': '考試模式',
+    'exam.timeRemaining': '剩餘時間',
+    'exam.submit': '提交考試',
+    'exam.results': '考試結果',
+    'exam.score': '得分',
+    'exam.passed': '通過',
+    'exam.failed': '未通過',
+
+    // Settings
+    'settings.title': '設定',
+    'settings.description': '管理您的帳戶設定和電子郵件偏好。',
+    'settings.profile': '個人資料',
+    'settings.account': '帳戶',
+    'settings.appearance': '外觀',
+
+    // Navigation
+    'nav.exams': '考試',
+    'nav.settings': '設定',
+    'nav.account': '帳戶',
+    'nav.signIn': '登入',
+    'nav.signOut': '登出',
+
+    // Language selector
+    'language.select': '語言',
+    'language.en': 'English',
+    'language.zh': '简体中文',
+    'language.zh-TW': '繁體中文',
+    'language.ja': '日本語',
+
+    // Sidebar
+    'sidebar.appTitle': '刷題大王',
+    'sidebar.general': '一般',
+    'sidebar.dashboard': '儀表板',
+    'sidebar.myExams': '我的考試',
+    'sidebar.other': '其他',
+    'sidebar.helpCenter': '說明中心',
+
+    // Authentication
+    'auth.email': '電子郵件',
+    'auth.password': '密碼',
+    'auth.confirmPassword': '確認密碼',
+    'auth.emailPlaceholder': 'name@example.com',
+    'auth.passwordPlaceholder': '********',
+    'auth.forgotPassword': '忘記密碼？',
+    'auth.signInWithEmail': '使用電子郵件登入',
+    'auth.signUpWithEmail': '使用電子郵件註冊',
+    'auth.orContinueWith': '或者使用',
+    'auth.google': 'Google',
+    'auth.sendResetLink': '傳送重設連結',
+    'auth.otpLabel': '一次性密碼',
+    'auth.verify': '驗證',
+    'auth.enterEmail': '請輸入電子郵件',
+    'auth.enterPassword': '請輸入密碼',
+    'auth.passwordMinLength': '密碼長度至少為7個字元',
+    'auth.confirmPasswordRequired': '請確認密碼',
+    'auth.passwordsNoMatch': '密碼不相符。',
+    'auth.enterOtp': '請輸入6位驗證碼。',
+    'auth.welcomeBack': '歡迎回來！',
+    'auth.signInFailed': '登入失敗',
+    'auth.signInGoogleSuccess': '使用 Google 登入成功！',
+    'auth.signInGoogleFailed': '使用 Google 登入失敗',
+    'auth.accountCreated': '帳戶建立成功！',
+    'auth.accountCreateFailed': '帳戶建立失敗',
+    'auth.resetEmailSent': '密碼重設郵件已傳送',
+    'auth.resetEmailFailed': '傳送重設郵件失敗',
+    // Auth page titles and descriptions
+    'auth.signInTitle': '登入',
+    'auth.signInDesc': '輸入您的電子郵件和密碼登入帳戶',
+    'auth.noAccount': '還沒有帳戶？',
+    'auth.signUp': '註冊',
+    'auth.signUpTitle': '建立帳戶',
+    'auth.signUpDesc': '輸入您的電子郵件和密碼建立帳戶。',
+    'auth.haveAccount': '已有帳戶？',
+    'auth.signIn': '登入',
+    'auth.termsAgree': '建立帳戶即表示您同意我們的',
+    'auth.termsOfService': '服務條款',
+    'auth.and': '和',
+    'auth.privacyPolicy': '隱私權政策',
+    'auth.forgotPasswordTitle': '忘記密碼',
+    'auth.forgotPasswordDesc': '輸入您註冊的電子郵件，我們將向您傳送重設密碼的連結。',
+    'auth.twoFactorTitle': '兩步驟驗證',
+    'auth.twoFactorDesc': '請輸入驗證碼。我們已將驗證碼傳送到您的電子郵件。',
+    'auth.notReceived': '沒有收到？',
+    'auth.resendCode': '重新傳送驗證碼',
+
+    // Error pages
+    'error.404': '404',
+    'error.404Title': '哎呀！找不到頁面！',
+    'error.404Desc': '您要尋找的頁面似乎不存在或可能已被刪除。',
+    'error.500': '500',
+    'error.500Title': '哎呀！出了點問題',
+    'error.500Desc': '我們對此帶來的不便深表歉意。請稍後再試。',
+    'error.401': '401',
+    'error.401Title': '未授權存取',
+    'error.401Desc': '請使用適當的憑證登入以存取此資源。',
+    'error.403': '403',
+    'error.403Title': '存取被禁止',
+    'error.403Desc': '您沒有檢視此資源的必要權限。',
+    'error.503': '503',
+    'error.503Title': '網站正在維護中！',
+    'error.503Desc': '網站目前無法使用。我們將很快恢復上線。',
+    'error.goBack': '返回',
+    'error.backToHome': '返回首頁',
+    'error.learnMore': '瞭解更多',
+
+    // Theme settings
+    'theme.title': '主題設定',
+    'theme.description': '調整外觀和版面配置以滿足您的偏好。',
+    'theme.reset': '重設',
+    'theme.resetAll': '將所有設定重設為預設值',
+    'theme.theme': '主題',
+    'theme.system': '系統',
+    'theme.light': '淺色',
+    'theme.dark': '深色',
+    'theme.themeDesc': '選擇系統偏好、淺色模式或深色模式',
+    'theme.sidebar': '側邊欄',
+    'theme.inset': '內嵌',
+    'theme.floating': '浮動',
+    'theme.sidebarOption': '側邊欄',
+    'theme.sidebarDesc': '選擇內嵌、浮動或標準側邊欄版面配置',
+    'theme.layout': '版面配置',
+    'theme.default': '預設',
+    'theme.compact': '緊湊',
+    'theme.fullLayout': '完整版面配置',
+    'theme.layoutDesc': '選擇預設展開、緊湊僅圖示或完整版面配置模式',
+    'theme.direction': '方向',
+    'theme.ltr': '從左到右',
+    'theme.rtl': '從右到左',
+    'theme.directionDesc': '選擇從左到右或從右到左的網站方向',
+
+    // Practice/Study components
+    'practice.answerSheet': '答題卡',
+    'practice.settings': '設定',
+    'practice.fontSize': '字型大小',
+    'practice.fontSmall': '小',
+    'practice.fontNormal': '正常',
+    'practice.fontLarge': '大',
+    'practice.bookmark': '收藏',
+    'practice.correctCount': '正確次數',
+    'practice.wrongCount': '錯誤次數',
+    'practice.answerCard': '答題卡',
+
+    // Common components
+    'common.search': '搜尋',
+    'common.typeCommand': '輸入指令或搜尋...',
+    'common.noResults': '找不到結果。',
+    'common.toggleTheme': '切換主題',
+    'common.skipToMain': '跳至主要內容',
+    'common.selected': '已選取',
+    'common.clearSelection': '清除選取',
+    'common.rowsPerPage': '每頁列數',
+    'common.pageOf': '第 {current} 頁，共 {total} 頁',
+    'common.goToFirstPage': '前往第一頁',
+    'common.goToPrevPage': '前往上一頁',
+    'common.goToNextPage': '前往下一頁',
+    'common.goToLastPage': '前往最後一頁',
+    'common.filter': '篩選...',
+    'common.view': '檢視',
+    'common.toggleColumns': '切換欄位',
+    'common.clearFilters': '清除篩選',
+    'common.pickDate': '選擇日期',
+    'common.comingSoon': '即將推出！',
+    'common.comingSoonDesc': '此頁面尚未建立。敬請期待！',
+    'common.guestUser': '訪客使用者',
+
+    // Sign out dialog
+    'signOut.title': '登出',
+    'signOut.description': '確定要登出嗎？您需要重新登入才能存取您的帳戶。',
+    'signOut.confirm': '登出',
+  },
 }
 
 const initialState: LanguageProviderState = {
@@ -866,15 +1122,20 @@ export const useLanguage = () => {
 // Helper to get explanation based on current language
 // eslint-disable-next-line react-refresh/only-export-components
 export function getLocalizedExplanation(
-  explanations: { en?: string; zh?: string; ja?: string } | undefined,
+  explanations: { en?: string; zh?: string; 'zh-TW'?: string; ja?: string } | undefined,
   language: Language
 ): string {
   if (!explanations) return ''
 
   // Try to get explanation in current language
-  const explanation = explanations[language]
+  const explanation = explanations[language as keyof typeof explanations]
   if (explanation && explanation.trim()) {
     return explanation.trim()
+  }
+
+  // For Traditional Chinese, also try Simplified Chinese as fallback
+  if (language === 'zh-TW' && explanations.zh && explanations.zh.trim()) {
+    return explanations.zh.trim()
   }
 
   // Fallback to English
@@ -883,7 +1144,7 @@ export function getLocalizedExplanation(
   }
 
   // Fallback to any available language
-  for (const lang of ['zh', 'ja'] as const) {
+  for (const lang of ['zh', 'zh-TW', 'ja'] as const) {
     if (explanations[lang] && explanations[lang]!.trim()) {
       return explanations[lang]!.trim()
     }
