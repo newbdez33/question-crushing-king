@@ -1,4 +1,4 @@
-import { Check, Globe } from 'lucide-react'
+import { Check } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useLanguage, type Language } from '@/context/language-provider'
 import { Button } from '@/components/ui/button'
@@ -8,21 +8,34 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
+import { FlagUS, FlagCN, FlagTW, FlagJP } from '@/components/icons/flags'
+import { type ComponentType, type SVGProps } from 'react'
 
-const languages: { value: Language; label: string; nativeLabel: string }[] = [
-  { value: 'en', label: 'English', nativeLabel: 'English' },
-  { value: 'zh', label: 'Chinese', nativeLabel: '中文' },
-  { value: 'ja', label: 'Japanese', nativeLabel: '日本語' },
+interface LanguageOption {
+  value: Language
+  label: string
+  nativeLabel: string
+  Flag: ComponentType<SVGProps<SVGSVGElement>>
+}
+
+const languages: LanguageOption[] = [
+  { value: 'en', label: 'English', nativeLabel: 'English', Flag: FlagUS },
+  { value: 'zh', label: 'Simplified Chinese', nativeLabel: '简体中文', Flag: FlagCN },
+  { value: 'zh-TW', label: 'Traditional Chinese', nativeLabel: '繁體中文', Flag: FlagTW },
+  { value: 'ja', label: 'Japanese', nativeLabel: '日本語', Flag: FlagJP },
 ]
 
 export function LanguageSwitch() {
   const { language, setLanguage, t } = useLanguage()
 
+  const currentLanguage = languages.find((lang) => lang.value === language) ?? languages[0]
+  const CurrentFlag = currentLanguage.Flag
+
   return (
     <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild>
         <Button variant='ghost' size='icon' className='scale-95 rounded-full'>
-          <Globe className='size-[1.2rem]' />
+          <CurrentFlag className='size-5 rounded-sm' />
           <span className='sr-only'>{t('language.select')}</span>
         </Button>
       </DropdownMenuTrigger>
@@ -31,7 +44,9 @@ export function LanguageSwitch() {
           <DropdownMenuItem
             key={lang.value}
             onClick={() => setLanguage(lang.value)}
+            className='gap-2'
           >
+            <lang.Flag className='size-4 rounded-sm' />
             {lang.nativeLabel}
             <Check
               size={14}

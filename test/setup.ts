@@ -110,7 +110,8 @@ const englishTranslations: Record<string, string> = {
   // Language selector
   'language.select': 'Language',
   'language.en': 'English',
-  'language.zh': '中文',
+  'language.zh': '简体中文',
+  'language.zh-TW': '繁體中文',
   'language.ja': '日本語',
 
   // Sidebar
@@ -263,11 +264,11 @@ vi.mock('@/context/language-provider', () => ({
     t: (key: string) => englishTranslations[key] ?? key,
   }),
   getLocalizedExplanation: (
-    explanations: { en?: string; zh?: string; ja?: string } | undefined,
+    explanations: { en?: string; zh?: string; 'zh-TW'?: string; ja?: string } | undefined,
     _language: string
   ) => {
     if (!explanations) return ''
-    return explanations.en || explanations.zh || explanations.ja || ''
+    return explanations.en || explanations.zh || explanations['zh-TW'] || explanations.ja || ''
   },
   LanguageProvider: ({ children }: { children: React.ReactNode }) => children,
 }))

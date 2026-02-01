@@ -29,7 +29,8 @@ describe('LanguageSwitch', () => {
     await user.click(screen.getByRole('button'))
 
     expect(screen.getByText('English')).toBeInTheDocument()
-    expect(screen.getByText('中文')).toBeInTheDocument()
+    expect(screen.getByText('简体中文')).toBeInTheDocument()
+    expect(screen.getByText('繁體中文')).toBeInTheDocument()
     expect(screen.getByText('日本語')).toBeInTheDocument()
   })
 
@@ -41,7 +42,7 @@ describe('LanguageSwitch', () => {
 
     // Default language is English, so it should have a check mark
     const menuItems = screen.getAllByRole('menuitem')
-    expect(menuItems).toHaveLength(3)
+    expect(menuItems).toHaveLength(4)
   })
 
   it('calls setLanguage when a language is selected', async () => {
@@ -49,12 +50,12 @@ describe('LanguageSwitch', () => {
     render(<LanguageSwitch />)
 
     await user.click(screen.getByRole('button'))
-    await user.click(screen.getByText('中文'))
+    await user.click(screen.getByText('简体中文'))
 
     // The language should be set (mocked in test setup)
   })
 
-  it('renders Globe icon', () => {
+  it('renders flag icon', () => {
     render(<LanguageSwitch />)
     const button = screen.getByRole('button')
     expect(button.querySelector('svg')).toBeInTheDocument()
