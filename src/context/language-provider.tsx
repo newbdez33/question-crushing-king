@@ -133,6 +133,14 @@ const translations: Record<Language, Record<string, string>> = {
     'language.en': 'English',
     'language.zh': '中文',
     'language.ja': '日本語',
+
+    // Sidebar
+    'sidebar.appTitle': 'Question King',
+    'sidebar.general': 'General',
+    'sidebar.dashboard': 'Dashboard',
+    'sidebar.myExams': 'My Exams',
+    'sidebar.other': 'Other',
+    'sidebar.helpCenter': 'Help Center',
   },
   zh: {
     // Common
@@ -244,6 +252,14 @@ const translations: Record<Language, Record<string, string>> = {
     'language.en': 'English',
     'language.zh': '中文',
     'language.ja': '日本語',
+
+    // Sidebar
+    'sidebar.appTitle': '刷题大王',
+    'sidebar.general': '常规',
+    'sidebar.dashboard': '仪表盘',
+    'sidebar.myExams': '我的考试',
+    'sidebar.other': '其他',
+    'sidebar.helpCenter': '帮助中心',
   },
   ja: {
     // Common
@@ -355,6 +371,14 @@ const translations: Record<Language, Record<string, string>> = {
     'language.en': 'English',
     'language.zh': '中文',
     'language.ja': '日本語',
+
+    // Sidebar
+    'sidebar.appTitle': '問題キング',
+    'sidebar.general': '一般',
+    'sidebar.dashboard': 'ダッシュボード',
+    'sidebar.myExams': 'マイ試験',
+    'sidebar.other': 'その他',
+    'sidebar.helpCenter': 'ヘルプセンター',
   },
 }
 

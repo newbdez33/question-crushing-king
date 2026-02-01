@@ -112,6 +112,14 @@ const englishTranslations: Record<string, string> = {
   'language.en': 'English',
   'language.zh': '中文',
   'language.ja': '日本語',
+
+  // Sidebar
+  'sidebar.appTitle': 'Question King',
+  'sidebar.general': 'General',
+  'sidebar.dashboard': 'Dashboard',
+  'sidebar.myExams': 'My Exams',
+  'sidebar.other': 'Other',
+  'sidebar.helpCenter': 'Help Center',
 }
 
 vi.mock('@/context/language-provider', () => ({
