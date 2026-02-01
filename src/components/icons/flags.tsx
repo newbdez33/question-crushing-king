@@ -112,7 +112,7 @@ export function FlagCN({ className, ...props }: FlagProps) {
   )
 }
 
-// Taiwan/Hong Kong combined flag with diagonal split (for Traditional Chinese)
+// Macau/Hong Kong combined flag with diagonal split (for Traditional Chinese)
 export function FlagTC({ className, ...props }: FlagProps) {
   return (
     <svg
@@ -129,28 +129,26 @@ export function FlagTC({ className, ...props }: FlagProps) {
           <polygon points="32,0 32,24 0,24" />
         </clipPath>
       </defs>
-      {/* Taiwan Flag (top-left triangle) */}
+      {/* Macau Flag (top-left triangle) */}
       <g clipPath="url(#tcTopLeft)">
-        <rect width="32" height="24" fill="#FE0000" />
-        <rect width="16" height="12" fill="#000095" />
-        {/* White sun */}
-        <g fill="#fff" transform="translate(8, 6)">
-          <circle cx="0" cy="0" r="3" />
-          {/* 12 rays */}
-          {[0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330].map((angle) => (
-            <line
-              key={angle}
-              x1="0"
-              y1="-2.5"
-              x2="0"
-              y2="-4.5"
-              stroke="#fff"
-              strokeWidth="0.8"
-              transform={`rotate(${angle})`}
-            />
-          ))}
-          <circle cx="0" cy="0" r="2" fill="#000095" />
-          <circle cx="0" cy="0" r="1.5" fill="#fff" />
+        <rect width="32" height="24" fill="#00785E" />
+        {/* 5 yellow stars in arc */}
+        <g fill="#FFDE00" transform="translate(8, 3)">
+          <polygon points="0,0 0.3,0.9 -0.5,0.35 0.5,0.35 -0.3,0.9" transform="translate(0, 0) scale(0.8)" />
+          <polygon points="0,0 0.3,0.9 -0.5,0.35 0.5,0.35 -0.3,0.9" transform="translate(-2.5, 1) scale(0.6)" />
+          <polygon points="0,0 0.3,0.9 -0.5,0.35 0.5,0.35 -0.3,0.9" transform="translate(2.5, 1) scale(0.6)" />
+          <polygon points="0,0 0.3,0.9 -0.5,0.35 0.5,0.35 -0.3,0.9" transform="translate(-4, 2.5) scale(0.5)" />
+          <polygon points="0,0 0.3,0.9 -0.5,0.35 0.5,0.35 -0.3,0.9" transform="translate(4, 2.5) scale(0.5)" />
+        </g>
+        {/* White lotus flower */}
+        <g fill="#fff" transform="translate(8, 9)">
+          {/* 3 petals */}
+          <ellipse cx="0" cy="-2" rx="1.5" ry="3" />
+          <ellipse cx="-2" cy="-1" rx="1.2" ry="2.5" transform="rotate(-30 -2 -1)" />
+          <ellipse cx="2" cy="-1" rx="1.2" ry="2.5" transform="rotate(30 2 -1)" />
+          {/* Bridge/water stylized */}
+          <path d="M-4,2 Q0,0.5 4,2" stroke="#fff" strokeWidth="0.8" fill="none" />
+          <path d="M-3,3 Q0,2 3,3" stroke="#fff" strokeWidth="0.6" fill="none" />
         </g>
       </g>
       {/* Hong Kong Flag (bottom-right triangle) */}
