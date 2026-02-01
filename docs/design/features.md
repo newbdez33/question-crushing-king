@@ -110,7 +110,7 @@ Exam Topics is a web-based application designed to help users practice for certi
   - Session-based statistics (total, answered, correct, wrong, accuracy)
   - Real-time result page with review entry
   - No timer (planned for future iterations)
-- **Docs**: See [EXAM_MODE_PLAN.md](./EXAM_MODE_PLAN.md) for user-facing design and [EXAM_MODE_TECH.md](./EXAM_MODE_TECH.md) for technical details.
+- **Docs**: See [exam-mode.md](./exam-mode.md) for user-facing design and [../technical/exam-mode.md](../technical/exam-mode.md) for technical details.
 
 ## 5. Data Specifications
 
