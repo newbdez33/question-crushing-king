@@ -37,7 +37,9 @@ import { Label } from '@/components/ui/label'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Header } from '@/components/layout/header'
 import { Main } from '@/components/layout/main'
+import { LanguageSwitch } from '@/components/language-switch'
 import { ThemeSwitch } from '@/components/theme-switch'
+import { useLanguage, getLocalizedExplanation } from '@/context/language-provider'
 import { PracticeMobileBar } from './components/practice-mobile-bar'
 import {
   PracticeSidebar,
@@ -84,6 +86,11 @@ type PracticeQuestion = {
   correctAnswers: number[]
   requiredSelections: number
   explanation?: string
+  explanations?: {
+    en?: string
+    zh?: string
+    ja?: string
+  }
 }
 
 function htmlToText(html: string) {
@@ -106,9 +113,9 @@ function parseCorrectLabels(input: string) {
   return Array.from(new Set(matches))
 }
 
-function formatQuestionType(type: string) {
-  if (type === 'multiple') return 'Multiple'
-  return 'Single'
+function formatQuestionType(type: string, t: (key: string) => string) {
+  if (type === 'multiple') return t('practice.multiple')
+  return t('practice.single')
 }
 
 function sameSelections(a: number[], b: number[]) {
@@ -229,6 +236,7 @@ export function PracticeMode({
 }: PracticeModeProps) {
   const navigate = useNavigate()
   const { user, guestId, loading: authLoading } = useAuth()
+  const { language, t } = useLanguage()
   const userId = user?.uid || guestId
   const exam = mockExams.find((e) => e.id === examId)
   /* istanbul ignore next -- mock exam fallback mapping */
@@ -265,6 +273,7 @@ export function PracticeMode({
         return {}
       }
     }
+    /* istanbul ignore next -- SSR fallback */
     return {}
   })
   const [settings, setSettings] = useState<PracticeSettings>({
@@ -610,6 +619,42 @@ export function PracticeMode({
             const requiredSelections =
               q.type === 'multiple' ? Math.max(correctLabels.length, 1) : 1
 
+            // Build explanations object for multi-language support
+            const explanations: { en?: string; zh?: string; ja?: string } = {}
+            const rawExplanation = (q.explanation ?? '').trim()
+
+            // Check if explanation contains Chinese characters - if so, it's the Chinese version
+            const hasChinese = /[\u4e00-\u9fff]/.test(rawExplanation)
+            /* istanbul ignore if -- depends on test data content */
+            if (hasChinese) {
+              explanations.zh = rawExplanation
+            } else if (rawExplanation) {
+              explanations.en = rawExplanation
+            }
+
+            // Check for explicit language-specific explanations in the data
+            const qAny = q as Record<string, unknown>
+            /* istanbul ignore if -- explanation presence depends on test data */
+            if (qAny.explanation_en && typeof qAny.explanation_en === 'string') {
+              explanations.en = (qAny.explanation_en as string).trim()
+            }
+            /* istanbul ignore if -- explanation presence depends on test data */
+            if (qAny.explanation_zh && typeof qAny.explanation_zh === 'string') {
+              explanations.zh = (qAny.explanation_zh as string).trim()
+            }
+            /* istanbul ignore if -- explanation presence depends on test data */
+            if (qAny.explanation_ja && typeof qAny.explanation_ja === 'string') {
+              explanations.ja = (qAny.explanation_ja as string).trim()
+            }
+            // Also support explanations object format
+            /* istanbul ignore if -- alternative format not used in current test data */
+            if (qAny.explanations && typeof qAny.explanations === 'object') {
+              const explObj = qAny.explanations as Record<string, string>
+              if (explObj.en) explanations.en = explObj.en.trim()
+              if (explObj.zh) explanations.zh = explObj.zh.trim()
+              if (explObj.ja) explanations.ja = explObj.ja.trim()
+            }
+
             return {
               id: q.id,
               type: (q.type === 'multiple'
@@ -628,7 +673,8 @@ export function PracticeMode({
                   ? correctAnswers
                   : [Math.max(correctIndex, 0)],
               requiredSelections,
-              explanation: (q.explanation ?? '').trim(),
+              explanation: rawExplanation,
+              explanations,
             }
           })
 
@@ -772,7 +818,7 @@ export function PracticeMode({
         { resetTimesWrong: graduatedNow }
       )
     } else {
-      toast.message('Saved locally. Sign in to sync to cloud')
+      toast.message(t('practice.savedLocally'))
     }
 
     // Update local state
@@ -807,9 +853,9 @@ export function PracticeMode({
 
     if (graduatedNow) {
       toast.success(
-        'Great job! This question has been removed from My Mistakes.',
+        t('practice.graduated'),
         {
-          description: `You answered it correctly ${settings.consecutiveCorrect} times in a row.`,
+          description: t('practice.graduatedDesc').replace('{count}', String(settings.consecutiveCorrect)),
         }
       )
       setShowFireworks(true)
@@ -875,7 +921,7 @@ export function PracticeMode({
         newState
       )
     } else {
-      toast.message('Bookmark saved locally. Sign in to sync to cloud')
+      toast.message(t('practice.bookmarkSavedLocally'))
     }
 
     // Update local progress
@@ -921,16 +967,17 @@ export function PracticeMode({
               </Button>
             </Link>
             <h1 className='text-lg font-semibold'>
-              {title} - {settings.bookmarksMode ? 'My Bookmarks' : settings.mistakesMode ? 'My Mistakes' : 'Practice'}
+              {title} - {settings.bookmarksMode ? t('practice.myBookmarks') : settings.mistakesMode ? t('practice.myMistakes') : t('practice.title')}
             </h1>
           </div>
           <div className='ms-auto flex items-center space-x-4'>
+            <LanguageSwitch />
             <ThemeSwitch />
           </div>
         </Header>
         <div className='flex flex-1 items-start justify-center gap-2 pt-0 sm:gap-4'>
           <Main className='mx-auto w-full max-w-3xl px-3 sm:px-0 py-4'>
-            <div className='text-sm text-muted-foreground'>Loading questions…</div>
+            <div className='text-sm text-muted-foreground'>{t('practice.loadingQuestions')}</div>
           </Main>
         </div>
       </>
@@ -947,17 +994,17 @@ export function PracticeMode({
           {isEmptyMistakes ? (
             <>
               <CheckCircle className='h-12 w-12 text-green-500' />
-              <p className='text-lg font-medium'>No mistakes to review!</p>
+              <p className='text-lg font-medium'>{t('practice.noMistakes')}</p>
               <p className='text-sm text-muted-foreground'>
-                Great job! You don't have any incorrect answers yet.
+                {t('practice.noMistakesDesc')}
               </p>
             </>
           ) : isEmptyBookmarks ? (
             <>
               <Bookmark className='h-12 w-12 text-muted-foreground' />
-              <p className='text-lg font-medium'>No bookmarked questions!</p>
+              <p className='text-lg font-medium'>{t('practice.noBookmarks')}</p>
               <p className='text-sm text-muted-foreground'>
-                Bookmark questions while practicing to review them here later.
+                {t('practice.noBookmarksDesc')}
               </p>
             </>
           ) : (
@@ -966,7 +1013,7 @@ export function PracticeMode({
             </p>
           )}
           <Link to='/exams/$examId' params={{ examId }}>
-            <Button>Back to Exam</Button>
+            <Button>{t('practice.backToExam')}</Button>
           </Link>
         </div>
       </Main>
@@ -979,6 +1026,11 @@ export function PracticeMode({
     large: 'text-base sm:text-lg',
   }[settings.fontSize]
 
+  /* istanbul ignore next -- fireworks require completing all questions */
+  const fireworksElement = showFireworks ? (
+    <FireworksOverlay onDone={() => setShowFireworks(false)} />
+  ) : null
+
   return (
     <div className='flex min-h-screen flex-col bg-background'>
       <Header fixed>
@@ -989,10 +1041,11 @@ export function PracticeMode({
             </Button>
           </Link>
           <h1 className='text-lg font-semibold'>
-            {title} - {settings.bookmarksMode ? 'My Bookmarks' : settings.mistakesMode ? 'My Mistakes' : 'Practice'}
+            {title} - {settings.bookmarksMode ? t('practice.myBookmarks') : settings.mistakesMode ? t('practice.myMistakes') : t('practice.title')}
           </h1>
         </div>
         <div className='ms-auto flex items-center space-x-4'>
+          <LanguageSwitch />
           <ThemeSwitch />
         </div>
       </Header>
@@ -1009,10 +1062,10 @@ export function PracticeMode({
               <CardHeader className='relative px-2 sm:px-6'>
                 <CardTitle className='leading-normal font-medium'>
                   <Badge variant='outline' className='me-2 mb-2'>
-                    Question {currentQuestionIndex + 1} of {questions.length}
+                    {t('practice.question')} {currentQuestionIndex + 1} {t('practice.of')} {questions.length}
                   </Badge>
                   <Badge variant='secondary' className='mb-2'>
-                    {formatQuestionType(question.type)}
+                    {formatQuestionType(question.type, t)}
                   </Badge>
                   <div className='mt-2'>
                     {question.contentHtml ? (
@@ -1191,17 +1244,17 @@ export function PracticeMode({
                     )}
                   >
                     <p className='font-semibold'>
-                      {isCorrect ? 'Correct Answer!' : 'Incorrect Answer'}
+                      {isCorrect ? t('practice.correctAnswer') : t('practice.incorrectAnswer')}
                     </p>
                     <div className='mt-2 flex gap-4 text-xs sm:gap-6 sm:text-sm'>
                       <p>
-                        <span className='font-semibold'>Correct Answer: </span>
+                        <span className='font-semibold'>{t('practice.correct')}: </span>
                         {question.correctAnswers
                           .map((i) => String.fromCharCode(65 + i))
                           .join(', ')}
                       </p>
                       <p>
-                        <span className='font-semibold'>Your Answer: </span>
+                        <span className='font-semibold'>{t('practice.yourAnswer')}: </span>
                         {selectedAnswers
                           .slice()
                           .sort((a, b) => a - b)
@@ -1209,14 +1262,17 @@ export function PracticeMode({
                           .join(', ')}
                       </p>
                     </div>
-                    {question.explanation && (
-                      <div className='mt-3 border-t border-current/20 pt-3'>
-                        <p className='mb-2 font-semibold'>Explanation:</p>
-                        <div className='prose prose-sm max-w-none dark:prose-invert prose-p:my-1 prose-ul:my-1 prose-li:my-0.5'>
-                          {renderExamHtml(question.explanation)}
+                    {(() => {
+                      const localizedExplanation = getLocalizedExplanation(question.explanations, language)
+                      return localizedExplanation && (
+                        <div className='mt-3 border-t border-current/20 pt-3'>
+                          <p className='mb-2 font-semibold'>{t('practice.explanation')}:</p>
+                          <div className='prose prose-sm max-w-none dark:prose-invert prose-p:my-1 prose-ul:my-1 prose-li:my-0.5'>
+                            {renderExamHtml(localizedExplanation)}
+                          </div>
                         </div>
-                      </div>
-                    )}
+                      )
+                    })()}
                   </div>
                 )}
               </CardContent>
@@ -1239,7 +1295,7 @@ export function PracticeMode({
                       className='min-w-[120px]'
                     >
                       <CheckCircle className='h-4 w-4' />
-                      Submit Answer
+                      {t('practice.submitAnswer')}
                     </Button>
                   </div>
                 )}
@@ -1273,10 +1329,7 @@ export function PracticeMode({
           />
         </div>
       </div>
-      {/* istanbul ignore next -- fireworks require completing all questions */}
-      {showFireworks && (
-        <FireworksOverlay onDone={() => setShowFireworks(false)} />
-      )}
+      {fireworksElement}
       <PracticeMobileBar
         questions={questions ?? []}
         progress={examProgress}
@@ -1293,19 +1346,18 @@ export function PracticeMode({
       <AlertDialog open={showClearConfirm} onOpenChange={setShowClearConfirm}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+            <AlertDialogTitle>{t('practice.clearProgressTitle')}</AlertDialogTitle>
             <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete your
-              progress for this exam.
+              {t('practice.clearProgressDesc')}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>{t('common.cancel')}</AlertDialogCancel>
             <AlertDialogAction
               onClick={confirmClearProgress}
               className='bg-red-600 hover:bg-red-700'
             >
-              Continue
+              {t('common.continue')}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

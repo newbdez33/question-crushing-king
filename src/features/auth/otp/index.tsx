@@ -1,4 +1,5 @@
 import { Link } from '@tanstack/react-router'
+import { useLanguage } from '@/context/language-provider'
 import {
   Card,
   CardContent,
@@ -11,16 +12,17 @@ import { AuthLayout } from '../auth-layout'
 import { OtpForm } from './components/otp-form'
 
 export function Otp() {
+  const { t } = useLanguage()
+
   return (
     <AuthLayout>
       <Card className='gap-4'>
         <CardHeader>
           <CardTitle className='text-base tracking-tight'>
-            Two-factor Authentication
+            {t('auth.twoFactorTitle')}
           </CardTitle>
           <CardDescription>
-            Please enter the authentication code. <br /> We have sent the
-            authentication code to your email.
+            {t('auth.twoFactorDesc')}
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -28,14 +30,13 @@ export function Otp() {
         </CardContent>
         <CardFooter>
           <p className='px-8 text-center text-sm text-muted-foreground'>
-            Haven't received it?{' '}
+            {t('auth.notReceived')}{' '}
             <Link
               to='/sign-in'
               className='underline underline-offset-4 hover:text-primary'
             >
-              Resend a new code.
+              {t('auth.resendCode')}
             </Link>
-            .
           </p>
         </CardFooter>
       </Card>

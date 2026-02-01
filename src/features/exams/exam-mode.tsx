@@ -25,7 +25,9 @@ import {
 import { Label } from '@/components/ui/label'
 import { Header } from '@/components/layout/header'
 import { Main } from '@/components/layout/main'
+import { LanguageSwitch } from '@/components/language-switch'
 import { ThemeSwitch } from '@/components/theme-switch'
+import { useLanguage, getLocalizedExplanation } from '@/context/language-provider'
 import { PracticeMobileBar } from './components/practice-mobile-bar'
 import {
   PracticeSidebar,
@@ -68,6 +70,11 @@ type PracticeQuestion = {
   correctAnswers: number[]
   requiredSelections: number
   explanation?: string
+  explanations?: {
+    en?: string
+    zh?: string
+    ja?: string
+  }
 }
 
 function htmlToText(html: string) {
@@ -200,6 +207,7 @@ export function ExamMode({
 }: ExamModeProps) {
   const navigate = useNavigate()
   const { user, guestId } = useAuth()
+  const { language, t } = useLanguage()
   const userId = user?.uid || guestId
   const exam = mockExams.find((e) => e.id === examId)
   const fallbackQuestions: PracticeQuestion[] | null = exam
@@ -311,6 +319,37 @@ export function ExamMode({
             const correctAnswers = correctLabels
               .map((label) => options.findIndex((o) => o.label === label))
               .filter((idx) => idx >= 0)
+            // Build explanations object for multi-language support
+            const explanations: { en?: string; zh?: string; ja?: string } = {}
+            const rawExplanation = (q.explanation ?? '').trim()
+
+            // Check if explanation contains Chinese characters - if so, it's the Chinese version
+            const hasChinese = /[\u4e00-\u9fff]/.test(rawExplanation)
+            if (hasChinese) {
+              explanations.zh = rawExplanation
+            } else if (rawExplanation) {
+              explanations.en = rawExplanation
+            }
+
+            // Check for explicit language-specific explanations in the data
+            const qAny = q as Record<string, unknown>
+            if (qAny.explanation_en && typeof qAny.explanation_en === 'string') {
+              explanations.en = (qAny.explanation_en as string).trim()
+            }
+            if (qAny.explanation_zh && typeof qAny.explanation_zh === 'string') {
+              explanations.zh = (qAny.explanation_zh as string).trim()
+            }
+            if (qAny.explanation_ja && typeof qAny.explanation_ja === 'string') {
+              explanations.ja = (qAny.explanation_ja as string).trim()
+            }
+            // Also support explanations object format
+            if (qAny.explanations && typeof qAny.explanations === 'object') {
+              const explObj = qAny.explanations as Record<string, string>
+              if (explObj.en) explanations.en = explObj.en.trim()
+              if (explObj.zh) explanations.zh = explObj.zh.trim()
+              if (explObj.ja) explanations.ja = explObj.ja.trim()
+            }
+
             return {
               id: q.id,
               type: (q.type === 'multiple'
@@ -324,7 +363,8 @@ export function ExamMode({
               })),
               correctAnswers: correctAnswers.length > 0 ? correctAnswers : [0],
               requiredSelections: Math.max(correctAnswers.length, 1),
-              explanation: (q.explanation ?? '').trim(),
+              explanation: rawExplanation,
+              explanations,
             }
           })
         const available =
@@ -452,7 +492,7 @@ export function ExamMode({
         newState
       )
     } else {
-      toast.message('Bookmark saved locally. Sign in to sync to cloud')
+      toast.message(t('practice.bookmarkSavedLocally'))
     }
   }
 
@@ -521,15 +561,16 @@ export function ExamMode({
                 <ArrowLeft className='h-4 w-4' />
               </Button>
             </Link>
-            <h1 className='text-lg font-semibold'>{title} - Exam Mode</h1>
+            <h1 className='text-lg font-semibold'>{title} - {t('exam.title')}</h1>
           </div>
           <div className='ms-auto flex items-center space-x-4'>
+            <LanguageSwitch />
             <ThemeSwitch />
           </div>
         </Header>
         <Main className='mx-auto w-full max-w-3xl'>
           <div className='text-sm text-muted-foreground'>
-            Loading questions…
+            {t('practice.loadingQuestions')}
           </div>
         </Main>
       </>
@@ -546,9 +587,10 @@ export function ExamMode({
                 <ArrowLeft className='h-4 w-4' />
               </Button>
             </Link>
-            <h1 className='text-lg font-semibold'>{title} - Exam Mode</h1>
+            <h1 className='text-lg font-semibold'>{title} - {t('exam.title')}</h1>
           </div>
           <div className='ms-auto flex items-center space-x-4'>
+            <LanguageSwitch />
             <ThemeSwitch />
           </div>
         </Header>
@@ -570,9 +612,10 @@ export function ExamMode({
               <ArrowLeft className='h-4 w-4' />
             </Button>
           </Link>
-          <h1 className='text-lg font-semibold'>{title} - Exam Mode</h1>
+          <h1 className='text-lg font-semibold'>{title} - {t('exam.title')}</h1>
         </div>
         <div className='ms-auto flex items-center space-x-4'>
+          <LanguageSwitch />
           <ThemeSwitch />
         </div>
       </Header>
@@ -593,10 +636,10 @@ export function ExamMode({
               <CardHeader className='relative px-2 sm:px-6'>
                 <CardTitle className='leading-normal font-medium'>
                   <Badge variant='outline' className='me-2 mb-2'>
-                    Question {currentQuestionIndex + 1} of {questions.length}
+                    {t('practice.question')} {currentQuestionIndex + 1} {t('practice.of')} {questions.length}
                   </Badge>
                   <Badge variant='secondary' className='mb-2'>
-                    {question?.type === 'multiple' ? 'Multiple' : 'Single'}
+                    {question?.type === 'multiple' ? t('practice.multiple') : t('practice.single')}
                   </Badge>
                   <div className='mt-2'>
                     {question?.contentHtml ? (
@@ -737,17 +780,17 @@ export function ExamMode({
                     )}
                   >
                     <p className='font-semibold'>
-                      {isCorrect ? 'Correct Answer!' : 'Incorrect Answer'}
+                      {isCorrect ? t('practice.correctAnswer') : t('practice.incorrectAnswer')}
                     </p>
                     <div className='mt-2 flex gap-4 text-xs sm:gap-6 sm:text-sm'>
                       <p>
-                        <span className='font-semibold'>Correct Answer: </span>
+                        <span className='font-semibold'>{t('practice.correct')}: </span>
                         {question.correctAnswers
                           .map((i) => String.fromCharCode(65 + i))
                           .join(', ')}
                       </p>
                       <p>
-                        <span className='font-semibold'>Your Answer: </span>
+                        <span className='font-semibold'>{t('practice.yourAnswer')}: </span>
                         {selectedAnswers
                           .slice()
                           .sort((a, b) => a - b)
@@ -755,14 +798,17 @@ export function ExamMode({
                           .join(', ')}
                       </p>
                     </div>
-                    {question.explanation && (
-                      <div className='mt-3 border-t border-current/20 pt-3'>
-                        <p className='mb-2 font-semibold'>Explanation:</p>
-                        <div className='prose prose-sm max-w-none dark:prose-invert prose-p:my-1 prose-ul:my-1 prose-li:my-0.5'>
-                          {renderExamHtml(question.explanation)}
+                    {(() => {
+                      const localizedExplanation = getLocalizedExplanation(question.explanations, language)
+                      return localizedExplanation && (
+                        <div className='mt-3 border-t border-current/20 pt-3'>
+                          <p className='mb-2 font-semibold'>{t('practice.explanation')}:</p>
+                          <div className='prose prose-sm max-w-none dark:prose-invert prose-p:my-1 prose-ul:my-1 prose-li:my-0.5'>
+                            {renderExamHtml(localizedExplanation)}
+                          </div>
                         </div>
-                      </div>
-                    )}
+                      )
+                    })()}
                   </div>
                 )}
               </CardContent>
@@ -785,7 +831,7 @@ export function ExamMode({
                       className='min-w-[120px]'
                     >
                       <CheckCircle className='h-4 w-4' />
-                      Submit Answer
+                      {t('practice.submitAnswer')}
                     </Button>
                   </div>
                 )}

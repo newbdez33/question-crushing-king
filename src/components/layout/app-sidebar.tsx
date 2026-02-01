@@ -1,6 +1,8 @@
 import { useNavigate } from '@tanstack/react-router'
+import { LayoutDashboard, HelpCircle, FileText } from 'lucide-react'
 import { useAuth } from '@/context/auth-ctx'
 import { useLayout } from '@/context/layout-provider'
+import { useLanguage } from '@/context/language-provider'
 import {
   Sidebar,
   SidebarContent,
@@ -8,14 +10,13 @@ import {
   SidebarHeader,
   SidebarRail,
 } from '@/components/ui/sidebar'
-// import { AppTitle } from './app-title'
-import { sidebarData } from './data/sidebar-data'
 import { NavGroup } from './nav-group'
 import { NavUser } from './nav-user'
 
 export function AppSidebar() {
   const { collapsible, variant } = useLayout()
   const { user } = useAuth()
+  const { t } = useLanguage()
   const navigate = useNavigate()
 
   const userData = user
@@ -29,6 +30,35 @@ export function AppSidebar() {
         email: 'guest@example.com',
         avatar: '',
       }
+
+  // Dynamic navigation groups with translations
+  const navGroups = [
+    {
+      title: t('sidebar.general'),
+      items: [
+        {
+          title: t('sidebar.dashboard'),
+          url: '/',
+          icon: LayoutDashboard,
+        },
+        {
+          title: t('sidebar.myExams'),
+          url: '/exams',
+          icon: FileText,
+        },
+      ],
+    },
+    {
+      title: t('sidebar.other'),
+      items: [
+        {
+          title: t('sidebar.helpCenter'),
+          url: '/help-center',
+          icon: HelpCircle,
+        },
+      ],
+    },
+  ]
 
   return (
     <Sidebar collapsible={collapsible} variant={variant}>
@@ -54,12 +84,12 @@ export function AppSidebar() {
             </svg>
           </div>
           <div className='grid flex-1 text-start text-sm leading-tight group-data-[collapsible=icon]/sidebar-wrapper:hidden'>
-            <span className='truncate text-lg font-bold'>刷题大王</span>
+            <span className='truncate text-lg font-bold'>{t('sidebar.appTitle')}</span>
           </div>
         </div>
       </SidebarHeader>
       <SidebarContent>
-        {sidebarData.navGroups.map((props) => (
+        {navGroups.map((props) => (
           <NavGroup key={props.title} {...props} />
         ))}
       </SidebarContent>

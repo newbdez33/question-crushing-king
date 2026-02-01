@@ -13,6 +13,7 @@ import { toast } from 'sonner'
 import { IconGoogle } from '@/assets/brand-icons'
 import { auth } from '@/lib/firebase'
 import { cn } from '@/lib/utils'
+import { useLanguage } from '@/context/language-provider'
 import { Button } from '@/components/ui/button'
 import {
   Form,
@@ -46,6 +47,7 @@ export function UserAuthForm({
 }: UserAuthFormProps) {
   const [isLoading, setIsLoading] = useState(false)
   const navigate = useNavigate()
+  const { t } = useLanguage()
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -61,13 +63,13 @@ export function UserAuthForm({
     try {
       await signInWithEmailAndPassword(auth, data.email, data.password)
 
-      toast.success(`Welcome back, ${data.email}!`)
+      toast.success(t('auth.welcomeBack'))
 
       const targetPath = redirectTo || '/'
       navigate({ to: targetPath, replace: true })
     } catch (error) {
       const message =
-        error instanceof Error ? error.message : 'Failed to sign in'
+        error instanceof Error ? error.message : t('auth.signInFailed')
       toast.error(message)
     } finally {
       setIsLoading(false)
@@ -79,12 +81,12 @@ export function UserAuthForm({
     try {
       const provider = new GoogleAuthProvider()
       await signInWithPopup(auth, provider)
-      toast.success('Signed in with Google successfully!')
+      toast.success(t('auth.signInGoogleSuccess'))
       const targetPath = redirectTo || '/'
       navigate({ to: targetPath, replace: true })
     } catch (error) {
       const message =
-        error instanceof Error ? error.message : 'Failed to sign in with Google'
+        error instanceof Error ? error.message : t('auth.signInGoogleFailed')
       toast.error(message)
     } finally {
       setIsLoading(false)
@@ -103,9 +105,9 @@ export function UserAuthForm({
           name='email'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Email</FormLabel>
+              <FormLabel>{t('auth.email')}</FormLabel>
               <FormControl>
-                <Input placeholder='name@example.com' {...field} />
+                <Input placeholder={t('auth.emailPlaceholder')} {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -116,23 +118,23 @@ export function UserAuthForm({
           name='password'
           render={({ field }) => (
             <FormItem className='relative'>
-              <FormLabel>Password</FormLabel>
+              <FormLabel>{t('auth.password')}</FormLabel>
               <FormControl>
-                <PasswordInput placeholder='********' {...field} />
+                <PasswordInput placeholder={t('auth.passwordPlaceholder')} {...field} />
               </FormControl>
               <FormMessage />
               <Link
                 to='/forgot-password'
                 className='absolute end-0 -top-0.5 text-sm font-medium text-muted-foreground hover:opacity-75'
               >
-                Forgot password?
+                {t('auth.forgotPassword')}
               </Link>
             </FormItem>
           )}
         />
         <Button className='mt-2' disabled={isLoading}>
           {isLoading && <Loader2 className='animate-spin' />}
-          Sign In with Email
+          {t('auth.signInWithEmail')}
         </Button>
 
         <div className='relative my-2'>
@@ -141,7 +143,7 @@ export function UserAuthForm({
           </div>
           <div className='relative flex justify-center text-xs uppercase'>
             <span className='bg-background px-2 text-muted-foreground'>
-              Or continue with
+              {t('auth.orContinueWith')}
             </span>
           </div>
         </div>
@@ -154,7 +156,7 @@ export function UserAuthForm({
             disabled={isLoading}
             onClick={handleGoogleSignIn}
           >
-            <IconGoogle className='h-4 w-4' /> Google
+            <IconGoogle className='h-4 w-4' /> {t('auth.google')}
           </Button>
         </div>
       </form>
