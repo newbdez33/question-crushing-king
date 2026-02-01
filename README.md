@@ -1,53 +1,53 @@
 # Exam Topics Practice App
 
-基于 Shadcn Admin Dashboard 的考试题库练习应用，支持加载本地 JSON 题库，提供多种练习和学习模式。
+A comprehensive exam question bank practice application built on Shadcn Admin Dashboard, supporting local JSON question banks with multiple practice and study modes.
 
-## 功能特性
+## Features
 
-- **题库管理** - 从 `/public/data` 加载 JSON 题库
-- **练习模式** - 逐题作答，即时评分，导航切换
-- **学习模式** - 展示正确答案和解析，支持书签
-- **考试模式** - 模拟考试，随机抽题
-- **错题本** - 针对错题进行强化练习
-- **进度同步** - 支持 Firebase 跨设备同步
+- **Question Bank Management** - Load JSON question banks from `/public/data`
+- **Practice Mode** - Answer questions one by one with instant scoring
+- **Study Mode** - View correct answers and explanations with bookmark support
+- **Exam Mode** - Simulated exams with random question sampling
+- **Mistake Review** - Targeted practice on previously incorrect answers
+- **Progress Sync** - Cross-device synchronization via Firebase
 
-## 技术栈
+## Tech Stack
 
-| 类别 | 技术 |
-|------|------|
-| UI 框架 | React 19 + TypeScript |
-| 组件库 | ShadcnUI (TailwindCSS + RadixUI) |
-| 构建工具 | Vite 6 |
-| 路由 | TanStack Router |
-| 状态管理 | Zustand |
-| 后端服务 | Firebase (Auth, Realtime Database) |
-| 测试 | Vitest (单元测试), Playwright (E2E) |
+| Category | Technology |
+|----------|------------|
+| UI Framework | React 19 + TypeScript |
+| Component Library | ShadcnUI (TailwindCSS + RadixUI) |
+| Build Tool | Vite 6 |
+| Routing | TanStack Router |
+| State Management | Zustand |
+| Backend | Firebase (Auth, Realtime Database) |
+| Testing | Vitest (unit), Playwright (E2E) |
 
-## 快速开始
+## Getting Started
 
-> **注意**: 本项目使用 `pnpm` 作为包管理器，请勿使用 npm 或 yarn。
+> **Note**: This project uses `pnpm` as the package manager. Do not use npm or yarn.
 
 ```bash
-# 克隆项目
+# Clone the project
 git clone <your-repo-url>
 cd examtopics
 
-# 安装依赖
+# Install dependencies
 pnpm install
 
-# 启动开发服务器
+# Start development server
 pnpm dev
 
-# 类型检查
+# Type checking
 pnpm typecheck
 
-# 运行测试
+# Run tests
 pnpm test
 ```
 
-## 环境变量
+## Environment Variables
 
-复制 `.env.example` 为 `.env` 并配置 Firebase 相关变量：
+Copy `.env.example` to `.env` and configure Firebase variables:
 
 ```
 VITE_FIREBASE_API_KEY=
@@ -56,29 +56,29 @@ VITE_FIREBASE_PROJECT_ID=
 VITE_FIREBASE_DATABASE_URL=
 ```
 
-## 项目结构
+## Project Structure
 
 ```
 ├── src/
-│   ├── features/      # 功能模块
-│   ├── components/    # 共享组件
-│   ├── routes/        # 路由配置
-│   ├── stores/        # 状态管理
-│   ├── hooks/         # 自定义 Hooks
-│   └── lib/           # 工具函数
-├── public/data/       # 题库 JSON 和图片
-└── docs/              # 项目文档
+│   ├── features/      # Feature modules
+│   ├── components/    # Shared components
+│   ├── routes/        # Route configuration
+│   ├── stores/        # State management
+│   ├── hooks/         # Custom hooks
+│   └── lib/           # Utility functions
+├── public/data/       # Question bank JSON and images
+└── docs/              # Project documentation
 ```
 
-## 文档
+## Documentation
 
-详细文档请参阅 [docs/](./docs/index.md) 目录：
+See [docs/](./docs/index.md) for detailed documentation:
 
-| 分类 | 文档 |
-|------|------|
-| **功能设计** | [功能规格](./docs/design/features.md) · [考试模式](./docs/design/exam-mode.md) · [我的考试](./docs/design/my-exams.md) |
-| **技术实现** | [架构说明](./docs/technical/architecture.md) · [考试模式技术](./docs/technical/exam-mode.md) · [用户数据](./docs/technical/user-data.md) · [主题定制](./docs/technical/theme.md) |
-| **测试** | [测试策略](./docs/testing/strategy.md) · [覆盖率计划](./docs/testing/coverage-plan.md) · [覆盖率报告](./docs/testing/coverage-results.md) |
+| Category | Documents |
+|----------|-----------|
+| **Design** | [Features](./docs/design/features.md) · [Exam Mode](./docs/design/exam-mode.md) · [My Exams](./docs/design/my-exams.md) |
+| **Technical** | [Architecture](./docs/technical/architecture.md) · [Exam Mode](./docs/technical/exam-mode.md) · [User Data](./docs/technical/user-data.md) · [Theme](./docs/technical/theme.md) |
+| **Testing** | [Strategy](./docs/testing/strategy.md) · [Coverage Plan](./docs/testing/coverage-plan.md) · [Coverage Results](./docs/testing/coverage-results.md) |
 
 ## License
 
