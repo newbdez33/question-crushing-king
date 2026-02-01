@@ -112,7 +112,7 @@ export function FlagCN({ className, ...props }: FlagProps) {
   )
 }
 
-// Macau/Hong Kong combined flag with diagonal split (for Traditional Chinese)
+// Hong Kong flag (for Traditional Chinese)
 export function FlagTC({ className, ...props }: FlagProps) {
   return (
     <svg
@@ -121,60 +121,33 @@ export function FlagTC({ className, ...props }: FlagProps) {
       className={className}
       {...props}
     >
-      <defs>
-        <clipPath id="tcTopLeft">
-          <polygon points="0,0 32,0 0,24" />
-        </clipPath>
-        <clipPath id="tcBottomRight">
-          <polygon points="32,0 32,24 0,24" />
-        </clipPath>
-      </defs>
-      {/* Macau Flag (top-left triangle) */}
-      <g clipPath="url(#tcTopLeft)">
-        <rect width="32" height="24" fill="#00785E" />
-        {/* 5 yellow stars in arc */}
-        <g fill="#FFDE00" transform="translate(8, 3)">
-          <polygon points="0,0 0.3,0.9 -0.5,0.35 0.5,0.35 -0.3,0.9" transform="translate(0, 0) scale(0.8)" />
-          <polygon points="0,0 0.3,0.9 -0.5,0.35 0.5,0.35 -0.3,0.9" transform="translate(-2.5, 1) scale(0.6)" />
-          <polygon points="0,0 0.3,0.9 -0.5,0.35 0.5,0.35 -0.3,0.9" transform="translate(2.5, 1) scale(0.6)" />
-          <polygon points="0,0 0.3,0.9 -0.5,0.35 0.5,0.35 -0.3,0.9" transform="translate(-4, 2.5) scale(0.5)" />
-          <polygon points="0,0 0.3,0.9 -0.5,0.35 0.5,0.35 -0.3,0.9" transform="translate(4, 2.5) scale(0.5)" />
+      <rect width="32" height="24" fill="#DE2110" />
+      {/* Bauhinia flower - larger and more visible */}
+      <g fill="#fff" transform="translate(16, 12)">
+        <circle cx="0" cy="0" r="1.5" />
+        {/* 5 petals - larger */}
+        <path d="M0,-8 C2,-5.5 2,-2.5 0,0 C-2,-2.5 -2,-5.5 0,-8" transform="rotate(0)" />
+        <path d="M0,-8 C2,-5.5 2,-2.5 0,0 C-2,-2.5 -2,-5.5 0,-8" transform="rotate(72)" />
+        <path d="M0,-8 C2,-5.5 2,-2.5 0,0 C-2,-2.5 -2,-5.5 0,-8" transform="rotate(144)" />
+        <path d="M0,-8 C2,-5.5 2,-2.5 0,0 C-2,-2.5 -2,-5.5 0,-8" transform="rotate(216)" />
+        <path d="M0,-8 C2,-5.5 2,-2.5 0,0 C-2,-2.5 -2,-5.5 0,-8" transform="rotate(288)" />
+        {/* Red veins/stars on petals */}
+        <g fill="#DE2110">
+          <ellipse cx="0" cy="-5" rx="0.4" ry="1.2" transform="rotate(0)" />
+          <ellipse cx="0" cy="-5" rx="0.4" ry="1.2" transform="rotate(72)" />
+          <ellipse cx="0" cy="-5" rx="0.4" ry="1.2" transform="rotate(144)" />
+          <ellipse cx="0" cy="-5" rx="0.4" ry="1.2" transform="rotate(216)" />
+          <ellipse cx="0" cy="-5" rx="0.4" ry="1.2" transform="rotate(288)" />
         </g>
-        {/* White lotus flower */}
-        <g fill="#fff" transform="translate(8, 9)">
-          {/* 3 petals */}
-          <ellipse cx="0" cy="-2" rx="1.5" ry="3" />
-          <ellipse cx="-2" cy="-1" rx="1.2" ry="2.5" transform="rotate(-30 -2 -1)" />
-          <ellipse cx="2" cy="-1" rx="1.2" ry="2.5" transform="rotate(30 2 -1)" />
-          {/* Bridge/water stylized */}
-          <path d="M-4,2 Q0,0.5 4,2" stroke="#fff" strokeWidth="0.8" fill="none" />
-          <path d="M-3,3 Q0,2 3,3" stroke="#fff" strokeWidth="0.6" fill="none" />
+        {/* Small red stars at petal tips */}
+        <g fill="#DE2110">
+          <circle cx="0" cy="-6.5" r="0.6" transform="rotate(0)" />
+          <circle cx="0" cy="-6.5" r="0.6" transform="rotate(72)" />
+          <circle cx="0" cy="-6.5" r="0.6" transform="rotate(144)" />
+          <circle cx="0" cy="-6.5" r="0.6" transform="rotate(216)" />
+          <circle cx="0" cy="-6.5" r="0.6" transform="rotate(288)" />
         </g>
       </g>
-      {/* Hong Kong Flag (bottom-right triangle) */}
-      <g clipPath="url(#tcBottomRight)">
-        <rect width="32" height="24" fill="#DE2110" />
-        {/* Bauhinia flower */}
-        <g fill="#fff" transform="translate(16, 12)">
-          <circle cx="0" cy="0" r="1" />
-          {/* 5 petals */}
-          <path d="M0,-5 C1.2,-3.5 1.2,-1.5 0,0 C-1.2,-1.5 -1.2,-3.5 0,-5" transform="rotate(0)" />
-          <path d="M0,-5 C1.2,-3.5 1.2,-1.5 0,0 C-1.2,-1.5 -1.2,-3.5 0,-5" transform="rotate(72)" />
-          <path d="M0,-5 C1.2,-3.5 1.2,-1.5 0,0 C-1.2,-1.5 -1.2,-3.5 0,-5" transform="rotate(144)" />
-          <path d="M0,-5 C1.2,-3.5 1.2,-1.5 0,0 C-1.2,-1.5 -1.2,-3.5 0,-5" transform="rotate(216)" />
-          <path d="M0,-5 C1.2,-3.5 1.2,-1.5 0,0 C-1.2,-1.5 -1.2,-3.5 0,-5" transform="rotate(288)" />
-          {/* Red stars on petals */}
-          <g fill="#DE2110">
-            <circle cx="0" cy="-3.2" r="0.5" transform="rotate(0)" />
-            <circle cx="0" cy="-3.2" r="0.5" transform="rotate(72)" />
-            <circle cx="0" cy="-3.2" r="0.5" transform="rotate(144)" />
-            <circle cx="0" cy="-3.2" r="0.5" transform="rotate(216)" />
-            <circle cx="0" cy="-3.2" r="0.5" transform="rotate(288)" />
-          </g>
-        </g>
-      </g>
-      {/* Diagonal divider line */}
-      <line x1="0" y1="24" x2="32" y2="0" stroke="#fff" strokeWidth="1" />
     </svg>
   )
 }
