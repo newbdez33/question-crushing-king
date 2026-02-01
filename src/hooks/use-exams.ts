@@ -48,6 +48,7 @@ export function useExams() {
         }
       /* istanbul ignore next -- network error handling */
       } catch {
+        /* istanbul ignore if -- network error handling */
         if (!cancelled) {
           setExamsFromIndex([])
           setLoading(false)

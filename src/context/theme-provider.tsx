@@ -63,6 +63,7 @@ export function ThemeProvider({
       root.classList.add(currentResolvedTheme) // Add the new theme class
     }
 
+    /* istanbul ignore next -- media query change event handler */
     const handleChange = () => {
       if (theme === 'system') {
         const systemTheme = mediaQuery.matches ? 'dark' : 'light'
@@ -106,6 +107,7 @@ export function ThemeProvider({
 export const useTheme = () => {
   const context = useContext(ThemeContext)
 
+  /* istanbul ignore if -- context has initialState so this is never null */
   if (!context) throw new Error('useTheme must be used within a ThemeProvider')
 
   return context

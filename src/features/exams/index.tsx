@@ -4,6 +4,7 @@ import { ProgressService } from '@/services/progress-service'
 import * as RemoteProgress from '@/services/firebase-progress'
 import { FileText, PlusCircle } from 'lucide-react'
 import { useAuth } from '@/context/auth-ctx'
+import { useLanguage } from '@/context/language-provider'
 import { useExams } from '@/hooks/use-exams'
 import { Button } from '@/components/ui/button'
 import {
@@ -18,10 +19,12 @@ import { Main } from '@/components/layout/main'
 import { ProfileDropdown } from '@/components/profile-dropdown'
 import { Search } from '@/components/search'
 import { ThemeSwitch } from '@/components/theme-switch'
+import { LanguageSwitch } from '@/components/language-switch'
 import { Skeleton } from '@/components/ui/skeleton'
 
 export function ExamsList() {
   const { user, guestId, loading: authLoading } = useAuth()
+  const { t } = useLanguage()
   const userId = user?.uid || guestId
   const { exams: allExams, loading } = useExams()
   const [remoteOwned, setRemoteOwned] = useState<Record<string, boolean>>({})
@@ -67,6 +70,7 @@ export function ExamsList() {
       <Header>
         <div className='ms-auto flex items-center space-x-4'>
           <Search />
+          <LanguageSwitch />
           <ThemeSwitch />
           <ProfileDropdown />
         </div>
@@ -74,7 +78,7 @@ export function ExamsList() {
 
       <Main>
         <div className='mb-2 flex items-center justify-between space-y-2'>
-          <h1 className='text-2xl font-bold tracking-tight'>My Exams</h1>
+          <h1 className='text-2xl font-bold tracking-tight'>{t('exams.myExams')}</h1>
         </div>
 
         {(loading || ownedLoading || authLoading || !userId) ? (
@@ -102,15 +106,14 @@ export function ExamsList() {
             <div className='mb-4 rounded-full bg-muted p-6'>
               <FileText className='h-12 w-12 text-muted-foreground' />
             </div>
-            <h3 className='text-xl font-semibold'>No exams yet</h3>
+            <h3 className='text-xl font-semibold'>{t('exams.noExams')}</h3>
             <p className='mt-2 max-w-sm text-muted-foreground'>
-              You haven't joined any exams yet. Go to the dashboard to explore
-              and join exams.
+              {t('exams.noExamsDesc')}
             </p>
             <Button asChild className='mt-6'>
               <Link to='/'>
                 <PlusCircle className='mr-2 h-4 w-4' />
-                Go to Dashboard
+                {t('exams.goToDashboard')}
               </Link>
             </Button>
           </div>
@@ -135,12 +138,12 @@ export function ExamsList() {
                     <div className='flex justify-between text-sm text-muted-foreground'>
                       <span>
                         {typeof exam.questionCount === 'number'
-                          ? `${exam.questionCount} Questions`
-                          : 'Questions: —'}
+                          ? `${exam.questionCount} ${t('common.questions')}`
+                          : `${t('common.questions')}: —`}
                       </span>
                       {exam.lastStudied && (
                         <span>
-                          Last studied:{' '}
+                          {t('dashboard.lastStudied')}:{' '}
                           {new Date(exam.lastStudied).toLocaleDateString()}
                         </span>
                       )}

@@ -13,6 +13,7 @@ import {
 } from 'lucide-react'
 import { toast } from 'sonner'
 import { useAuth } from '@/context/auth-ctx'
+import { useLanguage } from '@/context/language-provider'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import {
@@ -30,6 +31,7 @@ import { Header } from '@/components/layout/header'
 import { Main } from '@/components/layout/main'
 import { ProfileDropdown } from '@/components/profile-dropdown'
 import { ThemeSwitch } from '@/components/theme-switch'
+import { LanguageSwitch } from '@/components/language-switch'
 import { mockExams } from './data/mock-exams'
 import { useExams } from '@/hooks/use-exams'
 
@@ -40,6 +42,7 @@ interface ExamDetailsProps {
 export function ExamDetails({ examId }: ExamDetailsProps) {
   const navigate = useNavigate()
   const { user, guestId } = useAuth()
+  const { t } = useLanguage()
   const userId = user?.uid || guestId
   /* istanbul ignore next -- defensive check for type safety */
   const fallbackExam =
@@ -77,9 +80,9 @@ export function ExamDetails({ examId }: ExamDetailsProps) {
         void RemoteProgress.saveExamSettings(user.uid, examId, { owned: true })
       }
       setIsOwned(true)
-      toast.success('Exam added to My Exams')
+      toast.success(t('examDetails.addedToMyExams'))
     } catch {
-      toast.error('Failed to download exam data')
+      toast.error(t('common.error'))
     } finally {
       setJoinLoading(false)
     }
@@ -144,12 +147,13 @@ export function ExamDetails({ examId }: ExamDetailsProps) {
       <>
         <Header>
           <div className='ms-auto flex items-center space-x-4'>
+            <LanguageSwitch />
             <ThemeSwitch />
             <ProfileDropdown />
           </div>
         </Header>
         <Main>
-          <div className='text-sm text-muted-foreground'>Loading exam…</div>
+          <div className='text-sm text-muted-foreground'>{t('examDetails.loadingExam')}</div>
         </Main>
       </>
     )
@@ -166,6 +170,7 @@ export function ExamDetails({ examId }: ExamDetailsProps) {
           </Link>
         </div>
         <div className='ms-auto flex items-center space-x-4'>
+          <LanguageSwitch />
           <ThemeSwitch />
           <ProfileDropdown />
         </div>
@@ -182,7 +187,7 @@ export function ExamDetails({ examId }: ExamDetailsProps) {
             </div>
             {!isOwned && (
               <Button onClick={handleJoin} disabled={joinLoading}>
-                {joinLoading ? 'Downloading…' : 'Join My Exams'}
+                {joinLoading ? t('common.loading') : t('examDetails.join')}
               </Button>
             )}
           </div>
@@ -192,7 +197,7 @@ export function ExamDetails({ examId }: ExamDetailsProps) {
           <Card>
             <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
               <CardTitle className='text-sm font-medium'>
-                Total Questions
+                {t('common.questions')}
               </CardTitle>
               <BookOpen className='h-4 w-4 text-muted-foreground' />
             </CardHeader>
@@ -204,7 +209,7 @@ export function ExamDetails({ examId }: ExamDetailsProps) {
           <Card>
             <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
               <CardTitle className='text-sm font-medium'>
-                Last Studied
+                {t('dashboard.lastStudied')}
               </CardTitle>
               <RotateCcw className='h-4 w-4 text-muted-foreground' />
             </CardHeader>
@@ -212,14 +217,14 @@ export function ExamDetails({ examId }: ExamDetailsProps) {
               <div className='text-2xl font-bold'>
                 {exam.lastStudied
                   ? new Date(exam.lastStudied).toLocaleDateString()
-                  : 'Never'}
+                  : '-'}
               </div>
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-              <CardTitle className='text-sm font-medium'>Progress</CardTitle>
+              <CardTitle className='text-sm font-medium'>{t('common.progress')}</CardTitle>
               <CheckCircle className='h-4 w-4 text-muted-foreground' />
             </CardHeader>
             <CardContent>
@@ -230,29 +235,22 @@ export function ExamDetails({ examId }: ExamDetailsProps) {
                 %
               </div>
               <p className='text-xs text-muted-foreground'>
-                {stats.answered} of {exam.questionCount} completed
+                {stats.answered} / {exam.questionCount}
               </p>
             </CardContent>
           </Card>
         </div>
 
         <div className='mt-8'>
-          <h2 className='mb-4 text-xl font-semibold'>Study Modes</h2>
           <div className='grid gap-4 md:grid-cols-2'>
             <Link to='/exams/$examId/practice' params={{ examId: exam.id }}>
               <Card className='h-full cursor-pointer transition-colors hover:bg-muted/50'>
                 <CardHeader>
                   <CardTitle className='flex items-center gap-2'>
                     <CheckCircle className='h-5 w-5' />
-                    Practice Mode
+                    {t('practice.title')}
                   </CardTitle>
                 </CardHeader>
-                <CardContent>
-                  <p className='text-sm text-muted-foreground'>
-                    Answer questions one by one with immediate feedback and
-                    explanations.
-                  </p>
-                </CardContent>
               </Card>
             </Link>
 
@@ -261,15 +259,9 @@ export function ExamDetails({ examId }: ExamDetailsProps) {
                 <CardHeader>
                   <CardTitle className='flex items-center gap-2'>
                     <BookOpen className='h-5 w-5' />
-                    Study Mode
+                    {t('study.title')}
                   </CardTitle>
                 </CardHeader>
-                <CardContent>
-                  <p className='text-sm text-muted-foreground'>
-                    View questions with correct answers and explanations
-                    directly.
-                  </p>
-                </CardContent>
               </Card>
             </Link>
 
@@ -282,14 +274,9 @@ export function ExamDetails({ examId }: ExamDetailsProps) {
                 <CardHeader>
                   <CardTitle className='flex items-center gap-2'>
                     <AlertCircle className='h-5 w-5' />
-                    My Mistakes
+                    {t('practice.myMistakes')}
                   </CardTitle>
                 </CardHeader>
-                <CardContent>
-                  <p className='text-sm text-muted-foreground'>
-                    Review and retry questions you answered incorrectly.
-                  </p>
-                </CardContent>
               </Card>
             </Link>
 
@@ -302,14 +289,9 @@ export function ExamDetails({ examId }: ExamDetailsProps) {
                 <CardHeader>
                   <CardTitle className='flex items-center gap-2'>
                     <Bookmark className='h-5 w-5' />
-                    My Bookmarks
+                    {t('practice.myBookmarks')}
                   </CardTitle>
                 </CardHeader>
-                <CardContent>
-                  <p className='text-sm text-muted-foreground'>
-                    Review questions you've bookmarked for later.
-                  </p>
-                </CardContent>
               </Card>
             </Link>
 
@@ -319,28 +301,22 @@ export function ExamDetails({ examId }: ExamDetailsProps) {
                   <CardHeader>
                     <CardTitle className='flex items-center gap-2'>
                       <Brain className='h-5 w-5' />
-                      Exam Mode
+                      {t('exam.title')}
                     </CardTitle>
                   </CardHeader>
-                  <CardContent>
-                    <p className='text-sm text-muted-foreground'>
-                      Randomly select questions to simulate an exam session.
-                    </p>
-                  </CardContent>
                 </Card>
               </DialogTrigger>
               <DialogContent>
                 <DialogHeader>
-                  <DialogTitle>Start Exam Mode</DialogTitle>
+                  <DialogTitle>{t('examDetails.startExam')}</DialogTitle>
                   <DialogDescription>
-                    Enter the number of questions to include. Optional: provide
-                    a seed to reproduce selection.
+                    {t('examDetails.examSettings')}
                   </DialogDescription>
                 </DialogHeader>
                 <div className='space-y-4'>
                   <div className='grid grid-cols-4 items-center gap-3'>
                     <Label htmlFor='exam-count' className='col-span-1'>
-                      Question count
+                      {t('examDetails.numberOfQuestions')}
                     </Label>
                     <Input
                       id='exam-count'
@@ -357,7 +333,7 @@ export function ExamDetails({ examId }: ExamDetailsProps) {
                   </div>
                   <div className='grid grid-cols-4 items-center gap-3'>
                     <Label htmlFor='exam-seed' className='col-span-1'>
-                      Seed
+                      {t('examDetails.randomSeed')}
                     </Label>
                     <Input
                       id='exam-seed'
@@ -365,21 +341,16 @@ export function ExamDetails({ examId }: ExamDetailsProps) {
                       value={examSeed}
                       /* istanbul ignore next -- input change handler */
                       onChange={(e) => setExamSeed(e.target.value)}
-                      placeholder='Optional'
                       className='col-span-3'
                     />
                   </div>
-                  <p className='text-xs text-muted-foreground'>
-                    Available questions: {exam.questionCount}. Count will be
-                    clamped to this maximum.
-                  </p>
                 </div>
                 <DialogFooter>
                   <Button
                     variant='outline'
                     onClick={() => setExamDialogOpen(false)}
                   >
-                    Cancel
+                    {t('common.cancel')}
                   </Button>
                   <Button
                     /* istanbul ignore next -- onClick handler with fallback values */
@@ -401,7 +372,7 @@ export function ExamDetails({ examId }: ExamDetailsProps) {
                       })
                     }}
                   >
-                    Start
+                    {t('examDetails.startExamBtn')}
                   </Button>
                 </DialogFooter>
               </DialogContent>
