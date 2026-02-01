@@ -1,6 +1,6 @@
-# Exam Topics Practice App
+# 刷题大王
 
-A comprehensive exam question bank practice application built on Shadcn Admin Dashboard, supporting local JSON question banks with multiple practice and study modes.
+A modern exam practice application with multiple study modes, progress tracking, and cross-device synchronization.
 
 ## Features
 
