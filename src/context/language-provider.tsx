@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect, useState, useMemo } from 'react'
 import { getCookie, setCookie, removeCookie } from '@/lib/cookies'
 
-export type Language = 'en' | 'zh' | 'zh-TW' | 'ja'
+export type Language = 'en' | 'zh' | 'zh-TC' | 'ja'
 
 const DEFAULT_LANGUAGE: Language = 'en'
 const LANGUAGE_COOKIE_NAME = 'app-language'
@@ -132,7 +132,7 @@ const translations: Record<Language, Record<string, string>> = {
     'language.select': 'Language',
     'language.en': 'English',
     'language.zh': '简体中文',
-    'language.zh-TW': '繁體中文',
+    'language.zh-TC': '繁體中文',
     'language.ja': '日本語',
 
     // Sidebar
@@ -385,7 +385,7 @@ const translations: Record<Language, Record<string, string>> = {
     'language.select': '语言',
     'language.en': 'English',
     'language.zh': '简体中文',
-    'language.zh-TW': '繁體中文',
+    'language.zh-TC': '繁體中文',
     'language.ja': '日本語',
 
     // Sidebar
@@ -638,7 +638,7 @@ const translations: Record<Language, Record<string, string>> = {
     'language.select': '言語',
     'language.en': 'English',
     'language.zh': '简体中文',
-    'language.zh-TW': '繁體中文',
+    'language.zh-TC': '繁體中文',
     'language.ja': '日本語',
 
     // Sidebar
@@ -782,7 +782,7 @@ const translations: Record<Language, Record<string, string>> = {
     'signOut.description': 'ログアウトしてもよろしいですか？アカウントにアクセスするには再度ログインが必要です。',
     'signOut.confirm': 'ログアウト',
   },
-  'zh-TW': {
+  'zh-TC': {
     // Common
     'common.loading': '載入中...',
     'common.error': '錯誤',
@@ -891,7 +891,7 @@ const translations: Record<Language, Record<string, string>> = {
     'language.select': '語言',
     'language.en': 'English',
     'language.zh': '简体中文',
-    'language.zh-TW': '繁體中文',
+    'language.zh-TC': '繁體中文',
     'language.ja': '日本語',
 
     // Sidebar
@@ -1122,7 +1122,7 @@ export const useLanguage = () => {
 // Helper to get explanation based on current language
 // eslint-disable-next-line react-refresh/only-export-components
 export function getLocalizedExplanation(
-  explanations: { en?: string; zh?: string; 'zh-TW'?: string; ja?: string } | undefined,
+  explanations: { en?: string; zh?: string; 'zh-TC'?: string; ja?: string } | undefined,
   language: Language
 ): string {
   if (!explanations) return ''
@@ -1134,7 +1134,7 @@ export function getLocalizedExplanation(
   }
 
   // For Traditional Chinese, also try Simplified Chinese as fallback
-  if (language === 'zh-TW' && explanations.zh && explanations.zh.trim()) {
+  if (language === 'zh-TC' && explanations.zh && explanations.zh.trim()) {
     return explanations.zh.trim()
   }
 
@@ -1144,7 +1144,7 @@ export function getLocalizedExplanation(
   }
 
   // Fallback to any available language
-  for (const lang of ['zh', 'zh-TW', 'ja'] as const) {
+  for (const lang of ['zh', 'zh-TC', 'ja'] as const) {
     if (explanations[lang] && explanations[lang]!.trim()) {
       return explanations[lang]!.trim()
     }

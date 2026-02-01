@@ -21,7 +21,7 @@ interface LanguageOption {
 const languages: LanguageOption[] = [
   { value: 'en', label: 'English', nativeLabel: 'English', Flag: FlagEN },
   { value: 'zh', label: 'Simplified Chinese', nativeLabel: '简体中文', Flag: FlagCN },
-  { value: 'zh-TW', label: 'Traditional Chinese', nativeLabel: '繁體中文', Flag: FlagHK },
+  { value: 'zh-TC', label: 'Traditional Chinese', nativeLabel: '繁體中文', Flag: FlagHK },
   { value: 'ja', label: 'Japanese', nativeLabel: '日本語', Flag: FlagJP },
 ]
 
