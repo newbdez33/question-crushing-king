@@ -4,8 +4,8 @@ interface FlagProps extends SVGProps<SVGSVGElement> {
   className?: string
 }
 
-// United States flag (for English)
-export function FlagUS({ className, ...props }: FlagProps) {
+// US/UK combined flag with diagonal split (for English)
+export function FlagEN({ className, ...props }: FlagProps) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -13,76 +13,80 @@ export function FlagUS({ className, ...props }: FlagProps) {
       className={className}
       {...props}
     >
-      <rect width="32" height="24" fill="#B22234" />
-      <path
-        d="M0 2.77h32M0 6.46h32M0 10.15h32M0 13.85h32M0 17.54h32M0 21.23h32"
-        stroke="#fff"
-        strokeWidth="1.85"
-      />
-      <rect width="12.8" height="12.92" fill="#3C3B6E" />
-      <g fill="#fff">
-        <circle cx="1.07" cy="1.08" r="0.6" />
-        <circle cx="3.2" cy="1.08" r="0.6" />
-        <circle cx="5.33" cy="1.08" r="0.6" />
-        <circle cx="7.47" cy="1.08" r="0.6" />
-        <circle cx="9.6" cy="1.08" r="0.6" />
-        <circle cx="11.73" cy="1.08" r="0.6" />
-        <circle cx="2.13" cy="2.15" r="0.6" />
-        <circle cx="4.27" cy="2.15" r="0.6" />
-        <circle cx="6.4" cy="2.15" r="0.6" />
-        <circle cx="8.53" cy="2.15" r="0.6" />
-        <circle cx="10.67" cy="2.15" r="0.6" />
-        <circle cx="1.07" cy="3.23" r="0.6" />
-        <circle cx="3.2" cy="3.23" r="0.6" />
-        <circle cx="5.33" cy="3.23" r="0.6" />
-        <circle cx="7.47" cy="3.23" r="0.6" />
-        <circle cx="9.6" cy="3.23" r="0.6" />
-        <circle cx="11.73" cy="3.23" r="0.6" />
-        <circle cx="2.13" cy="4.31" r="0.6" />
-        <circle cx="4.27" cy="4.31" r="0.6" />
-        <circle cx="6.4" cy="4.31" r="0.6" />
-        <circle cx="8.53" cy="4.31" r="0.6" />
-        <circle cx="10.67" cy="4.31" r="0.6" />
-        <circle cx="1.07" cy="5.38" r="0.6" />
-        <circle cx="3.2" cy="5.38" r="0.6" />
-        <circle cx="5.33" cy="5.38" r="0.6" />
-        <circle cx="7.47" cy="5.38" r="0.6" />
-        <circle cx="9.6" cy="5.38" r="0.6" />
-        <circle cx="11.73" cy="5.38" r="0.6" />
-        <circle cx="2.13" cy="6.46" r="0.6" />
-        <circle cx="4.27" cy="6.46" r="0.6" />
-        <circle cx="6.4" cy="6.46" r="0.6" />
-        <circle cx="8.53" cy="6.46" r="0.6" />
-        <circle cx="10.67" cy="6.46" r="0.6" />
-        <circle cx="1.07" cy="7.54" r="0.6" />
-        <circle cx="3.2" cy="7.54" r="0.6" />
-        <circle cx="5.33" cy="7.54" r="0.6" />
-        <circle cx="7.47" cy="7.54" r="0.6" />
-        <circle cx="9.6" cy="7.54" r="0.6" />
-        <circle cx="11.73" cy="7.54" r="0.6" />
-        <circle cx="2.13" cy="8.62" r="0.6" />
-        <circle cx="4.27" cy="8.62" r="0.6" />
-        <circle cx="6.4" cy="8.62" r="0.6" />
-        <circle cx="8.53" cy="8.62" r="0.6" />
-        <circle cx="10.67" cy="8.62" r="0.6" />
-        <circle cx="1.07" cy="9.69" r="0.6" />
-        <circle cx="3.2" cy="9.69" r="0.6" />
-        <circle cx="5.33" cy="9.69" r="0.6" />
-        <circle cx="7.47" cy="9.69" r="0.6" />
-        <circle cx="9.6" cy="9.69" r="0.6" />
-        <circle cx="11.73" cy="9.69" r="0.6" />
-        <circle cx="2.13" cy="10.77" r="0.6" />
-        <circle cx="4.27" cy="10.77" r="0.6" />
-        <circle cx="6.4" cy="10.77" r="0.6" />
-        <circle cx="8.53" cy="10.77" r="0.6" />
-        <circle cx="10.67" cy="10.77" r="0.6" />
-        <circle cx="1.07" cy="11.85" r="0.6" />
-        <circle cx="3.2" cy="11.85" r="0.6" />
-        <circle cx="5.33" cy="11.85" r="0.6" />
-        <circle cx="7.47" cy="11.85" r="0.6" />
-        <circle cx="9.6" cy="11.85" r="0.6" />
-        <circle cx="11.73" cy="11.85" r="0.6" />
+      <defs>
+        <clipPath id="topLeft">
+          <polygon points="0,0 32,0 0,24" />
+        </clipPath>
+        <clipPath id="bottomRight">
+          <polygon points="32,0 32,24 0,24" />
+        </clipPath>
+      </defs>
+      {/* US Flag (top-left triangle) */}
+      <g clipPath="url(#topLeft)">
+        <rect width="32" height="24" fill="#B22234" />
+        <path
+          d="M0 2.77h32M0 6.46h32M0 10.15h32M0 13.85h32M0 17.54h32M0 21.23h32"
+          stroke="#fff"
+          strokeWidth="1.85"
+        />
+        <rect width="12.8" height="12.92" fill="#3C3B6E" />
+        <g fill="#fff">
+          <circle cx="1.6" cy="1.6" r="0.5" />
+          <circle cx="3.5" cy="1.6" r="0.5" />
+          <circle cx="5.4" cy="1.6" r="0.5" />
+          <circle cx="7.3" cy="1.6" r="0.5" />
+          <circle cx="9.2" cy="1.6" r="0.5" />
+          <circle cx="11.1" cy="1.6" r="0.5" />
+          <circle cx="2.55" cy="3.2" r="0.5" />
+          <circle cx="4.45" cy="3.2" r="0.5" />
+          <circle cx="6.35" cy="3.2" r="0.5" />
+          <circle cx="8.25" cy="3.2" r="0.5" />
+          <circle cx="10.15" cy="3.2" r="0.5" />
+          <circle cx="1.6" cy="4.8" r="0.5" />
+          <circle cx="3.5" cy="4.8" r="0.5" />
+          <circle cx="5.4" cy="4.8" r="0.5" />
+          <circle cx="7.3" cy="4.8" r="0.5" />
+          <circle cx="9.2" cy="4.8" r="0.5" />
+          <circle cx="11.1" cy="4.8" r="0.5" />
+          <circle cx="2.55" cy="6.4" r="0.5" />
+          <circle cx="4.45" cy="6.4" r="0.5" />
+          <circle cx="6.35" cy="6.4" r="0.5" />
+          <circle cx="8.25" cy="6.4" r="0.5" />
+          <circle cx="10.15" cy="6.4" r="0.5" />
+          <circle cx="1.6" cy="8" r="0.5" />
+          <circle cx="3.5" cy="8" r="0.5" />
+          <circle cx="5.4" cy="8" r="0.5" />
+          <circle cx="7.3" cy="8" r="0.5" />
+          <circle cx="9.2" cy="8" r="0.5" />
+          <circle cx="11.1" cy="8" r="0.5" />
+          <circle cx="2.55" cy="9.6" r="0.5" />
+          <circle cx="4.45" cy="9.6" r="0.5" />
+          <circle cx="6.35" cy="9.6" r="0.5" />
+          <circle cx="8.25" cy="9.6" r="0.5" />
+          <circle cx="10.15" cy="9.6" r="0.5" />
+          <circle cx="1.6" cy="11.2" r="0.5" />
+          <circle cx="3.5" cy="11.2" r="0.5" />
+          <circle cx="5.4" cy="11.2" r="0.5" />
+          <circle cx="7.3" cy="11.2" r="0.5" />
+          <circle cx="9.2" cy="11.2" r="0.5" />
+          <circle cx="11.1" cy="11.2" r="0.5" />
+        </g>
       </g>
+      {/* UK Flag (bottom-right triangle) */}
+      <g clipPath="url(#bottomRight)">
+        <rect width="32" height="24" fill="#012169" />
+        {/* White diagonals */}
+        <path d="M0,0 L32,24 M32,0 L0,24" stroke="#fff" strokeWidth="4" />
+        {/* Red diagonals */}
+        <path d="M0,0 L32,24" stroke="#C8102E" strokeWidth="2" />
+        <path d="M32,0 L0,24" stroke="#C8102E" strokeWidth="2" />
+        {/* White cross */}
+        <path d="M16,0 V24 M0,12 H32" stroke="#fff" strokeWidth="6" />
+        {/* Red cross */}
+        <path d="M16,0 V24 M0,12 H32" stroke="#C8102E" strokeWidth="3.5" />
+      </g>
+      {/* Diagonal divider line */}
+      <line x1="0" y1="24" x2="32" y2="0" stroke="#fff" strokeWidth="1" />
     </svg>
   )
 }
@@ -108,8 +112,8 @@ export function FlagCN({ className, ...props }: FlagProps) {
   )
 }
 
-// Taiwan flag (for Traditional Chinese)
-export function FlagTW({ className, ...props }: FlagProps) {
+// Hong Kong flag (for Traditional Chinese)
+export function FlagHK({ className, ...props }: FlagProps) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -117,12 +121,33 @@ export function FlagTW({ className, ...props }: FlagProps) {
       className={className}
       {...props}
     >
-      <rect width="32" height="24" fill="#FE0000" />
-      <rect width="16" height="12" fill="#000095" />
-      <g fill="#fff">
-        <circle cx="8" cy="6" r="4" />
-        <circle cx="8" cy="6" r="3" fill="#000095" />
-        <polygon points="8,2 8.7,5 11.5,5 9.4,6.9 10.1,9.9 8,8 5.9,9.9 6.6,6.9 4.5,5 7.3,5" fill="#fff" />
+      <rect width="32" height="24" fill="#DE2110" />
+      {/* Bauhinia flower - 5 petals */}
+      <g fill="#fff" transform="translate(16, 12)">
+        {/* Center */}
+        <circle cx="0" cy="0" r="1.2" />
+        {/* 5 petals arranged around center */}
+        <path d="M0,-6 C1.5,-4 1.5,-2 0,0 C-1.5,-2 -1.5,-4 0,-6" transform="rotate(0)" />
+        <path d="M0,-6 C1.5,-4 1.5,-2 0,0 C-1.5,-2 -1.5,-4 0,-6" transform="rotate(72)" />
+        <path d="M0,-6 C1.5,-4 1.5,-2 0,0 C-1.5,-2 -1.5,-4 0,-6" transform="rotate(144)" />
+        <path d="M0,-6 C1.5,-4 1.5,-2 0,0 C-1.5,-2 -1.5,-4 0,-6" transform="rotate(216)" />
+        <path d="M0,-6 C1.5,-4 1.5,-2 0,0 C-1.5,-2 -1.5,-4 0,-6" transform="rotate(288)" />
+        {/* Red lines on petals (stamens) */}
+        <g stroke="#DE2110" strokeWidth="0.3" fill="none">
+          <line x1="0" y1="-1.5" x2="0" y2="-5" transform="rotate(0)" />
+          <line x1="0" y1="-1.5" x2="0" y2="-5" transform="rotate(72)" />
+          <line x1="0" y1="-1.5" x2="0" y2="-5" transform="rotate(144)" />
+          <line x1="0" y1="-1.5" x2="0" y2="-5" transform="rotate(216)" />
+          <line x1="0" y1="-1.5" x2="0" y2="-5" transform="rotate(288)" />
+        </g>
+        {/* Small red stars on petals */}
+        <g fill="#DE2110">
+          <circle cx="0" cy="-4" r="0.6" transform="rotate(0)" />
+          <circle cx="0" cy="-4" r="0.6" transform="rotate(72)" />
+          <circle cx="0" cy="-4" r="0.6" transform="rotate(144)" />
+          <circle cx="0" cy="-4" r="0.6" transform="rotate(216)" />
+          <circle cx="0" cy="-4" r="0.6" transform="rotate(288)" />
+        </g>
       </g>
     </svg>
   )
@@ -142,3 +167,7 @@ export function FlagJP({ className, ...props }: FlagProps) {
     </svg>
   )
 }
+
+// Keep old names as aliases for backwards compatibility
+export { FlagEN as FlagUS }
+export { FlagHK as FlagTW }
