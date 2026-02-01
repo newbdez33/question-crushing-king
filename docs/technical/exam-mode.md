@@ -36,7 +36,7 @@
 - 全局进度（复用）：
   - 本地： [src/services/progress-service.ts](src/services/progress-service.ts)
   - 云端： [src/services/firebase-progress.ts](src/services/firebase-progress.ts)
-  - 字段：`status`、`userSelection`、`lastAnswered`、`consecutiveCorrect`、`timesWrong`、`bookmarked`（详见 [docs/USER_DATA.md](docs/USER_DATA.md)）
+  - 字段：`status`、`userSelection`、`lastAnswered`、`consecutiveCorrect`、`timesWrong`、`bookmarked`（详见 [user-data.md](./user-data.md)）
 
 ## 题目加载与渲染
 
