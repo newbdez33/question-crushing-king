@@ -13,6 +13,7 @@ import { toast } from 'sonner'
 import { IconGoogle } from '@/assets/brand-icons'
 import { auth } from '@/lib/firebase'
 import { cn } from '@/lib/utils'
+import { useLanguage } from '@/context/language-provider'
 import { Button } from '@/components/ui/button'
 import {
   Form,
@@ -48,6 +49,7 @@ export function SignUpForm({
 }: React.HTMLAttributes<HTMLFormElement>) {
   const [isLoading, setIsLoading] = useState(false)
   const navigate = useNavigate()
+  const { t } = useLanguage()
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -63,11 +65,11 @@ export function SignUpForm({
 
     try {
       await createUserWithEmailAndPassword(auth, data.email, data.password)
-      toast.success('Account created successfully!')
+      toast.success(t('auth.accountCreated'))
       navigate({ to: '/' })
     } catch (error) {
       const message =
-        error instanceof Error ? error.message : 'Failed to create account'
+        error instanceof Error ? error.message : t('auth.accountCreateFailed')
       toast.error(message)
     } finally {
       setIsLoading(false)
@@ -79,11 +81,11 @@ export function SignUpForm({
     try {
       const provider = new GoogleAuthProvider()
       await signInWithPopup(auth, provider)
-      toast.success('Signed in with Google successfully!')
+      toast.success(t('auth.signInGoogleSuccess'))
       navigate({ to: '/' })
     } catch (error) {
       const message =
-        error instanceof Error ? error.message : 'Failed to sign in with Google'
+        error instanceof Error ? error.message : t('auth.signInGoogleFailed')
       toast.error(message)
     } finally {
       setIsLoading(false)
@@ -102,9 +104,9 @@ export function SignUpForm({
           name='email'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Email</FormLabel>
+              <FormLabel>{t('auth.email')}</FormLabel>
               <FormControl>
-                <Input placeholder='name@example.com' {...field} />
+                <Input placeholder={t('auth.emailPlaceholder')} {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -115,9 +117,9 @@ export function SignUpForm({
           name='password'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Password</FormLabel>
+              <FormLabel>{t('auth.password')}</FormLabel>
               <FormControl>
-                <PasswordInput placeholder='********' {...field} />
+                <PasswordInput placeholder={t('auth.passwordPlaceholder')} {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -128,9 +130,9 @@ export function SignUpForm({
           name='confirmPassword'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Confirm Password</FormLabel>
+              <FormLabel>{t('auth.confirmPassword')}</FormLabel>
               <FormControl>
-                <PasswordInput placeholder='********' {...field} />
+                <PasswordInput placeholder={t('auth.passwordPlaceholder')} {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -138,7 +140,7 @@ export function SignUpForm({
         />
         <Button className='mt-2' disabled={isLoading}>
           {isLoading && <Loader2 className='animate-spin' />}
-          Sign Up with Email
+          {t('auth.signUpWithEmail')}
         </Button>
 
         <div className='relative my-2'>
@@ -147,7 +149,7 @@ export function SignUpForm({
           </div>
           <div className='relative flex justify-center text-xs uppercase'>
             <span className='bg-background px-2 text-muted-foreground'>
-              Or continue with
+              {t('auth.orContinueWith')}
             </span>
           </div>
         </div>
@@ -160,7 +162,7 @@ export function SignUpForm({
             disabled={isLoading}
             onClick={handleGoogleSignUp}
           >
-            <IconGoogle className='h-4 w-4' /> Google
+            <IconGoogle className='h-4 w-4' /> {t('auth.google')}
           </Button>
         </div>
       </form>
