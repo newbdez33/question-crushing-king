@@ -112,8 +112,8 @@ export function FlagCN({ className, ...props }: FlagProps) {
   )
 }
 
-// Hong Kong flag (for Traditional Chinese)
-export function FlagHK({ className, ...props }: FlagProps) {
+// Taiwan/Hong Kong combined flag with diagonal split (for Traditional Chinese)
+export function FlagTC({ className, ...props }: FlagProps) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -121,37 +121,68 @@ export function FlagHK({ className, ...props }: FlagProps) {
       className={className}
       {...props}
     >
-      <rect width="32" height="24" fill="#DE2110" />
-      {/* Bauhinia flower - 5 petals */}
-      <g fill="#fff" transform="translate(16, 12)">
-        {/* Center */}
-        <circle cx="0" cy="0" r="1.2" />
-        {/* 5 petals arranged around center */}
-        <path d="M0,-6 C1.5,-4 1.5,-2 0,0 C-1.5,-2 -1.5,-4 0,-6" transform="rotate(0)" />
-        <path d="M0,-6 C1.5,-4 1.5,-2 0,0 C-1.5,-2 -1.5,-4 0,-6" transform="rotate(72)" />
-        <path d="M0,-6 C1.5,-4 1.5,-2 0,0 C-1.5,-2 -1.5,-4 0,-6" transform="rotate(144)" />
-        <path d="M0,-6 C1.5,-4 1.5,-2 0,0 C-1.5,-2 -1.5,-4 0,-6" transform="rotate(216)" />
-        <path d="M0,-6 C1.5,-4 1.5,-2 0,0 C-1.5,-2 -1.5,-4 0,-6" transform="rotate(288)" />
-        {/* Red lines on petals (stamens) */}
-        <g stroke="#DE2110" strokeWidth="0.3" fill="none">
-          <line x1="0" y1="-1.5" x2="0" y2="-5" transform="rotate(0)" />
-          <line x1="0" y1="-1.5" x2="0" y2="-5" transform="rotate(72)" />
-          <line x1="0" y1="-1.5" x2="0" y2="-5" transform="rotate(144)" />
-          <line x1="0" y1="-1.5" x2="0" y2="-5" transform="rotate(216)" />
-          <line x1="0" y1="-1.5" x2="0" y2="-5" transform="rotate(288)" />
-        </g>
-        {/* Small red stars on petals */}
-        <g fill="#DE2110">
-          <circle cx="0" cy="-4" r="0.6" transform="rotate(0)" />
-          <circle cx="0" cy="-4" r="0.6" transform="rotate(72)" />
-          <circle cx="0" cy="-4" r="0.6" transform="rotate(144)" />
-          <circle cx="0" cy="-4" r="0.6" transform="rotate(216)" />
-          <circle cx="0" cy="-4" r="0.6" transform="rotate(288)" />
+      <defs>
+        <clipPath id="tcTopLeft">
+          <polygon points="0,0 32,0 0,24" />
+        </clipPath>
+        <clipPath id="tcBottomRight">
+          <polygon points="32,0 32,24 0,24" />
+        </clipPath>
+      </defs>
+      {/* Taiwan Flag (top-left triangle) */}
+      <g clipPath="url(#tcTopLeft)">
+        <rect width="32" height="24" fill="#FE0000" />
+        <rect width="16" height="12" fill="#000095" />
+        {/* White sun */}
+        <g fill="#fff" transform="translate(8, 6)">
+          <circle cx="0" cy="0" r="3" />
+          {/* 12 rays */}
+          {[0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330].map((angle) => (
+            <line
+              key={angle}
+              x1="0"
+              y1="-2.5"
+              x2="0"
+              y2="-4.5"
+              stroke="#fff"
+              strokeWidth="0.8"
+              transform={`rotate(${angle})`}
+            />
+          ))}
+          <circle cx="0" cy="0" r="2" fill="#000095" />
+          <circle cx="0" cy="0" r="1.5" fill="#fff" />
         </g>
       </g>
+      {/* Hong Kong Flag (bottom-right triangle) */}
+      <g clipPath="url(#tcBottomRight)">
+        <rect width="32" height="24" fill="#DE2110" />
+        {/* Bauhinia flower */}
+        <g fill="#fff" transform="translate(16, 12)">
+          <circle cx="0" cy="0" r="1" />
+          {/* 5 petals */}
+          <path d="M0,-5 C1.2,-3.5 1.2,-1.5 0,0 C-1.2,-1.5 -1.2,-3.5 0,-5" transform="rotate(0)" />
+          <path d="M0,-5 C1.2,-3.5 1.2,-1.5 0,0 C-1.2,-1.5 -1.2,-3.5 0,-5" transform="rotate(72)" />
+          <path d="M0,-5 C1.2,-3.5 1.2,-1.5 0,0 C-1.2,-1.5 -1.2,-3.5 0,-5" transform="rotate(144)" />
+          <path d="M0,-5 C1.2,-3.5 1.2,-1.5 0,0 C-1.2,-1.5 -1.2,-3.5 0,-5" transform="rotate(216)" />
+          <path d="M0,-5 C1.2,-3.5 1.2,-1.5 0,0 C-1.2,-1.5 -1.2,-3.5 0,-5" transform="rotate(288)" />
+          {/* Red stars on petals */}
+          <g fill="#DE2110">
+            <circle cx="0" cy="-3.2" r="0.5" transform="rotate(0)" />
+            <circle cx="0" cy="-3.2" r="0.5" transform="rotate(72)" />
+            <circle cx="0" cy="-3.2" r="0.5" transform="rotate(144)" />
+            <circle cx="0" cy="-3.2" r="0.5" transform="rotate(216)" />
+            <circle cx="0" cy="-3.2" r="0.5" transform="rotate(288)" />
+          </g>
+        </g>
+      </g>
+      {/* Diagonal divider line */}
+      <line x1="0" y1="24" x2="32" y2="0" stroke="#fff" strokeWidth="1" />
     </svg>
   )
 }
+
+// Keep old name as alias for backwards compatibility
+export { FlagTC as FlagHK }
 
 // Japan flag
 export function FlagJP({ className, ...props }: FlagProps) {
@@ -170,4 +201,4 @@ export function FlagJP({ className, ...props }: FlagProps) {
 
 // Keep old names as aliases for backwards compatibility
 export { FlagEN as FlagUS }
-export { FlagHK as FlagTW }
+export { FlagTC as FlagTW }
