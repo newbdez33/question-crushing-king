@@ -1,6 +1,7 @@
 import { Link, useNavigate } from '@tanstack/react-router'
 import { BadgeCheck, ChevronsUpDown, LogIn, LogOut } from 'lucide-react'
 import useDialogState from '@/hooks/use-dialog-state'
+import { useLanguage } from '@/context/language-provider'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import {
   DropdownMenu,
@@ -32,6 +33,7 @@ export function NavUser({ user, isGuest = false }: NavUserProps) {
   const { isMobile } = useSidebar()
   const [open, setOpen] = useDialogState()
   const navigate = useNavigate()
+  const { t } = useLanguage()
 
   const handleAuthAction = () => {
     if (isGuest) {
@@ -95,7 +97,7 @@ export function NavUser({ user, isGuest = false }: NavUserProps) {
                     <DropdownMenuItem asChild>
                       <Link to='/settings/account'>
                         <BadgeCheck />
-                        Account
+                        {t('nav.account')}
                       </Link>
                     </DropdownMenuItem>
                   </DropdownMenuGroup>
@@ -107,7 +109,7 @@ export function NavUser({ user, isGuest = false }: NavUserProps) {
                 onClick={handleAuthAction}
               >
                 {isGuest ? <LogIn /> : <LogOut />}
-                {isGuest ? 'Sign in' : 'Sign out'}
+                {isGuest ? t('nav.signIn') : t('nav.signOut')}
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
