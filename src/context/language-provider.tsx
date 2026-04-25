@@ -1152,3 +1152,29 @@ export function getLocalizedExplanation(
 
   return ''
 }
+
+// Helper to get localized question or option text while preserving legacy data.
+// eslint-disable-next-line react-refresh/only-export-components
+export function getLocalizedText(
+  fallback: string,
+  contents: { en?: string; zh?: string; 'zh-TC'?: string; ja?: string } | undefined,
+  language: Language
+): string {
+  const normalizedFallback = (fallback ?? '').trim()
+  if (!contents) return normalizedFallback
+
+  const localized = contents[language as keyof typeof contents]
+  if (localized && localized.trim()) {
+    return localized.trim()
+  }
+
+  if (language === 'zh-TC' && contents.zh && contents.zh.trim()) {
+    return contents.zh.trim()
+  }
+
+  if (language !== 'en' && contents.en && contents.en.trim()) {
+    return contents.en.trim()
+  }
+
+  return normalizedFallback
+}

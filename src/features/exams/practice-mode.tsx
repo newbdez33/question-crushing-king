@@ -39,13 +39,21 @@ import { Header } from '@/components/layout/header'
 import { Main } from '@/components/layout/main'
 import { LanguageSwitch } from '@/components/language-switch'
 import { ThemeSwitch } from '@/components/theme-switch'
-import { useLanguage, getLocalizedExplanation } from '@/context/language-provider'
+import {
+  useLanguage,
+  getLocalizedExplanation,
+  getLocalizedText,
+} from '@/context/language-provider'
 import { PracticeMobileBar } from './components/practice-mobile-bar'
 import {
   PracticeSidebar,
   type PracticeSettings,
 } from './components/practice-sidebar'
 import { mockExams } from './data/mock-exams'
+import {
+  readLocalizedContent,
+  type LocalizedContent,
+} from './localized-content'
 
 interface PracticeModeProps {
   examId: string
@@ -56,6 +64,7 @@ interface PracticeModeProps {
 type ExamOption = {
   label: string
   content: string
+  contents?: LocalizedContent
 }
 
 type ExamQuestion = {
@@ -63,6 +72,7 @@ type ExamQuestion = {
   questionNumber: number
   type: string
   content: string
+  contents?: LocalizedContent
   options: ExamOption[]
   correctAnswer: string
   explanation?: string
@@ -75,6 +85,7 @@ type ExamFile = {
 type PracticeOption = {
   text: string
   html?: string
+  contents?: LocalizedContent
 }
 
 type PracticeQuestion = {
@@ -82,6 +93,7 @@ type PracticeQuestion = {
   type: 'single' | 'multiple'
   text: string
   contentHtml?: string
+  contents?: LocalizedContent
   options: PracticeOption[]
   correctAnswers: number[]
   requiredSelections: number
@@ -215,6 +227,10 @@ function renderExamHtml(html: string) {
       {nodes.map((n, i) => renderNode(n, i, 'body'))}
     </div>
   )
+}
+
+function hasHtml(value: string) {
+  return value.includes('<')
 }
 
 /* istanbul ignore next -- progress merge utility for firebase sync */
@@ -662,11 +678,18 @@ export function PracticeMode({
                 : 'single') as PracticeQuestion['type'],
               text: htmlToText(q.content),
               contentHtml: q.content,
+              contents: readLocalizedContent((q as Record<string, unknown>).contents),
               options: options.map((o) => {
                 const raw = o.content ?? ''
                 const text = htmlToText(raw)
                 const html = raw.includes('<') ? raw : undefined
-                return { text, html }
+                return {
+                  text,
+                  html,
+                  contents: readLocalizedContent(
+                    (o as Record<string, unknown>).contents
+                  ),
+                }
               }),
               correctAnswers:
                 correctAnswers.length > 0
@@ -1068,11 +1091,14 @@ export function PracticeMode({
                     {formatQuestionType(question.type, t)}
                   </Badge>
                   <div className='mt-2'>
-                    {question.contentHtml ? (
-                      renderExamHtml(question.contentHtml)
-                    ) : (
-                      <p>{question.text}</p>
-                    )}
+                    {(() => {
+                      const content = getLocalizedText(
+                        question.contentHtml ?? question.text,
+                        question.contents,
+                        language
+                      )
+                      return hasHtml(content) ? renderExamHtml(content) : <p>{content}</p>
+                    })()}
                   </div>
                 </CardTitle>
                 <Button
@@ -1146,9 +1172,16 @@ export function PracticeMode({
                               fontSizeClass
                             )}
                           >
-                            {option.html
-                              ? renderExamHtml(option.html)
-                              : option.text}
+                            {(() => {
+                              const content = getLocalizedText(
+                                option.html ?? option.text,
+                                option.contents,
+                                language
+                              )
+                              return hasHtml(content)
+                                ? renderExamHtml(content)
+                                : content
+                            })()}
                           </Label>
                           {isSubmitted &&
                             question.correctAnswers.includes(idx) && (
@@ -1215,9 +1248,16 @@ export function PracticeMode({
                               fontSizeClass
                             )}
                           >
-                            {option.html
-                              ? renderExamHtml(option.html)
-                              : option.text}
+                            {(() => {
+                              const content = getLocalizedText(
+                                option.html ?? option.text,
+                                option.contents,
+                                language
+                              )
+                              return hasHtml(content)
+                                ? renderExamHtml(content)
+                                : content
+                            })()}
                           </Label>
                           {isSubmitted &&
                             question.correctAnswers.includes(idx) && (
