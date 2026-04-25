@@ -4,12 +4,15 @@ A modern exam practice application with multiple study modes, progress tracking,
 
 ## Features
 
-- **Question Bank Management** - Load JSON question banks from `/public/data`
+- **Question Bank Management** - Load registered JSON question banks from `/public/data`
 - **Practice Mode** - Answer questions one by one with instant scoring
 - **Study Mode** - View correct answers and explanations with bookmark support
-- **Exam Mode** - Simulated exams with random question sampling
+- **Exam Mode** - Randomized question sessions by count; full paper submission, result page, and review flow are planned
 - **Mistake Review** - Targeted practice on previously incorrect answers
+- **My Exams** - Personalized list of joined exams
 - **Progress Sync** - Cross-device synchronization via Firebase
+- **Profile Data** - Firebase Auth profile fields plus custom Realtime Database fields
+- **Localization** - English, Simplified Chinese, Traditional Chinese, and Japanese UI strings, with localized answer explanations when present in question data
 
 ## Tech Stack
 
@@ -17,10 +20,12 @@ A modern exam practice application with multiple study modes, progress tracking,
 |----------|------------|
 | UI Framework | React 19 + TypeScript |
 | Component Library | ShadcnUI (TailwindCSS + RadixUI) |
-| Build Tool | Vite 6 |
+| Build Tool | Vite 7 |
+| Package Manager | pnpm 9.15.0 |
 | Routing | TanStack Router |
-| State Management | Zustand |
+| State Management | Zustand + React Context |
 | Backend | Firebase (Auth, Realtime Database) |
+| Localization | LanguageProvider (`en`, `zh`, `zh-TC`, `ja`) |
 | Testing | Vitest (unit), Playwright (E2E) |
 
 ## Getting Started
@@ -36,6 +41,7 @@ cd examtopics
 pnpm install
 
 # Start development server
+# Runs `pnpm typecheck` first via the `predev` script.
 pnpm dev
 
 # Type checking
@@ -53,8 +59,15 @@ Copy `.env.example` to `.env` and configure Firebase variables:
 VITE_FIREBASE_API_KEY=
 VITE_FIREBASE_AUTH_DOMAIN=
 VITE_FIREBASE_PROJECT_ID=
+VITE_FIREBASE_STORAGE_BUCKET=
+VITE_FIREBASE_MESSAGING_SENDER_ID=
+VITE_FIREBASE_APP_ID=
+VITE_FIREBASE_MEASUREMENT_ID=
 VITE_FIREBASE_DATABASE_URL=
+VITE_SHOW_DEVTOOLS=
 ```
+
+See [User Data](./docs/technical/user-data.md) for the LocalStorage and Firebase Realtime Database paths.
 
 ## Project Structure
 

@@ -7,14 +7,14 @@ Exam Topics is a web-based application designed to help users practice for certi
 ## 2. User Roles
 
 - **Guest**: Can access all features without registration. Progress is saved locally using a persistent Guest ID.
-- **Registered User**: (Planned) Can sync progress across devices. Currently functions similarly to Guest with authentication UI placeholders.
+- **Registered User**: Uses Firebase Auth (email/password or Google sign-in). Progress, joined exams, bookmarks, and selected settings sync through Firebase Realtime Database.
 
 ## 3. Layout & Navigation
 
 ### 3.1 Sidebar Navigation
 
-- **Dashboard**: The landing page displaying user statistics.
-- **My Exams**: A list of available question banks.
+- **Dashboard**: The landing page displaying user statistics, recent activity, and registered exams from `public/data/index.json`.
+- **My Exams**: A personalized list of exams the user has joined.
 
 ### 3.2 Responsive Design
 
@@ -41,7 +41,7 @@ Exam Topics is a web-based application designed to help users practice for certi
     - **Practice Mode**: Standard practice session.
     - **Study Mode**: View questions with answers revealed.
     - **My Mistakes**: Practice session filtered to show only incorrect/missed questions.
-    - **Exam Mode**: Simulated exam with random question selection. No timer (planned for future).
+    - **Exam Mode**: Randomized question session by count. Full paper submission, result page, review flow, and timer are planned for future iterations.
 
 ### 4.3 Practice Mode
 
@@ -57,7 +57,7 @@ Exam Topics is a web-based application designed to help users practice for certi
     - Correct/Incorrect status displayed.
     - Explanation/Reference text revealed.
     - Answer Sheet updates color.
-    - Progress saved to Local Storage.
+    - Progress saved locally and synced to Firebase for authenticated users.
 
 ### 4.4 Study Mode
 
@@ -91,7 +91,7 @@ Exam Topics is a web-based application designed to help users practice for certi
 
 ### 4.6 Progress Tracking
 
-- **Persistence**: All data is stored in browser `localStorage`.
+- **Persistence**: Guest data is stored in browser `localStorage`; authenticated user data is also synced to Firebase Realtime Database.
 - **Data Points**:
   - Status (correct/incorrect).
   - User Selection (indices).
@@ -103,19 +103,25 @@ Exam Topics is a web-based application designed to help users practice for certi
 
 ### 4.7 Exam Mode
 
-- **Purpose**: Simulated exam with random question selection by count.
+- **Purpose**: Random question session with count-based selection.
 - **Route**: `/exams/$examId/exam`
-- **Features**:
+- **Implemented Features**:
   - Random question selection with optional reproducible seed
-  - Session-based statistics (total, answered, correct, wrong, accuracy)
-  - Real-time result page with review entry
-  - No timer (planned for future iterations)
+  - URL-synced question navigation (`?q=`)
+  - Immediate per-question grading and explanation display
+  - Progress/bookmark updates through the same local/Firebase paths as Practice Mode
+  - Practice Mode answer card, font size, auto-next, and clear-progress controls
+- **Planned Features**:
+  - Final submit-paper action
+  - Result page with total/answered/correct/wrong/unanswered/accuracy statistics
+  - Session-only review flow
+  - Timer and pause/resume behavior
 - **Docs**: See [exam-mode.md](./exam-mode.md) for user-facing design and [../technical/exam-mode.md](../technical/exam-mode.md) for technical details.
 
 ## 5. Data Specifications
 
 - **Sources**:
-  - `public/data/index.json`: Exam registry containing `{ id, title, description }` entries.
+  - `public/data/index.json`: Exam registry containing `{ id, title, description, questionCount }` entries. Only registered exams are visible in the app library.
   - `public/data/{examId}.json`: Question bank for each exam; contains only `questions` array.
 - **Question Format** (`questions[]`):
   - `id`: Unique identifier.
@@ -125,5 +131,7 @@ Exam Topics is a web-based application designed to help users practice for certi
   - `options`: Array of objects `{ label: string; content: string }`.
   - `correctAnswer`: Label(s) of the correct option, e.g. `"A"` or `"BD"`.
   - `explanation?`: Optional HTML explanation.
-- **Images**: Stored in `public/data/images/` and referenced relatively (e.g. `images/...`) in JSON.
+  - `explanation_en?`, `explanation_zh?`, `explanation_ja?`: Optional language-specific explanations.
+  - `explanations?`: Optional object format with `en`, `zh`, and `ja` explanation fields.
+- **Images**: Prefer `public/data/images/` with relative `images/...` references. Absolute `/images/...` references are served from `public/images/...`.
 
