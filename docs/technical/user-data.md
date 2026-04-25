@@ -7,7 +7,8 @@ This document describes the structure of user data stored locally in the applica
 | Key | Description |
 | --- | --- |
 | `examtopics_guest_id` | Stores a persistent unique identifier (UUID) for guest users. |
-| `examtopics_progress` | Stores the main application state, including user progress, answers, and bookmarks for all exams. |
+| `examtopics_progress` | Stores answer progress and bookmarks for all users. |
+| `examtopics_settings` | Stores per-exam settings such as joined exams and My Mistakes thresholds. |
 
 ## Data Structure
 
@@ -44,6 +45,7 @@ interface QuestionProgress {
   userSelection?: number[]     // Array of selected option indices (e.g., [0, 2])
   timesWrong?: number          // Cumulative count of incorrect attempts
 }
+
 ```
 
 #### JSON Example
@@ -77,6 +79,38 @@ interface QuestionProgress {
 }
 ```
 
+### 3. Settings Data (`examtopics_settings`)
+
+This item stores a JSON object containing per-user settings. For authenticated users, the same settings are mirrored in Firebase under `examtopics_progress/{uid}/_settings`.
+
+```typescript
+interface AppSettings {
+  [userId: string]: UserSettings
+}
+
+interface UserSettings {
+  [examId: string]: ExamSettings
+}
+
+interface ExamSettings {
+  owned?: boolean                         // Whether the exam appears in My Exams
+  mistakesConsecutiveCorrect?: number     // Graduation threshold for My Mistakes
+}
+```
+
+#### Settings JSON Example
+
+```json
+{
+  "550e8400-e29b-41d4-a716-446655440000": {
+    "SOA-C03": {
+      "owned": true,
+      "mistakesConsecutiveCorrect": 3
+    }
+  }
+}
+```
+
 ## Logic & Behavior
 
 ### Guest vs. Authenticated User
@@ -91,6 +125,7 @@ interface QuestionProgress {
   - Identified by their unique Firebase User UID.
   - Progress is saved locally under this Firebase UID and also synced to Firebase Realtime Database under `examtopics_progress/{uid}`.
   - Screens subscribe to `examtopics_progress/{uid}/{examId}` and reflect remote changes in real-time.
+  - Joined exams and per-exam settings are stored under `examtopics_settings` locally and `examtopics_progress/{uid}/_settings` remotely.
 
 ### Guest Data Merge Process (On Login)
 
@@ -108,6 +143,15 @@ When a guest user logs in or signs up:
 4. **Sync to Firebase**:
    - After merge, the system writes the merged local User data to `examtopics_progress/{uid}` in Firebase so it’s available across devices.
 
+### Guest Settings Merge Process (On Login)
+
+When a guest user logs in or signs up:
+
+1. The app invokes `ProgressService.mergeSettings(guestId, userId)`.
+2. The merged settings are pushed to Firebase with `mergeLocalSettingsIntoRemote(uid, localSettings)`.
+3. Remote settings are read back with `getUserSettings(uid)` and saved locally with `ProgressService.saveUserSettings(uid, remote)`.
+4. `owned` determines whether an exam appears in My Exams. If either guest or user settings mark an exam as owned, the merged settings keep it owned.
+
 - **Progress Tracking**:
   - `status`: Updated immediately upon submitting an answer.
   - `consecutiveCorrect`:
@@ -120,11 +164,23 @@ When a guest user logs in or signs up:
   - When "Clear Progress" is triggered for an exam, answer-related fields (`status`, `lastAnswered`, `consecutiveCorrect`, `userSelection`) are removed, but `bookmarked` status is preserved.
   - For authenticated users, the same clear operation is applied in Firebase under `examtopics_progress/{uid}/{examId}`.
 
+- **Joined Exams**:
+  - Clicking "Join My Exams" writes `{ owned: true }` for that exam.
+  - Guest users write local settings only.
+  - Authenticated users write both local settings and Firebase settings.
+
+- **Profile Data**:
+  - Firebase Auth stores base fields such as `displayName`, `email`, and `photoURL`.
+  - Custom profile fields are stored in Realtime Database under `users/{uid}/profile`.
+  - Current custom fields are `username`, `bio`, and `urls`.
+
 ## Firebase Realtime Database
 
-### Base Path
+### Base Paths
 
-- `examtopics_progress/{uid}/{examId}/{questionId}`
+- Progress: `examtopics_progress/{uid}/{examId}/{questionId}`
+- Settings: `examtopics_progress/{uid}/_settings/{examId}`
+- Custom Profile: `users/{uid}/profile`
 
 ### Fields
 
@@ -135,9 +191,21 @@ When a guest user logs in or signs up:
 - `timesWrong`: number
 - `bookmarked`: boolean
 
+### Settings Fields
+
+- `owned`: boolean
+- `mistakesConsecutiveCorrect`: number
+
+### Profile Fields
+
+- `username`: string
+- `bio`: string
+- `urls`: `{ value: string }[]`
+
 ### Subscriptions
 
-- UI subscribes to `examtopics_progress/{uid}/{examId}` via Firebase listeners and updates local UI state when remote data changes.
+- Practice/Study/Exam UI subscribes to `examtopics_progress/{uid}/{examId}` via Firebase listeners and updates local UI state when remote data changes.
+- My Exams loads `examtopics_progress/{uid}/_settings` to filter owned exams for authenticated users.
 
 ### Rules (Example)
 
@@ -147,6 +215,12 @@ When a guest user logs in or signs up:
 {
   "rules": {
     "examtopics_progress": {
+      "$uid": {
+        ".read": "auth != null && auth.uid == $uid",
+        ".write": "auth != null && auth.uid == $uid"
+      }
+    },
+    "users": {
       "$uid": {
         ".read": "auth != null && auth.uid == $uid",
         ".write": "auth != null && auth.uid == $uid"

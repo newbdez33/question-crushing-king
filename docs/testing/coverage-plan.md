@@ -1,10 +1,11 @@
-# Unit Test Coverage Plan - 100% Target
+# Unit Test Coverage Plan - High Coverage Target
 
 ## Current State
 
 - **Test Framework:** Vitest + React Testing Library
-- **Current Coverage:** ~2.9% (5 test files out of ~173 source files)
-- **Current Thresholds:** 80% lines, 75% branches, 80% functions, 80% statements
+- **Current Test Footprint:** 38 tracked source test files plus 12 Playwright E2E specs
+- **Current Thresholds:** 98% lines, 89% branches, 95% functions, 95% statements
+- **Goal:** Keep coverage close to 100% while allowing known browser-only or defensive branches where jsdom coverage is not practical.
 
 ## Phase Overview
 
@@ -35,23 +36,26 @@ Functions to add tests for:
 - [ ] `getAllProgress()` - localStorage retrieval
 - [ ] `getUserProgress(userId)` - user-specific progress
 - [ ] `getExamProgress(userId, examId)` - exam-specific progress
-- [ ] `saveAnswer(userId, examId, questionIndex, answer, options)` - all flag combinations
-- [ ] `toggleBookmark(userId, examId, questionIndex)` - bookmark toggling
+- [ ] `saveAnswer(userId, examId, questionId, status, userSelection?, isCorrectAttempt?, options?)` - all flag combinations
+- [ ] `toggleBookmark(userId, examId, questionId)` - bookmark toggling
 - [ ] `clearExamProgress(userId, examId)` - clearing progress
-- [ ] `mergeProgress(userId, local, remote)` - merge logic
-- [ ] `getSettings(userId)` - settings retrieval
-- [ ] `saveSettings(userId, settings)` - settings persistence
-- [ ] `mergeSettings(local, remote)` - settings merge
+- [ ] `mergeProgress(sourceUserId, targetUserId)` - guest-to-user merge logic
+- [ ] `getUserSettings(userId)` - settings retrieval
+- [ ] `saveUserSettings(userId, settings)` - settings persistence
+- [ ] `saveExamSettings(userId, examId, settings)` - per-exam settings persistence
+- [ ] `mergeSettings(sourceUserId, targetUserId)` - settings merge
 
 #### `src/services/firebase-progress.ts` (NEW)
 **File:** `src/services/__tests__/firebase-progress.test.ts`
 
 Functions to test:
-- [ ] `pushProgressToCloud(userId, progress)` - cloud upload
-- [ ] `pullProgressFromCloud(userId)` - cloud download
-- [ ] `syncProgress(userId)` - bidirectional sync
-- [ ] `pushSettingsToCloud(userId, settings)` - settings upload
-- [ ] `pullSettingsFromCloud(userId)` - settings download
+- [ ] `subscribeExamProgress(userId, examId, onChange)` - realtime exam subscription
+- [ ] `getUserProgress(userId)` - remote progress retrieval
+- [ ] `saveAnswer(userId, examId, questionId, status, userSelection?, prev?, isCorrectAttempt?, options?)` - remote answer save
+- [ ] `mergeLocalIntoRemote(userId, local)` - cloud upload for merged progress
+- [ ] `saveExamSettings(userId, examId, settings)` - settings upload
+- [ ] `getUserSettings(userId)` - settings download
+- [ ] `mergeLocalSettingsIntoRemote(userId, local)` - cloud upload for merged settings
 - [ ] Error handling scenarios
 - [ ] Network failure scenarios
 
@@ -60,8 +64,7 @@ Functions to test:
 
 Functions to test:
 - [ ] `getUserProfile(userId)` - profile retrieval
-- [ ] `updateUserProfile(userId, data)` - profile updates
-- [ ] `deleteUserProfile(userId)` - profile deletion
+- [ ] `saveUserProfile(userId, data)` - profile updates
 
 ### 1.2 Hooks
 
@@ -554,28 +557,17 @@ describe('useCustomHook', () => {
 
 ## Coverage Configuration Update
 
-Update `vite.config.ts` for 100% coverage target:
+Current `vite.config.ts` coverage gate:
 
 ```typescript
 coverage: {
+  reporter: ['text', 'html'],
   thresholds: {
-    lines: 100,
-    branches: 100,
-    functions: 100,
-    statements: 100
+    lines: 98,
+    branches: 89,
+    functions: 95,
+    statements: 95
   },
-  exclude: [
-    // Exclude route files (test via E2E)
-    'src/routes/**',
-    // Exclude type definitions
-    '**/*.d.ts',
-    // Exclude config files
-    'src/lib/firebase.ts',
-    'src/lib/fonts.ts',
-    // Test files themselves
-    '**/__tests__/**',
-    '**/test/**'
-  ]
 }
 ```
 

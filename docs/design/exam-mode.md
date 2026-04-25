@@ -2,32 +2,32 @@
 
 ## 概述
 
-- 在现有 Practice Mode 基础上提供“模拟考试”体验：用户先输入考试题数，系统随机抽取指定数量进入作答。
-- 界面与交互沿用 Practice Mode，但会话内所有题以“未作答”起始；提交后仍更新全局错题库与连对计数。
-- 完成后展示本次考试的成绩统计与复盘入口。
+- 在现有 Practice Mode 基础上提供“随机抽题”体验：用户先输入考试题数，系统随机抽取指定数量进入作答。
+- 当前实现沿用 Practice Mode 的逐题提交、即时判分、题卡、书签、字体设置、Auto next 与进度持久化。
+- “提交试卷”、本次考试成绩统计、复盘入口、计时器属于后续迭代计划，当前尚未实现。
 
 ## 目标与范围
 
-- 目标：提供快速、沉浸的考试模拟，兼顾练习积累（错题库持续生效）。
-- 范围：题目抽取、考试会话、答题提交与错题库更新、结果统计与复盘。
-- 不含：计时器、暂停/续考、分卷结构等进阶功能（后续迭代）。
+- 目标：提供快速随机练习入口，兼顾练习积累（错题库持续生效）。
+- 当前范围：题目抽取、题号同步、逐题答题、即时判分、错题库与连对计数更新。
+- 后续范围：整卷提交、结果页、复盘、计时器、暂停/续考、分卷结构。
 
 ## 用户流程
 
-- 入口：在考试详情页选择“Exam Mode”→输入题数（如 50）。
+- 入口：在考试详情页选择“Exam Mode”→输入题数（如 50）和可选 seed。
 - 抽题：从该考试的全题库随机抽取 50 题生成会话并进入答题界面。
-- 作答：逐题答题；题卡跳转、书签等沿用 Practice Mode。
-- 完成：点击“提交试卷”或全部作答后进入结果页：展示正确数、错误数、未作答数、正确率与复盘入口。
-- 复盘：查看本次错题清单或重新开启新的 Exam Mode。
+- 作答：逐题答题并立即提交；题卡跳转、书签、字体设置、Auto next 等沿用 Practice Mode。
+- 当前完成方式：没有整卷完成态；用户逐题查看即时反馈，进度写入本地/Firebase。
+- 计划完成方式：点击“提交试卷”或全部作答后进入结果页，展示正确数、错误数、未作答数、正确率与复盘入口。
+- 计划复盘：查看本次错题清单或重新开启新的 Exam Mode。
 
 ## 路由与入口
 
 - 建议路由：`/exams/$examId/exam`
 - 查询参数：
-  - `count`：题数
+  - `count`：题数（可选；缺失时加载全部题）
   - `seed`：随机种子（可选，便于复现）
   - `q`：当前题号（1-based）
-  - `mode=exam`：用于界面层区分
 - 路由与题号同步参考：[src/routes/_authenticated/exams/$examId/practice.tsx](src/routes/_authenticated/exams/$examId/practice.tsx) 与题号同步逻辑 [src/features/exams/practice-mode.tsx](src/features/exams/practice-mode.tsx#L236-L251)。
 
 ## 题目选择
@@ -44,15 +44,18 @@
 - 复用 Practice Mode 布局与组件：
   - 桌面侧边栏题卡与设置：[src/features/exams/components/practice-sidebar.tsx](src/features/exams/components/practice-sidebar.tsx)
   - 移动端底栏：[src/features/exams/components/practice-mobile-bar.tsx](src/features/exams/components/practice-mobile-bar.tsx)
-- 差异：
+- 当前差异：
   - 头部标签显示“Exam Mode”
   - 隐藏“仅练错题”等错题模式专属控件
+  - 题卡仅显示本次抽取的题目集合
+- 计划差异：
   - 增加“提交试卷”按钮与结果页
-- 题卡仅显示本次会话抽取的题号；标记未作答/已作答/对/错与 Practice Mode 一致。
+- 当前题卡颜色主要来自全局进度；后续整卷模式需要引入会话内未作答/已作答/对/错状态。
 
 ## 答题与错题库影响
 
-- 会话内提交：在 `ExamSession` 中记录 `userSelection` 与 `isCorrect`，更新本次会话统计。
+- 当前逐题提交：复用进度服务记录 `userSelection` 与 `isCorrect`，并立即展示反馈。
+- 计划会话提交：在 `ExamSession` 中记录 `userSelection` 与 `isCorrect`，更新本次会话统计。
 - 全局进度与错题库：
   - 提交后调用现有进度服务，更新 `status`、`consecutiveCorrect`、`timesWrong`；
   - 参考提交与持久化逻辑：[src/features/exams/practice-mode.tsx](src/features/exams/practice-mode.tsx#L575-L626)、
@@ -63,10 +66,11 @@
   - 连对：`consecutiveCorrect+1`，达阈值（默认 3）后毕业并可重置 `timesWrong=0`
   - 过滤/毕业实现参考：[src/features/exams/practice-mode.tsx](src/features/exams/practice-mode.tsx#L260-L336)。
 
-## 结果页与复盘
+## 结果页与复盘（计划）
 
-- 展示：总题数、已作答、正确、错误、正确率。
-- 复盘：本次错题列表入口（会话内错题或跳到 Practice 的错题模式），支持“重新开始一次 Exam Mode”（保留上次 `count` 与可选 `seed`）。
+- 当前尚未实现专用结果页。
+- 计划展示：总题数、已作答、正确、错误、未作答、正确率。
+- 计划复盘：本次错题列表入口（会话内错题或跳到 Practice 的错题模式），支持“重新开始一次 Exam Mode”（保留上次 `count` 与可选 `seed`）。
 
 ## 异常与边界
 
@@ -81,7 +85,7 @@
 - Practice Mode：逐题作答、即时判分、题卡跳转与设置（Auto next、Font size、Consecutive correct）。
 - Study Mode：展示正确答案与解释，题卡跳转与字体设置。
 - My Mistakes：按错题池过滤；连对毕业阈值控制错题移出规则。
-- Exam Mode：模拟考试（题数输入、随机抽题、会话统计与复盘）。
+- Exam Mode：随机抽题练习（题数输入、随机抽题、逐题即时判分）；整卷统计与复盘待实现。
 - 仪表盘（Dashboard）：近况与数据概览（可在后续扩展）。
 - Settings：保留 Profile/Account/Appearance；移除 Notifications 与 Display。Layout 设置通过全局 Config Drawer 与 Header 快捷控件统一入口。
 
@@ -97,11 +101,9 @@
 - Profile 与 Firebase 关联：Profile 页读取与编辑须与 Firebase 同步（详见下节）。
 - 设计与实现要点
   - 导航与路由
-    - 移除侧边导航条目 Notifications、Display 与其对应页面容器：
-      - Settings 主页与侧边导航：[src/features/settings/index.tsx](src/features/settings/index.tsx#L1-L74)
-      - Notifications 容器与表单：[src/features/settings/notifications/index.tsx](src/features/settings/notifications/index.tsx#L1-L13)、[src/features/settings/notifications/notifications-form.tsx](src/features/settings/notifications/notifications-form.tsx#L1-L220)
-      - Display 容器与表单：[src/features/settings/display/index.tsx](src/features/settings/display/index.tsx#L1-L13)、[src/features/settings/display/display-form.tsx](src/features/settings/display/display-form.tsx#L1-L121)
-    - 移除路由生成树中的注册项：[src/routeTree.gen.ts](src/routeTree.gen.ts#L235-L283) 与 [src/routeTree.gen.ts](src/routeTree.gen.ts#L507-L515)
+    - 当前 Settings 侧边导航仅保留 Profile、Account、Appearance：
+      - Settings 主页与侧边导航：[src/features/settings/index.tsx](src/features/settings/index.tsx)
+    - Notifications 与 Display 已从当前源码树中移除，不再有对应页面容器、表单或路由。
   - Layout 要素（统一配置入口）
     - Theme：系统/明亮/暗黑，入口位于 Config Drawer 与 Header 的 ThemeSwitch
       - 参考：[src/components/config-drawer.tsx](src/components/config-drawer.tsx#L1-L354)、[src/features/settings/index.tsx](src/features/settings/index.tsx#L14-L21)
@@ -135,11 +137,11 @@
 - 现状
   - 用户基础资料（displayName、photoURL、email）来源于 Firebase Auth 的 User 对象，通过 AuthContext 提供。
     - 参考：[src/context/auth-context.tsx](src/context/auth-context.tsx#L12-L50)、[src/context/auth-ctx.ts](src/context/auth-ctx.ts#L11-L19)
-  - Settings › Profile 当前为演示表单（username、bio、urls），提交不与 Firebase 交互。
-    - 参考：[src/features/settings/profile/profile-form.tsx](src/features/settings/profile/profile-form.tsx#L59-L177)、[src/features/settings/profile/index.tsx](src/features/settings/profile/index.tsx#L4-L13)
+  - Settings › Profile 已与 Firebase 关联：读取 Auth User 基础资料，并通过 `user-profile` 服务读取/保存自定义资料字段。
+    - 参考：[src/features/settings/profile/profile-form.tsx](src/features/settings/profile/profile-form.tsx)、[src/services/user-profile.ts](src/services/user-profile.ts)
 - 目标
-  - Profile 页需与 Firebase 关联：读取与展示 Auth User 基础资料；支持编辑后更新至 Firebase。
-  - 自定义资料字段（bio、urls、username 等）采用数据库持久化（建议 Realtime DB 的 `users/{uid}/profile`，或 Firestore）。
+  - Profile 页持续与 Firebase 关联：读取与展示 Auth User 基础资料；支持编辑后更新至 Firebase。
+  - 自定义资料字段（bio、urls、username 等）持久化到 Realtime DB 的 `users/{uid}/profile`。
 - 读写规则
   - 读取
     - 基础资料：从 useAuth().user 读取 displayName、photoURL、email。
@@ -159,7 +161,7 @@
   - 提交流程：先调用 Auth 更新（如需），再写入 DB 自定义字段；统一成功/失败提示。
   - 同步显示：提交成功后刷新 AuthContext 或本地状态，保证头部/侧边栏资料即时更新。
 - 影响范围
-  - 新增用户资料服务模块（如 `services/user-profile.ts`）供 Profile 表单复用。
+  - 用户资料服务模块 `services/user-profile.ts` 供 Profile 表单复用。
   - 侧边栏与头像下拉显示名称与头像来源不变，但提交后需立即反映最新值：
     - 参考显示位置：[src/components/layout/app-sidebar.tsx](src/components/layout/app-sidebar.tsx#L21-L31)、[src/components/profile-dropdown.tsx](src/components/profile-dropdown.tsx#L18-L30)
 
@@ -189,9 +191,9 @@
 
 - 入口：在考试详情页选择“Exam Mode”，先输入题数。
 - 抽题：从全题库随机抽指定数量（可复现随机 `seed`），呈现按题号升序。
-- 会话：题卡仅显示会话题号；会话内初始均为未作答。
-- 提交：即时判分并更新会话统计；同时写入全局进度（错题与连对）。
-- 结果：展示总题数、已作答、正确、错误、正确率；提供本次错题复盘与重新开始。
+- 会话：题卡仅显示本次抽取的题目集合。
+- 提交：即时判分；同时写入全局进度（错题与连对）。
+- 计划：展示总题数、已作答、正确、错误、未作答、正确率；提供本次错题复盘与重新开始。
 
 ## 题库与渲染
 

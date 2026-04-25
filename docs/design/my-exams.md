@@ -8,7 +8,7 @@
 
 ## Data Model
 
-We will leverage the existing `ProgressService` which uses LocalStorage (and can be synced). We will extend `ExamSettings` to include an `owned` boolean flag.
+We leverage `ProgressService` for local settings and `firebase-progress` for authenticated-user sync. `ExamSettings` includes an `owned` boolean flag.
 
 ### `src/services/progress-service.ts`
 
@@ -48,6 +48,7 @@ Centralizes reading the exams library (`public/data/index.json`) and merging wit
   - If `owned`: Show "Owned" indicator (optional) or just hide the button.
 - **Action**:
   - On "Join": Call `ProgressService.saveExamSettings(userId, examId, { owned: true })`.
+  - If authenticated, also call `RemoteProgress.saveExamSettings(uid, examId, { owned: true })`.
   - Trigger a re-render or state update to reflect the change.
 
 ## User Flow
