@@ -3,6 +3,8 @@
 **Date:** January 30, 2026
 **Branch:** `claude/plan-unit-test-coverage-EdKKN`
 
+> Historical snapshot. Current enforced thresholds live in `vite.config.ts` and are higher than the thresholds shown in this January report.
+
 ## Summary
 
 All unit test coverage thresholds have been met. The project now has comprehensive unit test coverage including `practice-mode.tsx` and `practice-mobile-bar.tsx`.
@@ -181,16 +183,16 @@ The touch gesture handlers in `practice-mobile-bar.tsx` have limited coverage du
 
 ### vite.config.ts
 
-Coverage configuration with no exclusions - all files are included:
+Current coverage gate:
 
 ```typescript
 coverage: {
   reporter: ['text', 'html'],
   thresholds: {
-    lines: 80,
-    branches: 75,
-    functions: 80,
-    statements: 80,
+    lines: 98,
+    branches: 89,
+    functions: 95,
+    statements: 95,
   },
 },
 ```
@@ -228,7 +230,7 @@ The following components should have comprehensive E2E tests:
 pnpm test
 
 # Run tests with coverage
-pnpm test -- --coverage
+pnpm test:coverage
 
 # Run specific test file
 pnpm test -- --run src/features/exams/__tests__/exam-details-full.test.tsx
@@ -236,10 +238,12 @@ pnpm test -- --run src/features/exams/__tests__/exam-details-full.test.tsx
 
 ## CI Pipeline
 
-The CI pipeline (`.github/workflows/ci-validate.yml`) includes test coverage verification:
+The CI pipeline (`.github/workflows/ci-validate.yml`) currently runs the unit/integration suite but does not run coverage:
 
 1. `pnpm install --frozen-lockfile`
 2. `pnpm typecheck`
 3. `pnpm lint`
 4. `pnpm build`
-5. `pnpm test` (includes coverage threshold checks)
+5. `pnpm test`
+
+Coverage thresholds are enforced when running `pnpm test:coverage`.
