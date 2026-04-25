@@ -34,6 +34,7 @@ const translations: Record<Language, Record<string, string>> = {
     'common.questions': 'Questions',
     'common.progress': 'Progress',
     'common.accuracy': 'Accuracy',
+    'common.lastUpdated': 'Updated',
 
     // Dashboard
     'dashboard.title': 'Dashboard',
@@ -287,6 +288,7 @@ const translations: Record<Language, Record<string, string>> = {
     'common.questions': '题目',
     'common.progress': '进度',
     'common.accuracy': '正确率',
+    'common.lastUpdated': '更新',
 
     // Dashboard
     'dashboard.title': '仪表盘',
@@ -540,6 +542,7 @@ const translations: Record<Language, Record<string, string>> = {
     'common.questions': '問題',
     'common.progress': '進捗',
     'common.accuracy': '正答率',
+    'common.lastUpdated': '更新日',
 
     // Dashboard
     'dashboard.title': 'ダッシュボード',
@@ -793,6 +796,7 @@ const translations: Record<Language, Record<string, string>> = {
     'common.questions': '題目',
     'common.progress': '進度',
     'common.accuracy': '正確率',
+    'common.lastUpdated': '更新',
 
     // Dashboard
     'dashboard.title': '儀表板',
