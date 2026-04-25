@@ -25,7 +25,15 @@ import { Header } from '@/components/layout/header'
 import { Main } from '@/components/layout/main'
 import { LanguageSwitch } from '@/components/language-switch'
 import { ThemeSwitch } from '@/components/theme-switch'
-import { useLanguage, getLocalizedExplanation } from '@/context/language-provider'
+import {
+  useLanguage,
+  getLocalizedExplanation,
+  getLocalizedText,
+} from '@/context/language-provider'
+import {
+  readLocalizedContent,
+  type LocalizedContent,
+} from './localized-content'
 import { StudyMobileBar } from './components/study-mobile-bar'
 import { StudySidebar, type StudySettings } from './components/study-sidebar'
 import { mockExams } from './data/mock-exams'
@@ -37,6 +45,7 @@ interface StudyModeProps {
 type ExamOption = {
   label: string
   content: string
+  contents?: LocalizedContent
 }
 
 type ExamQuestion = {
@@ -44,6 +53,7 @@ type ExamQuestion = {
   questionNumber: number
   type: string
   content: string
+  contents?: LocalizedContent
   options: ExamOption[]
   correctAnswer: string
   explanation?: string
@@ -58,7 +68,12 @@ type StudyQuestion = {
   type: 'single' | 'multiple'
   text: string
   contentHtml?: string
-  options: string[]
+  contents?: LocalizedContent
+  options: {
+    text: string
+    html?: string
+    contents?: LocalizedContent
+  }[]
   correctAnswers: number[]
   explanation?: string
   explanations?: {
@@ -185,6 +200,10 @@ function renderExamHtml(html: string) {
   )
 }
 
+function hasHtml(value: string) {
+  return value.includes('<')
+}
+
 export function StudyMode({ examId }: StudyModeProps) {
   const { user, guestId } = useAuth()
   const { language, t } = useLanguage()
@@ -195,7 +214,7 @@ export function StudyMode({ examId }: StudyModeProps) {
         id: q.id,
         type: 'single' as const,
         text: q.text,
-        options: q.options,
+        options: q.options.map((option) => ({ text: option })),
         correctAnswers: [q.correctAnswer],
         explanation: q.explanation,
       }))
@@ -301,7 +320,17 @@ export function StudyMode({ examId }: StudyModeProps) {
                 : 'single') as StudyQuestion['type'],
               text: htmlToText(q.content),
               contentHtml: q.content,
-              options: options.map((o) => htmlToText(o.content)),
+              contents: readLocalizedContent((q as Record<string, unknown>).contents),
+              options: options.map((o) => {
+                const raw = o.content ?? ''
+                return {
+                  text: htmlToText(raw),
+                  html: raw.includes('<') ? raw : undefined,
+                  contents: readLocalizedContent(
+                    (o as Record<string, unknown>).contents
+                  ),
+                }
+              }),
               correctAnswers:
                 correctAnswers.length > 0
                   ? correctAnswers
@@ -464,11 +493,14 @@ export function StudyMode({ examId }: StudyModeProps) {
                     {formatQuestionTypeWithT(question.type, t)}
                   </Badge>
                   <div className='mt-2'>
-                    {question.contentHtml ? (
-                      renderExamHtml(question.contentHtml)
-                    ) : (
-                      <p>{question.text}</p>
-                    )}
+                    {(() => {
+                      const content = getLocalizedText(
+                        question.contentHtml ?? question.text,
+                        question.contents,
+                        language
+                      )
+                      return hasHtml(content) ? renderExamHtml(content) : <p>{content}</p>
+                    })()}
                   </div>
                 </CardTitle>
                 <Button
@@ -514,7 +546,16 @@ export function StudyMode({ examId }: StudyModeProps) {
                               : ''
                           }
                         >
-                          {option}
+                          {(() => {
+                            const content = getLocalizedText(
+                              option.html ?? option.text,
+                              option.contents,
+                              language
+                            )
+                            return hasHtml(content)
+                              ? renderExamHtml(content)
+                              : content
+                          })()}
                         </span>
                       </div>
                     )

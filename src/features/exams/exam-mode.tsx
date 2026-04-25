@@ -27,7 +27,15 @@ import { Header } from '@/components/layout/header'
 import { Main } from '@/components/layout/main'
 import { LanguageSwitch } from '@/components/language-switch'
 import { ThemeSwitch } from '@/components/theme-switch'
-import { useLanguage, getLocalizedExplanation } from '@/context/language-provider'
+import {
+  useLanguage,
+  getLocalizedExplanation,
+  getLocalizedText,
+} from '@/context/language-provider'
+import {
+  readLocalizedContent,
+  type LocalizedContent,
+} from './localized-content'
 import { PracticeMobileBar } from './components/practice-mobile-bar'
 import {
   PracticeSidebar,
@@ -45,6 +53,7 @@ interface ExamModeProps {
 type ExamOption = {
   label: string
   content: string
+  contents?: LocalizedContent
 }
 
 type ExamQuestion = {
@@ -52,6 +61,7 @@ type ExamQuestion = {
   questionNumber: number
   type: string
   content: string
+  contents?: LocalizedContent
   options: ExamOption[]
   correctAnswer: string
   explanation?: string
@@ -66,7 +76,8 @@ type PracticeQuestion = {
   type: 'single' | 'multiple'
   text: string
   contentHtml?: string
-  options: { text: string; html?: string }[]
+  contents?: LocalizedContent
+  options: { text: string; html?: string; contents?: LocalizedContent }[]
   correctAnswers: number[]
   requiredSelections: number
   explanation?: string
@@ -186,6 +197,10 @@ function renderExamHtml(html: string) {
       {nodes.map((n, i) => renderNode(n, i, 'body'))}
     </div>
   )
+}
+
+function hasHtml(value: string) {
+  return value.includes('<')
 }
 
 function mulberry32(seed: number) {
@@ -357,9 +372,13 @@ export function ExamMode({
                 : 'single') as PracticeQuestion['type'],
               text: htmlToText(q.content),
               contentHtml: q.content,
+              contents: readLocalizedContent((q as Record<string, unknown>).contents),
               options: options.map((o) => ({
                 text: htmlToText(o.content),
                 html: o.content,
+                contents: readLocalizedContent(
+                  (o as Record<string, unknown>).contents
+                ),
               })),
               correctAnswers: correctAnswers.length > 0 ? correctAnswers : [0],
               requiredSelections: Math.max(correctAnswers.length, 1),
@@ -642,11 +661,16 @@ export function ExamMode({
                     {question?.type === 'multiple' ? t('practice.multiple') : t('practice.single')}
                   </Badge>
                   <div className='mt-2'>
-                    {question?.contentHtml ? (
-                      renderExamHtml(question.contentHtml)
-                    ) : (
-                      <p>{question?.text}</p>
-                    )}
+                    {question
+                      ? (() => {
+                          const content = getLocalizedText(
+                            question.contentHtml ?? question.text,
+                            question.contents,
+                            language
+                          )
+                          return hasHtml(content) ? renderExamHtml(content) : <p>{content}</p>
+                        })()
+                      : null}
                   </div>
                 </CardTitle>
                 <Button
@@ -701,9 +725,16 @@ export function ExamMode({
                             htmlFor={`option-${idx}`}
                             className='flex-1 cursor-pointer text-xs leading-relaxed font-normal'
                           >
-                            {option.html
-                              ? renderExamHtml(option.html)
-                              : option.text}
+                            {(() => {
+                              const content = getLocalizedText(
+                                option.html ?? option.text,
+                                option.contents,
+                                language
+                              )
+                              return hasHtml(content)
+                                ? renderExamHtml(content)
+                                : content
+                            })()}
                           </Label>
                           {isSubmitted &&
                             question.correctAnswers.includes(idx) && (
@@ -751,9 +782,16 @@ export function ExamMode({
                             htmlFor={`option-${idx}`}
                             className='flex-1 cursor-pointer text-xs leading-relaxed font-normal'
                           >
-                            {option.html
-                              ? renderExamHtml(option.html)
-                              : option.text}
+                            {(() => {
+                              const content = getLocalizedText(
+                                option.html ?? option.text,
+                                option.contents,
+                                language
+                              )
+                              return hasHtml(content)
+                                ? renderExamHtml(content)
+                                : content
+                            })()}
                           </Label>
                           {isSubmitted &&
                             question.correctAnswers.includes(idx) && (

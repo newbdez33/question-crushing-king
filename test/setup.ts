@@ -270,5 +270,22 @@ vi.mock('@/context/language-provider', () => ({
     if (!explanations) return ''
     return explanations.en || explanations.zh || explanations['zh-TC'] || explanations.ja || ''
   },
+  getLocalizedText: (
+    fallback: string,
+    contents: { en?: string; zh?: string; 'zh-TC'?: string; ja?: string } | undefined,
+    language: string
+  ) => {
+    const normalizedFallback = (fallback ?? '').trim()
+    if (!contents) return normalizedFallback
+    const localized = contents[language as keyof typeof contents]
+    if (localized && localized.trim()) return localized.trim()
+    if (language === 'zh-TC' && contents.zh && contents.zh.trim()) {
+      return contents.zh.trim()
+    }
+    if (language !== 'en' && contents.en && contents.en.trim()) {
+      return contents.en.trim()
+    }
+    return normalizedFallback
+  },
   LanguageProvider: ({ children }: { children: React.ReactNode }) => children,
 }))

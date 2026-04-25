@@ -14,9 +14,12 @@ vi.doMock('@/lib/cookies', () => ({
 }))
 
 // Import the actual implementation after setting up mocks
-const { LanguageProvider, useLanguage, getLocalizedExplanation } = await vi.importActual<
-  typeof import('../language-provider')
->('../language-provider')
+const {
+  LanguageProvider,
+  useLanguage,
+  getLocalizedExplanation,
+  getLocalizedText,
+} = await vi.importActual<typeof import('../language-provider')>('../language-provider')
 
 // Test component that uses the context
 function TestConsumer() {
@@ -254,5 +257,35 @@ describe('getLocalizedExplanation', () => {
     }
 
     expect(getLocalizedExplanation(explanations, 'en')).toBe('日本語の説明')
+  })
+})
+
+describe('getLocalizedText', () => {
+  it('returns localized content in the requested language', () => {
+    expect(
+      getLocalizedText(
+        'English question',
+        { en: 'English question', zh: '中文题干' },
+        'zh'
+      )
+    ).toBe('中文题干')
+  })
+
+  it('falls back to simplified Chinese for Traditional Chinese', () => {
+    expect(
+      getLocalizedText('English question', { zh: '中文题干' }, 'zh-TC')
+    ).toBe('中文题干')
+  })
+
+  it('falls back to default content when localization is missing', () => {
+    expect(getLocalizedText('English question', undefined, 'zh')).toBe(
+      'English question'
+    )
+  })
+
+  it('ignores whitespace-only localized content', () => {
+    expect(getLocalizedText('English question', { zh: '   ' }, 'zh')).toBe(
+      'English question'
+    )
   })
 })

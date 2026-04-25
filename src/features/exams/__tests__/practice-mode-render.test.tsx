@@ -191,6 +191,45 @@ describe('PracticeMode Basic Rendering', () => {
     expect(screen.getByText('What is 1+1?')).toBeInTheDocument()
   })
 
+  it('renders localized question and option content when available', async () => {
+    mockFetch.mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({
+        questions: [
+          {
+            id: 'q-localized',
+            questionNumber: 1,
+            type: 'single',
+            content: '<p>What is 1+1?</p>',
+            contents: {
+              zh: '<p>一加一等于几？</p>',
+              en: '<p>Localized English question?</p>',
+            },
+            options: [
+              { label: 'A', content: '1', contents: { zh: '一', en: '1' } },
+              { label: 'B', content: '2', contents: { zh: '二', en: 'Two' } },
+            ],
+            correctAnswer: 'B',
+            explanation: '<p>1+1 equals 2</p>',
+          },
+        ],
+      }),
+    })
+
+    render(<PracticeMode examId="test-exam" />)
+
+    await waitFor(
+      () => {
+        expect(screen.queryByText('Loading questions…')).not.toBeInTheDocument()
+      },
+      { timeout: 8000 }
+    )
+
+    expect(screen.getByText('Localized English question?')).toBeInTheDocument()
+    expect(screen.getByText('Two')).toBeInTheDocument()
+    expect(screen.queryByText('What is 1+1?')).not.toBeInTheDocument()
+  })
+
   it('shows Single type indicator', async () => {
     render(<PracticeMode examId="test-exam" />)
 
