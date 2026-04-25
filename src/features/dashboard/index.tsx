@@ -304,6 +304,11 @@ export function Dashboard() {
                             ? `${exam.questionCount} ${t('common.questions')}`
                             : `${t('common.questions')}: —`}
                         </span>
+                        {exam.lastUpdated && (
+                          <span>
+                            {t('common.lastUpdated')}: {exam.lastUpdated}
+                          </span>
+                        )}
                       </div>
                     </CardContent>
                   </Card>

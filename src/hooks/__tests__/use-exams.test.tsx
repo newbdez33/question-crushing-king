@@ -22,6 +22,7 @@ describe('useExams', () => {
         title: 'Real Exam 1',
         description: 'A real exam',
         questionCount: 50,
+        updatedAt: '2026-04-25',
       },
       {
         id: 'real-exam-2',
@@ -63,6 +64,7 @@ describe('useExams', () => {
     // Should have both real exams and mock exams
     expect(result.current.exams).toHaveLength(3)
     expect(result.current.exams[0].id).toBe('real-exam-1')
+    expect(result.current.exams[0].lastUpdated).toBe('2026-04-25')
     expect(result.current.exams[1].id).toBe('real-exam-2')
     expect(result.current.exams[2].id).toBe('mock-exam-1')
   })
@@ -217,6 +219,36 @@ describe('useExams', () => {
     expect(withCount?.questionCount).toBe(42)
     expect(stringCount?.questionCount).toBeUndefined()
     expect(noCount?.questionCount).toBeUndefined()
+  })
+
+  it('should handle updatedAt correctly', async () => {
+    globalThis.fetch = vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        exams: [
+          { id: 'with-date', updatedAt: '2026-04-25' },
+          { id: 'empty-date', updatedAt: '' },
+          { id: 'numeric-date', updatedAt: 123 },
+          { id: 'no-date' },
+        ],
+      }),
+    })
+
+    const { result } = renderHook(() => useExams())
+
+    await waitFor(() => {
+      expect(result.current.loading).toBe(false)
+    })
+
+    const withDate = result.current.exams.find(e => e.id === 'with-date')
+    const emptyDate = result.current.exams.find(e => e.id === 'empty-date')
+    const numericDate = result.current.exams.find(e => e.id === 'numeric-date')
+    const noDate = result.current.exams.find(e => e.id === 'no-date')
+
+    expect(withDate?.lastUpdated).toBe('2026-04-25')
+    expect(emptyDate?.lastUpdated).toBeUndefined()
+    expect(numericDate?.lastUpdated).toBeUndefined()
+    expect(noDate?.lastUpdated).toBeUndefined()
   })
 
   it('should cancel fetch on unmount', async () => {

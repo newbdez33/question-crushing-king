@@ -7,10 +7,17 @@ export type Exam = {
   description: string
   questionCount?: number
   lastStudied?: string
+  lastUpdated?: string
 }
 
 type IndexFile = {
-  exams?: Array<{ id: string; title?: string; description?: string; questionCount?: number }>
+  exams?: Array<{
+    id: string
+    title?: string
+    description?: string
+    questionCount?: number
+    updatedAt?: string
+  }>
 }
 
 export function useExams() {
@@ -43,6 +50,10 @@ export function useExams() {
             title: entry.title ?? id,
             description: entry.description ?? `/public/data/${id}.json`,
             questionCount: typeof entry.questionCount === 'number' ? entry.questionCount : undefined,
+            lastUpdated:
+              typeof entry.updatedAt === 'string' && entry.updatedAt.trim()
+                ? entry.updatedAt.trim()
+                : undefined,
             lastStudied: undefined,
           })
         }

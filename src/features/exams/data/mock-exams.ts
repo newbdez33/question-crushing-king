@@ -11,6 +11,7 @@ export interface Exam {
   title: string
   description: string
   questionCount: number
+  lastUpdated?: string // ISO date string for question bank content updates
   lastStudied?: string // ISO Date string
   questions: Question[]
 }
