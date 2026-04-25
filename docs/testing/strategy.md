@@ -15,23 +15,21 @@
 ## 工具选型
 
 - 单元/组件/集成：Vitest（与 Vite 原生集成）、React Testing Library、JSDOM。
-- Mock：MSW（Mock Service Worker）在测试与开发环境统一拦截网络请求。
+- Mock：当前使用 Vitest module mocks 和 Playwright 浏览器上下文；MSW 可作为后续网络层统一 mock 方案。
 - 覆盖率：@vitest/coverage-v8（或 c8）。
 - E2E：Playwright（跨浏览器、并行、快照/trace）。
 
-## 初始化与安装步骤
+## 初始化状态
 
-- 安装单元/组件测试依赖
+- 已安装并接入：
+  - Vitest、React Testing Library、JSDOM、`@testing-library/jest-dom`
+  - `@vitest/coverage-v8`
+  - Playwright
+- 尚未接入：
+  - MSW
 
 ```bash
-pnpm add -D vitest @testing-library/react @testing-library/user-event jsdom @testing-library/jest-dom @vitest/coverage-v8 msw
-```
-
-- 安装 E2E 测试依赖
-
-```bash
-pnpm add -D @playwright/test playwright
-npx playwright install
+pnpm install
 ```
 
 ## 配置建议
@@ -48,12 +46,15 @@ export default defineConfig({
   test: {
     environment: 'jsdom',
     setupFiles: ['./test/setup.ts'],
+    exclude: ['e2e/**', '**/node_modules/**'],
     coverage: {
       reporter: ['text', 'html'],
-      lines: 80,
-      branches: 75,
-      functions: 80,
-      statements: 80,
+      thresholds: {
+        lines: 98,
+        branches: 89,
+        functions: 95,
+        statements: 95,
+      },
     },
   },
 })
@@ -75,9 +76,9 @@ export default defineConfig({
   timeout: 30_000,
   retries: 1,
   use: {
-    baseURL: 'http://localhost:5173',
+    baseURL: 'http://localhost:5175',
     trace: 'on-first-retry',
-    screenshot: 'only-on-failure',
+    screenshot: 'on',
     video: 'retain-on-failure',
   },
   projects: [
@@ -86,9 +87,11 @@ export default defineConfig({
     { name: 'webkit', use: { ...devices['Desktop Safari'] } },
   ],
   webServer: {
-    command: 'pnpm dev',
-    port: 5173,
+    command: 'pnpm dev --port 5175',
+    port: 5175,
     reuseExistingServer: !process.env.CI,
+    stdout: 'ignore',
+    stderr: 'pipe',
   },
 })
 ```
@@ -106,7 +109,7 @@ export default defineConfig({
 - 单元/组件
   - 仅断言对外可观察行为（文本、角色、ARIA、样式类变更），避免断言内部实现。
   - 优先使用 user-event 模拟交互，避免 fireEvent 过度使用。
-  - 网络交互使用 MSW 拦截，在 beforeAll/afterAll 中启动/停止。
+  - 当前网络/服务依赖使用 Vitest mock 隔离；如后续引入 MSW，在 beforeAll/afterAll 中启动/停止。
 - 集成
   - 验证路由跳转、状态（Zustand/React Query）与组件协作。
   - 尽量在 JSDOM 环境下完成，避免引入浏览器特性依赖。
@@ -117,13 +120,13 @@ export default defineConfig({
 
 ## Mock 与数据管理
 
-- MSW 路由：为 axios/fetch 定义标准化 handlers；测试中以场景为单位注册。
+- 后续 MSW 路由：为 fetch/Firebase 边界定义标准化 handlers；测试中以场景为单位注册。
 - 测试数据：使用 @faker-js/faker 生成少量稳定基准数据；快照测试仅用于可控结构。
 - 环境变量：测试环境独立 .env.test；严禁在测试中依赖真实密钥或生产地址。
 
 ## 覆盖率与质量门禁
 
-- 阈值：Lines ≥ 80%，Functions ≥ 80%，Branches ≥ 75%。
+- 当前阈值：Lines ≥ 98%，Functions ≥ 95%，Branches ≥ 89%，Statements ≥ 95%。
 - 在 CI 中启用覆盖率检查并作为门禁；低于阈值时阻止合并。
 
 ## 回归测试策略
@@ -135,19 +138,24 @@ export default defineConfig({
 
 ## CI/CD 集成（示例）
 
-- 触发：PR、main 合并、夜间计划任务。
-- 任务：
-  - Lint 与类型检查：pnpm lint、pnpm typecheck
-  - 单元/集成测试：pnpm vitest run --coverage
-  - E2E：pnpm playwright test
-  - 报告：上传 coverage 与 Playwright artifacts（trace、screenshot、video）
+- 当前触发：PR、push 到 `main`（限定源码/配置相关路径）、手动 `workflow_dispatch`。
+- 当前任务：
+  - `pnpm install --frozen-lockfile`
+  - `pnpm typecheck`
+  - `pnpm lint`
+  - `pnpm build`
+  - `pnpm test`
+- 尚未纳入 CI：
+  - `pnpm test:coverage`
+  - `pnpm test:e2e`
+  - coverage 与 Playwright artifacts 上传
 
 ## 里程碑与执行清单
 
-- M1：接入 Vitest 与 RTL，完成 10 个核心组件用例与覆盖率门禁。
-- M2：接入 MSW，覆盖查询与表单提交流程的集成测试。
-- M3：接入 Playwright，完成 5 条 Smoke 与 8 条核心回归旅程。
-- M4：打通 CI，按标签执行测试矩阵（浏览器 × 标签 × 环境）。
+- M1：已接入 Vitest 与 RTL；当前已有 Button、Auth settings sync、Exam join sync 等用例。
+- M2：待接入 MSW 或等价网络边界 mock，覆盖查询与表单提交流程的集成测试。
+- M3：已接入 Playwright；当前已有 smoke、join guest、join user、auth regression 等 E2E。
+- M4：已打通基础 CI；待加入覆盖率、E2E、artifact 上传与按标签执行测试矩阵。
 - M5：治理与维护，处理 flaky 用例，形成每周报告与问题清单。
 
 ## 常用命令
@@ -156,28 +164,29 @@ export default defineConfig({
 
 # 单元/集成（watch）
 
-pnpm vitest
+pnpm test
 
 # 单次运行并生成覆盖率
 
-pnpm vitest run --coverage
+pnpm test:coverage
 
 # 端到端
 
-pnpm playwright test
+pnpm test:e2e
 
 # 只跑 Smoke（示例标签）
 
-pnpm playwright test --grep @smoke
+pnpm test:e2e -- --grep @smoke
 ```
 
 ## 实施进展（当前仓库）
 
-- 已接入 Vitest 配置，在 vite.config.ts 启用 jsdom、setupFiles 与覆盖率。
-- 新增全局初始化 test/setup.ts，使用 @testing-library/jest-dom/vitest 扩展断言。
-- 新增 Button 组件的基础测试用例（渲染、className 合并、点击交互）。
-- 首次运行结果：通过 3/3 测试；生成 v8 覆盖率报告（示例：components/ui/button.tsx 为 100% 行/函数覆盖）。
-- 后续计划：按组件邻近策略陆续补齐 Input、Switch、Config Drawer 等关键交互组件测试，并扩展到路由与状态的集成测试。
+- 已接入 Vitest 配置，在 `vite.config.ts` 启用 jsdom、setupFiles 与覆盖率阈值。
+- 新增全局初始化 `test/setup.ts`，使用 `@testing-library/jest-dom/vitest` 扩展断言。
+- 当前单元/集成测试覆盖 Button、Auth settings sync、Exam join sync。
+- 当前 E2E 覆盖 smoke、guest join、user join、auth regression。
+- 当前 CI 覆盖 typecheck、lint、build、unit/integration test。
+- 后续计划：补齐 Exam Mode 抽样/提交、Profile Firebase 保存、题库注册一致性校验，并把 E2E 与 coverage 加入 CI。
 
 ## 成功度量
 
