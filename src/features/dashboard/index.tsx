@@ -298,14 +298,14 @@ export function Dashboard() {
                       <CardDescription>{exam.description}</CardDescription>
                     </CardHeader>
                     <CardContent>
-                      <div className='flex justify-between text-sm text-muted-foreground'>
-                        <span>
+                      <div className='flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-muted-foreground'>
+                        <span className='whitespace-nowrap'>
                           {typeof exam.questionCount === 'number'
                             ? `${exam.questionCount} ${t('common.questions')}`
                             : `${t('common.questions')}: —`}
                         </span>
                         {exam.lastUpdated && (
-                          <span>
+                          <span className='whitespace-nowrap'>
                             {t('common.lastUpdated')}: {exam.lastUpdated}
                           </span>
                         )}
