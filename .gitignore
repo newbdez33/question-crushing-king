@@ -12,6 +12,9 @@ dist
 .env.test.local
 .env.production.local
 
+# Local batch tooling (SAP translation chunks, etc.)
+tmp/
+
 # Testing
 coverage
 test-results/
