@@ -297,15 +297,15 @@ export function Dashboard() {
                       </div>
                       <CardDescription>{exam.description}</CardDescription>
                     </CardHeader>
-                    <CardContent>
-                      <div className='flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-muted-foreground'>
-                        <span className='whitespace-nowrap'>
+                    <CardContent className='mt-auto px-6 pt-4'>
+                      <div className='flex items-end justify-between gap-4 text-sm text-muted-foreground'>
+                        <span>
                           {typeof exam.questionCount === 'number'
                             ? `${exam.questionCount} ${t('common.questions')}`
                             : `${t('common.questions')}: —`}
                         </span>
                         {exam.lastUpdated && (
-                          <span className='whitespace-nowrap'>
+                          <span className='text-right'>
                             {t('common.lastUpdated')}: {exam.lastUpdated}
                           </span>
                         )}
