@@ -180,6 +180,7 @@ When a guest user logs in or signs up:
 
 - Progress: `examtopics_progress/{uid}/{examId}/{questionId}`
 - Settings: `examtopics_progress/{uid}/_settings/{examId}`
+- AI Assistant settings: `examtopics_ai_settings/{uid}` (fields: `baseUrl`, `model`, `apiKey`, `systemPrompt`)
 - Custom Profile: `users/{uid}/profile`
 
 ### Fields

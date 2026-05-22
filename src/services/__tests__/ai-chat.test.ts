@@ -2,12 +2,40 @@ import { describe, it, expect, vi, afterEach } from 'vitest'
 import { parseChatChunk, streamChat } from '../ai-chat'
 
 describe('parseChatChunk', () => {
-  it('extracts assistant delta from a normal SSE payload', () => {
+  it('extracts content from a normal SSE payload', () => {
     expect(
       parseChatChunk(
         JSON.stringify({ choices: [{ delta: { content: 'Hello' } }] })
       )
-    ).toBe('Hello')
+    ).toEqual({ content: 'Hello' })
+  })
+
+  it('extracts reasoning_content (DeepSeek-style)', () => {
+    expect(
+      parseChatChunk(
+        JSON.stringify({
+          choices: [{ delta: { reasoning_content: 'Let me think' } }],
+        })
+      )
+    ).toEqual({ reasoning: 'Let me think' })
+  })
+
+  it('also accepts the alternate "reasoning" field name', () => {
+    expect(
+      parseChatChunk(
+        JSON.stringify({ choices: [{ delta: { reasoning: 'thinking…' } }] })
+      )
+    ).toEqual({ reasoning: 'thinking…' })
+  })
+
+  it('returns both when content and reasoning arrive in the same chunk', () => {
+    expect(
+      parseChatChunk(
+        JSON.stringify({
+          choices: [{ delta: { content: 'A', reasoning_content: 'B' } }],
+        })
+      )
+    ).toEqual({ content: 'A', reasoning: 'B' })
   })
 
   it('returns null for the [DONE] sentinel', () => {
@@ -22,7 +50,7 @@ describe('parseChatChunk', () => {
     expect(parseChatChunk('not json')).toBeNull()
   })
 
-  it('returns null when delta has no content (e.g. role-only chunks)', () => {
+  it('returns null when delta has only a role (no usable text)', () => {
     expect(
       parseChatChunk(JSON.stringify({ choices: [{ delta: { role: 'assistant' } }] }))
     ).toBeNull()
@@ -49,14 +77,14 @@ describe('streamChat', () => {
     globalThis.fetch = originalFetch
   })
 
-  it('yields deltas in order from SSE chunks split across packets', async () => {
+  it('yields content deltas in order, supports mid-line chunk splits', async () => {
+    const fullSecond = JSON.stringify({ choices: [{ delta: { content: ' wo' } }] })
     globalThis.fetch = vi.fn().mockResolvedValue(
       makeStreamResponse([
         `data: ${JSON.stringify({ choices: [{ delta: { content: 'Hel' } }] })}\n`,
         `data: ${JSON.stringify({ choices: [{ delta: { content: 'lo' } }] })}\n`,
-        // chunk split mid-line — the parser must buffer until newline
-        `data: ${JSON.stringify({ choices: [{ delta: { content: ' wo' } }] }).slice(0, 30)}`,
-        `${JSON.stringify({ choices: [{ delta: { content: ' wo' } }] }).slice(30)}\n`,
+        `data: ${fullSecond.slice(0, 30)}`,
+        `${fullSecond.slice(30)}\n`,
         `data: [DONE]\n`,
       ])
     ) as unknown as typeof fetch
@@ -68,9 +96,34 @@ describe('streamChat', () => {
       model: 'm',
       messages: [{ role: 'user', content: 'hi' }],
     })) {
-      out.push(d)
+      if (d.content) out.push(d.content)
     }
     expect(out.join('')).toBe('Hello wo')
+  })
+
+  it('yields reasoning then content for reasoning models', async () => {
+    globalThis.fetch = vi.fn().mockResolvedValue(
+      makeStreamResponse([
+        `data: ${JSON.stringify({ choices: [{ delta: { reasoning_content: 'thinking ' } }] })}\n`,
+        `data: ${JSON.stringify({ choices: [{ delta: { reasoning_content: 'hard' } }] })}\n`,
+        `data: ${JSON.stringify({ choices: [{ delta: { content: 'answer' } }] })}\n`,
+        `data: [DONE]\n`,
+      ])
+    ) as unknown as typeof fetch
+
+    let reasoning = ''
+    let content = ''
+    for await (const d of streamChat({
+      baseUrl: 'http://example/v1',
+      apiKey: 'k',
+      model: 'm',
+      messages: [],
+    })) {
+      if (d.reasoning) reasoning += d.reasoning
+      if (d.content) content += d.content
+    }
+    expect(reasoning).toBe('thinking hard')
+    expect(content).toBe('answer')
   })
 
   it('throws on non-2xx responses', async () => {
