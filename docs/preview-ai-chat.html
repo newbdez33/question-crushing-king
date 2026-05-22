@@ -1,0 +1,505 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>AI Chat Preview — Practice Mode</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      :root {
+        --bg: 0 0% 100%;
+        --fg: 222.2 47.4% 11.2%;
+        --muted: 210 40% 96.1%;
+        --muted-fg: 215.4 16.3% 46.9%;
+        --border: 214.3 31.8% 91.4%;
+        --primary: 222.2 47.4% 11.2%;
+        --primary-fg: 210 40% 98%;
+        --accent: 210 40% 94%;
+        --green-bg: 138 76% 96%;
+        --green-fg: 142 71% 22%;
+        --green-border: 142 71% 45%;
+        --red-bg: 0 86% 97%;
+        --red-fg: 0 70% 35%;
+        --red-border: 0 84% 60%;
+      }
+      body {
+        background: hsl(var(--muted));
+        color: hsl(var(--fg));
+        font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+          "Helvetica Neue", Arial, sans-serif;
+      }
+      .card {
+        background: hsl(var(--bg));
+        border: 1px solid hsl(var(--border));
+        border-radius: 12px;
+        box-shadow:
+          0 1px 2px rgba(0, 0, 0, 0.04),
+          0 1px 1px rgba(0, 0, 0, 0.02);
+      }
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        padding: 2px 8px;
+        font-size: 12px;
+        border: 1px solid hsl(var(--border));
+        border-radius: 999px;
+        line-height: 1.4;
+        color: hsl(var(--fg));
+        background: hsl(var(--bg));
+      }
+      .badge-secondary {
+        background: hsl(var(--muted));
+      }
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        padding: 8px 14px;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 500;
+        border: 1px solid transparent;
+        cursor: pointer;
+        transition: background 0.15s;
+      }
+      .btn-primary {
+        background: hsl(var(--primary));
+        color: hsl(var(--primary-fg));
+      }
+      .btn-primary:hover {
+        opacity: 0.92;
+      }
+      .btn-outline {
+        background: hsl(var(--bg));
+        border-color: hsl(var(--border));
+      }
+      .btn-outline:hover {
+        background: hsl(var(--muted));
+      }
+      .btn-ghost:hover {
+        background: hsl(var(--muted));
+      }
+      .option {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        padding: 12px 14px;
+        border: 1px solid hsl(var(--border));
+        border-radius: 10px;
+        transition: background 0.15s;
+      }
+      .option-letter {
+        flex: none;
+        width: 28px;
+        height: 28px;
+        border-radius: 999px;
+        border: 1px solid hsl(var(--muted-fg));
+        font-size: 12px;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .option.correct {
+        background: hsl(var(--green-bg));
+        border-color: hsl(var(--green-border));
+      }
+      .option.wrong {
+        background: hsl(var(--red-bg));
+        border-color: hsl(var(--red-border));
+      }
+      .feedback-green {
+        background: hsl(var(--green-bg));
+        color: hsl(var(--green-fg));
+        border-radius: 10px;
+        padding: 14px 16px;
+      }
+      .msg-user {
+        background: hsl(var(--primary));
+        color: hsl(var(--primary-fg));
+        border-radius: 14px 14px 4px 14px;
+        padding: 10px 14px;
+        max-width: 85%;
+        line-height: 1.5;
+        font-size: 14px;
+      }
+      .msg-assistant {
+        background: hsl(var(--muted));
+        border-radius: 14px 14px 14px 4px;
+        padding: 10px 14px;
+        max-width: 90%;
+        line-height: 1.55;
+        font-size: 14px;
+      }
+      .msg-assistant code {
+        background: hsl(var(--bg));
+        border: 1px solid hsl(var(--border));
+        padding: 1px 5px;
+        border-radius: 4px;
+        font-size: 12.5px;
+      }
+      .input,
+      .textarea {
+        width: 100%;
+        background: hsl(var(--bg));
+        border: 1px solid hsl(var(--border));
+        border-radius: 8px;
+        padding: 8px 12px;
+        font-size: 14px;
+        outline: none;
+      }
+      .input:focus,
+      .textarea:focus {
+        border-color: hsl(var(--fg) / 0.4);
+        box-shadow: 0 0 0 3px hsl(var(--fg) / 0.05);
+      }
+      .label {
+        font-size: 13px;
+        font-weight: 500;
+        margin-bottom: 6px;
+        display: block;
+      }
+      .hint {
+        font-size: 12px;
+        color: hsl(var(--muted-fg));
+        margin-top: 4px;
+      }
+      .ai-dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 999px;
+        background: #22c55e;
+        display: inline-block;
+        margin-right: 6px;
+      }
+      .ai-pulse::after {
+        content: "▍";
+        display: inline-block;
+        animation: blink 1s infinite;
+        margin-left: 2px;
+      }
+      @keyframes blink {
+        0%, 50% { opacity: 1; }
+        51%, 100% { opacity: 0; }
+      }
+      .sidebar-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 8px 12px;
+        font-size: 14px;
+        border-radius: 8px;
+        color: hsl(var(--fg));
+      }
+      .sidebar-item:hover { background: hsl(var(--muted)); }
+      .sidebar-item.active {
+        background: hsl(var(--muted));
+        font-weight: 500;
+      }
+      .icon {
+        width: 16px;
+        height: 16px;
+        stroke: currentColor;
+        fill: none;
+        stroke-width: 2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+      .toggle-bar {
+        display: inline-flex;
+        background: hsl(var(--bg));
+        border: 1px solid hsl(var(--border));
+        border-radius: 8px;
+        padding: 3px;
+        gap: 3px;
+      }
+      .toggle-bar button {
+        padding: 6px 14px;
+        font-size: 13px;
+        border-radius: 6px;
+        border: none;
+        background: transparent;
+        cursor: pointer;
+      }
+      .toggle-bar button.active {
+        background: hsl(var(--fg));
+        color: hsl(var(--bg));
+      }
+    </style>
+  </head>
+  <body class="min-h-screen">
+    <div class="max-w-6xl mx-auto p-4 sm:p-8">
+      <div class="flex items-center justify-between mb-6">
+        <div>
+          <h1 class="text-xl font-semibold">AI Chat — Static Preview</h1>
+          <p class="text-sm text-[hsl(var(--muted-fg))]">
+            Practice mode chat panel + AI Assistant settings page.
+          </p>
+        </div>
+        <div class="toggle-bar" id="viewToggle">
+          <button class="active" data-view="practice">Practice mode</button>
+          <button data-view="settings">Settings</button>
+        </div>
+      </div>
+
+      <!-- ========================== PRACTICE VIEW ========================== -->
+      <section id="view-practice" class="space-y-4">
+        <!-- Question Card (existing) -->
+        <div class="card p-5 sm:p-6">
+          <div class="flex items-start justify-between gap-3">
+            <div class="flex flex-wrap gap-2">
+              <span class="badge">Question 14 of 220</span>
+              <span class="badge badge-secondary">Single answer</span>
+            </div>
+            <button class="btn btn-ghost p-2" title="Bookmark">
+              <svg class="icon" viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+            </button>
+          </div>
+          <p class="mt-3 leading-relaxed">
+            A company hosts a static website on Amazon S3 and wants to serve it
+            globally with low latency, HTTPS, and the ability to invalidate
+            cached objects on demand. Which combination of AWS services should
+            the solutions architect recommend?
+          </p>
+
+          <div class="mt-5 space-y-2.5">
+            <div class="option wrong">
+              <div class="option-letter">A</div>
+              <div class="flex-1 text-sm">S3 + AWS Global Accelerator</div>
+              <svg class="icon text-red-600" viewBox="0 0 24 24" stroke="#dc2626"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg>
+            </div>
+            <div class="option correct">
+              <div class="option-letter" style="background:#0f172a;color:#fff;border-color:#0f172a">B</div>
+              <div class="flex-1 text-sm">S3 + Amazon CloudFront + ACM certificate</div>
+              <svg class="icon" viewBox="0 0 24 24" stroke="#16a34a"><path d="M20 6L9 17l-5-5"/></svg>
+            </div>
+            <div class="option">
+              <div class="option-letter">C</div>
+              <div class="flex-1 text-sm">S3 + Route 53 latency-based routing only</div>
+            </div>
+            <div class="option">
+              <div class="option-letter">D</div>
+              <div class="flex-1 text-sm">EC2 behind an Application Load Balancer</div>
+            </div>
+          </div>
+
+          <div class="feedback-green mt-5">
+            <p class="font-semibold">Correct answer ✓</p>
+            <div class="mt-1.5 flex gap-6 text-sm">
+              <p><span class="font-semibold">Correct:</span> B</p>
+              <p><span class="font-semibold">Your answer:</span> B</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============= NEW: AI Chat Panel ============= -->
+        <div class="card overflow-hidden">
+          <!-- Panel header -->
+          <div class="flex items-center justify-between px-5 py-3 border-b border-[hsl(var(--border))]">
+            <div class="flex items-center gap-2">
+              <svg class="icon" viewBox="0 0 24 24" stroke="#9333ea"><path d="M12 3l1.9 5.8L20 10l-5 4 1.5 6L12 17l-4.5 3L9 14l-5-4 6.1-1.2z"/></svg>
+              <span class="font-medium text-sm">AI Explanation</span>
+              <span class="ai-dot"></span>
+              <span class="text-xs text-[hsl(var(--muted-fg))]">gpt-4o-mini</span>
+            </div>
+            <div class="flex items-center gap-1">
+              <button class="btn btn-ghost p-2" title="New thread">
+                <svg class="icon" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg>
+              </button>
+              <button class="btn btn-ghost p-2" title="Open AI settings">
+                <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- Messages -->
+          <div class="px-5 py-4 space-y-3 max-h-[420px] overflow-y-auto">
+            <div class="flex justify-end">
+              <div class="msg-user">
+                Please explain why <b>B</b> is correct and why the others are
+                wrong.
+              </div>
+            </div>
+
+            <div class="flex justify-start">
+              <div class="msg-assistant">
+                <b>Why B is correct.</b> Amazon CloudFront is a CDN that fronts
+                your S3 origin, terminates TLS using an ACM certificate, and
+                supports on-demand cache invalidation. That covers the three
+                requirements: <code>global low latency</code>,
+                <code>HTTPS</code>, and <code>invalidate cached objects</code>.
+                <br /><br />
+                <b>Why the others are wrong.</b>
+                <ul class="list-disc pl-5 mt-1 space-y-1">
+                  <li><b>A.</b> Global Accelerator routes TCP/UDP to regional endpoints; it does not cache static content or expose invalidation.</li>
+                  <li><b>C.</b> Route 53 latency-based routing only chooses an endpoint — it doesn't cache or provide HTTPS for S3 websites.</li>
+                  <li><b>D.</b> EC2 + ALB is over-provisioned for static content and lacks edge caching.</li>
+                </ul>
+                <span class="ai-pulse"></span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Composer -->
+          <div class="border-t border-[hsl(var(--border))] p-3 sm:p-4 bg-[hsl(var(--muted))]/40">
+            <div class="flex items-center gap-2 mb-2 flex-wrap">
+              <button class="btn btn-outline text-xs">
+                <svg class="icon" viewBox="0 0 24 24"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+                Explain this question
+              </button>
+              <button class="btn btn-outline text-xs">Compare A vs B</button>
+              <button class="btn btn-outline text-xs">Give me a hint</button>
+            </div>
+            <div class="flex items-end gap-2">
+              <textarea
+                rows="1"
+                placeholder="Ask a follow-up about this question…"
+                class="textarea resize-none"
+              ></textarea>
+              <button class="btn btn-primary" title="Send">
+                <svg class="icon" viewBox="0 0 24 24" stroke="currentColor"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4z"/></svg>
+              </button>
+            </div>
+            <p class="hint">
+              Uses your API key from
+              <a class="underline" href="#" data-go="settings">Settings → AI Assistant</a>.
+              Conversations stay in your browser.
+            </p>
+          </div>
+        </div>
+
+        <!-- Empty-state variant (shown stacked for design reference) -->
+        <details class="card p-5">
+          <summary class="cursor-pointer text-sm font-medium select-none">
+            Variant: empty state (no API key configured)
+          </summary>
+          <div class="mt-4 flex flex-col items-center text-center gap-3 py-6">
+            <svg class="icon w-8 h-8" viewBox="0 0 24 24" stroke="#9333ea"><path d="M12 3l1.9 5.8L20 10l-5 4 1.5 6L12 17l-4.5 3L9 14l-5-4 6.1-1.2z"/></svg>
+            <p class="text-sm font-medium">AI explanations are off</p>
+            <p class="text-xs text-[hsl(var(--muted-fg))] max-w-sm">
+              Add your OpenAI-compatible API key to get explanations and ask
+              follow-up questions about any practice item.
+            </p>
+            <button class="btn btn-primary" data-go="settings">Open AI settings</button>
+          </div>
+        </details>
+      </section>
+
+      <!-- ========================== SETTINGS VIEW ========================== -->
+      <section id="view-settings" class="hidden">
+        <div class="card p-4 sm:p-6">
+          <h2 class="text-2xl font-bold tracking-tight">Settings</h2>
+          <p class="text-[hsl(var(--muted-fg))] text-sm">
+            Manage your account and AI explanation preferences.
+          </p>
+          <hr class="my-5 border-[hsl(var(--border))]" />
+
+          <div class="flex flex-col lg:flex-row gap-6">
+            <aside class="lg:w-56 shrink-0">
+              <nav class="flex lg:flex-col gap-1">
+                <a class="sidebar-item" href="#">
+                  <svg class="icon" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                  Profile
+                </a>
+                <a class="sidebar-item" href="#">
+                  <svg class="icon" viewBox="0 0 24 24"><path d="M14.7 6.3a4 4 0 1 0-5 5L2 19l3 3 7.7-7.7a4 4 0 0 0 5-5l-2 2-1.8-1.8z"/></svg>
+                  Account
+                </a>
+                <a class="sidebar-item" href="#">
+                  <svg class="icon" viewBox="0 0 24 24"><circle cx="13.5" cy="6.5" r=".5"/><circle cx="17.5" cy="10.5" r=".5"/><circle cx="8.5" cy="7.5" r=".5"/><circle cx="6.5" cy="12.5" r=".5"/><path d="M12 2a10 10 0 0 0 0 20 2.5 2.5 0 0 0 2-4 2.5 2.5 0 0 1 2-4h2a4 4 0 0 0 4-4 10 10 0 0 0-10-8z"/></svg>
+                  Appearance
+                </a>
+                <a class="sidebar-item active" href="#">
+                  <svg class="icon" viewBox="0 0 24 24"><path d="M12 3l1.9 5.8L20 10l-5 4 1.5 6L12 17l-4.5 3L9 14l-5-4 6.1-1.2z"/></svg>
+                  AI Assistant
+                </a>
+              </nav>
+            </aside>
+
+            <div class="flex-1 max-w-2xl">
+              <h3 class="text-lg font-semibold">AI Assistant</h3>
+              <p class="text-sm text-[hsl(var(--muted-fg))]">
+                Configure an OpenAI-compatible endpoint to power in-app
+                explanations. Your key is stored only in this browser.
+              </p>
+              <hr class="my-4 border-[hsl(var(--border))]" />
+
+              <div class="space-y-5">
+                <div>
+                  <label class="label">Base URL</label>
+                  <input class="input" value="https://api.openai.com/v1" />
+                  <p class="hint">
+                    Any OpenAI-compatible endpoint works (OpenAI, Azure
+                    OpenAI, OpenRouter, Groq, Ollama, …). Must end in
+                    <code>/v1</code>.
+                  </p>
+                </div>
+
+                <div>
+                  <label class="label">Model ID</label>
+                  <input class="input" value="gpt-4o-mini" />
+                  <p class="hint">Example: <code>gpt-4o-mini</code>, <code>gpt-4.1</code>, <code>llama3.1:8b</code>.</p>
+                </div>
+
+                <div>
+                  <label class="label">API Key</label>
+                  <div class="flex gap-2">
+                    <input class="input flex-1" type="password" value="sk-************************" />
+                    <button class="btn btn-outline" type="button">Show</button>
+                  </div>
+                  <p class="hint">
+                    Stored in <code>localStorage</code>. Never sent to our
+                    servers — calls go directly from your browser to the
+                    endpoint above.
+                  </p>
+                </div>
+
+                <div>
+                  <label class="label">System / Instruction Prompt</label>
+                  <textarea class="textarea" rows="4">You are a helpful AWS certification tutor. When given a question, explain why the correct answer is right and why each wrong option is wrong, in plain language. Use short bullet points.</textarea>
+                  <p class="hint">This is prepended to every chat as the system message.</p>
+                </div>
+
+                <div class="flex items-center justify-between border-t border-[hsl(var(--border))] pt-4">
+                  <button class="btn btn-outline" type="button">Test connection</button>
+                  <div class="flex gap-2">
+                    <button class="btn btn-ghost" type="button">Reset to defaults</button>
+                    <button class="btn btn-primary" type="button">Save</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <script>
+      const buttons = document.querySelectorAll("#viewToggle button");
+      const views = {
+        practice: document.getElementById("view-practice"),
+        settings: document.getElementById("view-settings"),
+      };
+      function show(view) {
+        for (const k of Object.keys(views)) {
+          views[k].classList.toggle("hidden", k !== view);
+        }
+        buttons.forEach((b) =>
+          b.classList.toggle("active", b.dataset.view === view)
+        );
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+      buttons.forEach((b) => b.addEventListener("click", () => show(b.dataset.view)));
+      document
+        .querySelectorAll('[data-go="settings"]')
+        .forEach((el) =>
+          el.addEventListener("click", (e) => {
+            e.preventDefault();
+            show("settings");
+          })
+        );
+    </script>
+  </body>
+</html>
