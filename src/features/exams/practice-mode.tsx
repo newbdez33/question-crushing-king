@@ -44,6 +44,7 @@ import {
   getLocalizedExplanation,
   getLocalizedText,
 } from '@/context/language-provider'
+import { AiChatPanel } from './components/ai-chat-panel'
 import { PracticeMobileBar } from './components/practice-mobile-bar'
 import {
   PracticeSidebar,
@@ -1351,6 +1352,42 @@ export function PracticeMode({
                 </Button>
               </CardFooter>
             </Card>
+            {isSubmitted && question && (
+              <AiChatPanel
+                context={{
+                  questionId: question.id,
+                  questionText: htmlToText(
+                    getLocalizedText(
+                      question.contentHtml ?? question.text,
+                      question.contents,
+                      language
+                    )
+                  ),
+                  options: question.options.map((opt, idx) => ({
+                    letter: String.fromCharCode(65 + idx),
+                    text: htmlToText(
+                      getLocalizedText(
+                        opt.html ?? opt.text,
+                        opt.contents,
+                        language
+                      )
+                    ),
+                  })),
+                  correctLetters: question.correctAnswers.map((i) =>
+                    String.fromCharCode(65 + i)
+                  ),
+                  userSelectedLetters: selectedAnswers
+                    .slice()
+                    .sort((a, b) => a - b)
+                    .map((i) => String.fromCharCode(65 + i)),
+                  language,
+                  builtinExplanation: getLocalizedExplanation(
+                    question.explanations,
+                    language
+                  ),
+                }}
+              />
+            )}
           </Main>
           <div className='h-[calc(var(--mobile-bar-height,0px)+env(safe-area-inset-bottom)+0.5rem)] lg:hidden' />
         </div>
