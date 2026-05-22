@@ -1,5 +1,5 @@
 import { Outlet } from '@tanstack/react-router'
-import { Palette, Wrench, UserCog } from 'lucide-react'
+import { Palette, Sparkles, Wrench, UserCog } from 'lucide-react'
 import { Separator } from '@/components/ui/separator'
 import { ConfigDrawer } from '@/components/config-drawer'
 import { Header } from '@/components/layout/header'
@@ -29,6 +29,11 @@ export function Settings() {
       title: t('settings.appearance'),
       href: '/settings/appearance',
       icon: <Palette size={18} />,
+    },
+    {
+      title: t('settings.ai.title'),
+      href: '/settings/ai',
+      icon: <Sparkles size={18} />,
     },
   ]
 
