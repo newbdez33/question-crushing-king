@@ -3,6 +3,13 @@ export interface ChatMessage {
   content: string
 }
 
+export interface ChatDelta {
+  /** Final answer tokens, accumulated by the UI as the visible assistant reply. */
+  content?: string
+  /** Chain-of-thought tokens emitted by reasoning models (DeepSeek, o1-style). */
+  reasoning?: string
+}
+
 export interface StreamChatOptions {
   baseUrl: string
   apiKey: string
@@ -18,28 +25,37 @@ function joinUrl(base: string, path: string) {
 
 /**
  * Parse a single SSE data line content from an OpenAI-compatible chat completion
- * chunk and return the assistant text delta (or null if nothing to emit).
+ * chunk. Returns the content/reasoning deltas, or null if there's nothing useful.
  */
-export function parseChatChunk(data: string): string | null {
+export function parseChatChunk(data: string): ChatDelta | null {
   if (!data || data === '[DONE]') return null
   try {
     const json = JSON.parse(data) as {
-      choices?: Array<{ delta?: { content?: string } }>
+      choices?: Array<{
+        delta?: { content?: string; reasoning_content?: string; reasoning?: string }
+      }>
     }
-    const delta = json.choices?.[0]?.delta?.content
-    return delta ?? null
+    const delta = json.choices?.[0]?.delta
+    if (!delta) return null
+    const content = delta.content
+    const reasoning = delta.reasoning_content ?? delta.reasoning
+    if (!content && !reasoning) return null
+    const out: ChatDelta = {}
+    if (content) out.content = content
+    if (reasoning) out.reasoning = reasoning
+    return out
   } catch {
     return null
   }
 }
 
 /**
- * Stream a chat completion. Yields text deltas as they arrive.
+ * Stream a chat completion. Yields {content, reasoning} deltas as they arrive.
  * Throws on non-2xx or network errors. Honors the provided AbortSignal.
  */
 export async function* streamChat(
   options: StreamChatOptions
-): AsyncGenerator<string, void, void> {
+): AsyncGenerator<ChatDelta, void, void> {
   const { baseUrl, apiKey, model, messages, signal } = options
   const url = joinUrl(baseUrl, '/chat/completions')
 

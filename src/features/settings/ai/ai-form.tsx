@@ -75,8 +75,9 @@ export function AiSettingsForm() {
     setTesting(true)
     try {
       const controller = new AbortController()
-      const timer = setTimeout(() => controller.abort(), 20000)
-      let received = ''
+      const timer = setTimeout(() => controller.abort(), 60000)
+      let content = ''
+      let reasoning = ''
       for await (const delta of streamChat({
         baseUrl: values.baseUrl,
         apiKey: values.apiKey,
@@ -87,16 +88,29 @@ export function AiSettingsForm() {
         ],
         signal: controller.signal,
       })) {
-        received += delta
-        if (received.length > 32) break
+        if (delta.content) content += delta.content
+        if (delta.reasoning) reasoning += delta.reasoning
+        // Stop as soon as we have proof of life: any final content,
+        // or enough reasoning to confirm the stream is alive.
+        if (content.length > 0 || reasoning.length > 64) {
+          controller.abort()
+          break
+        }
       }
       clearTimeout(timer)
-      if (received.trim().length === 0) {
+      const preview = (content || reasoning).trim().slice(0, 80)
+      if (!preview) {
         toast.warning(t('settings.ai.testEmpty'))
       } else {
-        toast.success(t('settings.ai.testOk'), { description: received.trim().slice(0, 80) })
+        toast.success(t('settings.ai.testOk'), { description: preview })
       }
     } catch (err) {
+      // The proof-of-life early-exit uses `break` (no throw), so any AbortError
+      // reaching here is the 60s timeout firing — surface it as "no response".
+      if ((err as { name?: string })?.name === 'AbortError') {
+        toast.warning(t('settings.ai.testEmpty'))
+        return
+      }
       const msg = err instanceof Error ? err.message : String(err)
       toast.error(t('settings.ai.testFailed'), { description: msg })
     } finally {

@@ -276,6 +276,8 @@ const translations: Record<Language, Record<string, string>> = {
     'practice.ai.openSettings': 'Open AI settings',
     'practice.ai.emptyTitle': 'AI explanations are off',
     'practice.ai.emptyDesc': 'Add an OpenAI-compatible API key to get explanations and ask follow-up questions.',
+    'practice.ai.thinking': 'Thinking…',
+    'practice.ai.thoughts': 'Thoughts',
 
     // Common components
     'common.search': 'Search',
@@ -558,6 +560,8 @@ const translations: Record<Language, Record<string, string>> = {
     'practice.ai.openSettings': '打开 AI 设置',
     'practice.ai.emptyTitle': 'AI 解释未启用',
     'practice.ai.emptyDesc': '添加 OpenAI 兼容的 API Key 后即可获得解释并继续追问。',
+    'practice.ai.thinking': '思考中…',
+    'practice.ai.thoughts': '思考过程',
 
     // Common components
     'common.search': '搜索',
@@ -840,6 +844,8 @@ const translations: Record<Language, Record<string, string>> = {
     'practice.ai.openSettings': 'AI 設定を開く',
     'practice.ai.emptyTitle': 'AI 解説は無効です',
     'practice.ai.emptyDesc': 'OpenAI 互換の API キーを設定すると、解説や追加の質問が利用できます。',
+    'practice.ai.thinking': '思考中…',
+    'practice.ai.thoughts': '思考プロセス',
 
     // Common components
     'common.search': '検索',
@@ -1122,6 +1128,8 @@ const translations: Record<Language, Record<string, string>> = {
     'practice.ai.openSettings': '開啟 AI 設定',
     'practice.ai.emptyTitle': 'AI 解釋未啟用',
     'practice.ai.emptyDesc': '新增 OpenAI 相容的 API 金鑰後即可取得解釋並繼續追問。',
+    'practice.ai.thinking': '思考中…',
+    'practice.ai.thoughts': '思考過程',
 
     // Common components
     'common.search': '搜尋',
