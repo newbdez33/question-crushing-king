@@ -1,5 +1,6 @@
 export interface QuestionContext {
   questionId: string
+  examId: string
   questionText: string
   options: { letter: string; text: string }[]
   correctLetters: string[]

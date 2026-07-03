@@ -9,6 +9,7 @@ import {
 function makeCtx(overrides: Partial<QuestionContext> = {}): QuestionContext {
   return {
     questionId: 'q1',
+    examId: 'e1',
     questionText: 'What does S3 stand for?',
     options: [
       { letter: 'A', text: 'Simple Storage Service' },

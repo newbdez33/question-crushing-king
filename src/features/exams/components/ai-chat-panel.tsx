@@ -17,6 +17,7 @@ import {
   type AiSettings,
 } from '@/services/ai-settings'
 import { streamChat, type ChatMessage } from '@/services/ai-chat'
+import { AiChatHistoryService } from '@/services/ai-chat-history'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
@@ -52,20 +53,41 @@ export function AiChatPanel({ context }: AiChatPanelProps) {
   const abortRef = useRef<AbortController | null>(null)
   const scrollRef = useRef<HTMLDivElement | null>(null)
 
-  // Load settings + reset thread when question changes
+  // Load settings for the signed-in (or guest) user.
   useEffect(() => {
     if (userId) setSettings(AiSettingsService.get(userId))
   }, [userId])
 
+  // Restore any saved thread when the question (or user) changes.
   useEffect(() => {
-    setMessages([])
-    setInput('')
-    setError(null)
     abortRef.current?.abort()
     abortRef.current = null
     setStreaming(false)
     setStreamingId(null)
-  }, [context.questionId])
+    setInput('')
+    setError(null)
+    const saved = userId
+      ? AiChatHistoryService.get(userId, context.examId, context.questionId)
+      : []
+    setMessages(
+      saved.map((m) => ({ id: m.id, role: m.role, content: m.content }))
+    )
+  }, [context.examId, context.questionId, userId])
+
+  // Persist a completed thread so it can be restored on return to this question.
+  const wasStreamingRef = useRef(false)
+  useEffect(() => {
+    const justFinished = wasStreamingRef.current && !streaming
+    wasStreamingRef.current = streaming
+    if (!justFinished || !userId || messages.length === 0) return
+    AiChatHistoryService.save(
+      userId,
+      context.examId,
+      context.questionId,
+      messages.map((m) => ({ id: m.id, role: m.role, content: m.content })),
+      Date.now()
+    )
+  }, [streaming, messages, userId, context.examId, context.questionId])
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -182,6 +204,9 @@ export function AiChatPanel({ context }: AiChatPanelProps) {
     setMessages([])
     setInput('')
     setError(null)
+    if (userId) {
+      AiChatHistoryService.clear(userId, context.examId, context.questionId)
+    }
   }
 
   if (!settings) {
