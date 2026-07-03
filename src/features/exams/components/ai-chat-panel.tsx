@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { Link } from '@tanstack/react-router'
 import {
+  Brain,
+  ChevronDown,
   Loader2,
   RotateCcw,
   Send,
@@ -37,6 +39,8 @@ interface UiMessage {
   id: string
   role: 'user' | 'assistant'
   content: string
+  /** Chain-of-thought stream from reasoning models (DeepSeek, o1-style). */
+  reasoning?: string
 }
 
 function buildInitialUserPrompt(ctx: QuestionContext): string {
@@ -100,6 +104,7 @@ export function AiChatPanel({ context }: AiChatPanelProps) {
     abortRef.current?.abort()
     abortRef.current = null
     setStreaming(false)
+    setStreamingId(null)
   }, [context.questionId])
 
   useEffect(() => {
@@ -113,15 +118,19 @@ export function AiChatPanel({ context }: AiChatPanelProps) {
     [settings]
   )
 
+  const [streamingId, setStreamingId] = useState<string | null>(null)
+
   const runChat = async (history: UiMessage[]) => {
     if (!settings) return
     setError(null)
     setStreaming(true)
     const assistantId = `a-${Date.now()}`
+    setStreamingId(assistantId)
     setMessages((m) => [...m, { id: assistantId, role: 'assistant', content: '' }])
 
     const controller = new AbortController()
     abortRef.current = controller
+    // Reasoning is internal to the model; never send it back as history.
     const apiMessages: ChatMessage[] = [
       { role: 'system', content: settings.systemPrompt || '' },
       ...history.map((m) => ({ role: m.role, content: m.content })),
@@ -138,7 +147,11 @@ export function AiChatPanel({ context }: AiChatPanelProps) {
         setMessages((m) =>
           m.map((msg) =>
             msg.id === assistantId
-              ? { ...msg, content: msg.content + delta }
+              ? {
+                  ...msg,
+                  content: msg.content + (delta.content ?? ''),
+                  reasoning: (msg.reasoning ?? '') + (delta.reasoning ?? ''),
+                }
               : msg
           )
         )
@@ -149,10 +162,18 @@ export function AiChatPanel({ context }: AiChatPanelProps) {
       } else {
         const msg = err instanceof Error ? err.message : String(err)
         setError(msg)
-        setMessages((m) => m.filter((msg) => msg.id !== assistantId || msg.content.length > 0))
+        setMessages((m) =>
+          m.filter(
+            (msg) =>
+              msg.id !== assistantId ||
+              msg.content.length > 0 ||
+              (msg.reasoning?.length ?? 0) > 0
+          )
+        )
       }
     } finally {
       setStreaming(false)
+      setStreamingId(null)
       abortRef.current = null
     }
   }
@@ -262,31 +283,55 @@ export function AiChatPanel({ context }: AiChatPanelProps) {
                 {t('practice.ai.hint')}
               </p>
             )}
-            {messages.map((msg) => (
-              <div
-                key={msg.id}
-                className={cn(
-                  'flex',
-                  msg.role === 'user' ? 'justify-end' : 'justify-start'
-                )}
-              >
-                <div
-                  className={cn(
-                    'whitespace-pre-wrap rounded-2xl px-3 py-2 text-sm leading-relaxed',
-                    msg.role === 'user'
-                      ? 'max-w-[85%] rounded-br-sm bg-primary text-primary-foreground'
-                      : 'max-w-[92%] rounded-bl-sm bg-muted'
-                  )}
-                >
-                  {msg.role === 'user'
-                    ? // hide the bulky structured prompt; show friendly label
-                      msg.content.startsWith('Question:\n')
-                      ? t('practice.ai.explainPrompt')
-                      : msg.content
-                    : msg.content || (streaming ? '…' : '')}
+            {messages.map((msg) => {
+              if (msg.role === 'user') {
+                return (
+                  <div key={msg.id} className='flex justify-end'>
+                    <div className='whitespace-pre-wrap rounded-2xl rounded-br-sm bg-primary px-3 py-2 text-sm leading-relaxed text-primary-foreground max-w-[85%]'>
+                      {msg.content.startsWith('Question:\n')
+                        ? t('practice.ai.explainPrompt')
+                        : msg.content}
+                    </div>
+                  </div>
+                )
+              }
+              const isStreamingThis = streamingId === msg.id
+              const thinking =
+                isStreamingThis && !msg.content && (msg.reasoning?.length ?? 0) > 0
+              return (
+                <div key={msg.id} className='flex justify-start'>
+                  <div className='max-w-[92%] space-y-2'>
+                    {msg.reasoning && (
+                      <details
+                        className='rounded-lg border border-dashed border-muted-foreground/30 bg-muted/40 px-3 py-2 text-xs text-muted-foreground'
+                        open={thinking}
+                      >
+                        <summary className='flex cursor-pointer list-none items-center gap-1.5 font-medium select-none [&::-webkit-details-marker]:hidden'>
+                          <Brain
+                            className={cn(
+                              'h-3.5 w-3.5',
+                              thinking && 'animate-pulse text-purple-500'
+                            )}
+                          />
+                          {thinking
+                            ? t('practice.ai.thinking')
+                            : t('practice.ai.thoughts')}
+                          <ChevronDown className='ml-auto h-3 w-3 transition-transform [details[open]>summary>&]:rotate-180' />
+                        </summary>
+                        <div className='mt-2 whitespace-pre-wrap leading-relaxed'>
+                          {msg.reasoning}
+                        </div>
+                      </details>
+                    )}
+                    {(msg.content || !msg.reasoning) && (
+                      <div className='whitespace-pre-wrap rounded-2xl rounded-bl-sm bg-muted px-3 py-2 text-sm leading-relaxed'>
+                        {msg.content || (isStreamingThis ? '…' : '')}
+                      </div>
+                    )}
+                  </div>
                 </div>
-              </div>
-            ))}
+              )
+            })}
             {error && (
               <div className='rounded-md border border-destructive/40 bg-destructive/10 px-3 py-2 text-xs text-destructive'>
                 {error}
