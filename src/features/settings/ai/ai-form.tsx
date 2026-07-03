@@ -105,8 +105,12 @@ export function AiSettingsForm() {
         toast.success(t('settings.ai.testOk'), { description: preview })
       }
     } catch (err) {
-      // AbortError after we got a sample is a successful early-exit, not a failure.
-      if ((err as { name?: string })?.name === 'AbortError') return
+      // The proof-of-life early-exit uses `break` (no throw), so any AbortError
+      // reaching here is the 60s timeout firing — surface it as "no response".
+      if ((err as { name?: string })?.name === 'AbortError') {
+        toast.warning(t('settings.ai.testEmpty'))
+        return
+      }
       const msg = err instanceof Error ? err.message : String(err)
       toast.error(t('settings.ai.testFailed'), { description: msg })
     } finally {
