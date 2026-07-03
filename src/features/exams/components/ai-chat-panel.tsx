@@ -17,19 +17,16 @@ import {
   type AiSettings,
 } from '@/services/ai-settings'
 import { streamChat, type ChatMessage } from '@/services/ai-chat'
+import { AiChatHistoryService } from '@/services/ai-chat-history'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
-
-interface QuestionContext {
-  questionId: string
-  questionText: string
-  options: { letter: string; text: string }[]
-  correctLetters: string[]
-  userSelectedLetters: string[]
-  language: string
-  builtinExplanation?: string
-}
+import {
+  buildExplainInstruction,
+  buildSystemPrompt,
+  type QuestionContext,
+} from './ai-chat-prompt'
+import { MarkdownMessage } from './markdown-message'
 
 interface AiChatPanelProps {
   context: QuestionContext
@@ -41,42 +38,6 @@ interface UiMessage {
   content: string
   /** Chain-of-thought stream from reasoning models (DeepSeek, o1-style). */
   reasoning?: string
-}
-
-function buildInitialUserPrompt(ctx: QuestionContext): string {
-  const lines: string[] = []
-  lines.push('Question:')
-  lines.push(ctx.questionText)
-  lines.push('')
-  lines.push('Options:')
-  ctx.options.forEach((o) => {
-    lines.push(`${o.letter}. ${o.text}`)
-  })
-  lines.push('')
-  lines.push(`Correct answer: ${ctx.correctLetters.join(', ')}`)
-  if (ctx.userSelectedLetters.length > 0) {
-    lines.push(`My answer: ${ctx.userSelectedLetters.join(', ')}`)
-  }
-  if (ctx.builtinExplanation) {
-    lines.push('')
-    lines.push(`Existing explanation (for reference): ${ctx.builtinExplanation}`)
-  }
-  lines.push('')
-  lines.push(
-    'Please explain why the correct answer is right and why each other option is wrong, in plain language.'
-  )
-  if (ctx.language && ctx.language !== 'en') {
-    const langName =
-      ctx.language === 'zh'
-        ? 'Simplified Chinese'
-        : ctx.language === 'zh-TC'
-          ? 'Traditional Chinese'
-          : ctx.language === 'ja'
-            ? 'Japanese'
-            : ctx.language
-    lines.push(`Respond in ${langName}.`)
-  }
-  return lines.join('\n')
 }
 
 export function AiChatPanel({ context }: AiChatPanelProps) {
@@ -92,20 +53,41 @@ export function AiChatPanel({ context }: AiChatPanelProps) {
   const abortRef = useRef<AbortController | null>(null)
   const scrollRef = useRef<HTMLDivElement | null>(null)
 
-  // Load settings + reset thread when question changes
+  // Load settings for the signed-in (or guest) user.
   useEffect(() => {
     if (userId) setSettings(AiSettingsService.get(userId))
   }, [userId])
 
+  // Restore any saved thread when the question (or user) changes.
   useEffect(() => {
-    setMessages([])
-    setInput('')
-    setError(null)
     abortRef.current?.abort()
     abortRef.current = null
     setStreaming(false)
     setStreamingId(null)
-  }, [context.questionId])
+    setInput('')
+    setError(null)
+    const saved = userId
+      ? AiChatHistoryService.get(userId, context.examId, context.questionId)
+      : []
+    setMessages(
+      saved.map((m) => ({ id: m.id, role: m.role, content: m.content }))
+    )
+  }, [context.examId, context.questionId, userId])
+
+  // Persist a completed thread so it can be restored on return to this question.
+  const wasStreamingRef = useRef(false)
+  useEffect(() => {
+    const justFinished = wasStreamingRef.current && !streaming
+    wasStreamingRef.current = streaming
+    if (!justFinished || !userId || messages.length === 0) return
+    AiChatHistoryService.save(
+      userId,
+      context.examId,
+      context.questionId,
+      messages.map((m) => ({ id: m.id, role: m.role, content: m.content })),
+      Date.now()
+    )
+  }, [streaming, messages, userId, context.examId, context.questionId])
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -130,9 +112,14 @@ export function AiChatPanel({ context }: AiChatPanelProps) {
 
     const controller = new AbortController()
     abortRef.current = controller
-    // Reasoning is internal to the model; never send it back as history.
+    // The current question is injected into the system message on every request
+    // so the model always has it — whether the user clicked Explain or typed a
+    // free-form message. Reasoning is internal; never send it back as history.
     const apiMessages: ChatMessage[] = [
-      { role: 'system', content: settings.systemPrompt || '' },
+      {
+        role: 'system',
+        content: buildSystemPrompt(settings.systemPrompt, context),
+      },
       ...history.map((m) => ({ role: m.role, content: m.content })),
     ]
 
@@ -185,8 +172,9 @@ export function AiChatPanel({ context }: AiChatPanelProps) {
       role: 'user',
       content: t('practice.ai.explainPrompt'),
     }
-    // Use the rich prompt as the actual content sent, but show the friendly label.
-    const sendableContent = buildInitialUserPrompt(context)
+    // The question is carried by the system context; this message is just the
+    // ask. Show the friendly label in the bubble, send the instruction.
+    const sendableContent = buildExplainInstruction(context)
     const history = [...messages, { ...userMsg, content: sendableContent }]
     setMessages((m) => [...m, userMsg])
     void runChat(history)
@@ -216,6 +204,9 @@ export function AiChatPanel({ context }: AiChatPanelProps) {
     setMessages([])
     setInput('')
     setError(null)
+    if (userId) {
+      AiChatHistoryService.clear(userId, context.examId, context.questionId)
+    }
   }
 
   if (!settings) {
@@ -288,9 +279,7 @@ export function AiChatPanel({ context }: AiChatPanelProps) {
                 return (
                   <div key={msg.id} className='flex justify-end'>
                     <div className='whitespace-pre-wrap rounded-2xl rounded-br-sm bg-primary px-3 py-2 text-sm leading-relaxed text-primary-foreground max-w-[85%]'>
-                      {msg.content.startsWith('Question:\n')
-                        ? t('practice.ai.explainPrompt')
-                        : msg.content}
+                      {msg.content}
                     </div>
                   </div>
                 )
@@ -324,8 +313,12 @@ export function AiChatPanel({ context }: AiChatPanelProps) {
                       </details>
                     )}
                     {(msg.content || !msg.reasoning) && (
-                      <div className='whitespace-pre-wrap rounded-2xl rounded-bl-sm bg-muted px-3 py-2 text-sm leading-relaxed'>
-                        {msg.content || (isStreamingThis ? '…' : '')}
+                      <div className='rounded-2xl rounded-bl-sm bg-muted px-3 py-2 text-sm leading-relaxed'>
+                        {msg.content ? (
+                          <MarkdownMessage content={msg.content} />
+                        ) : isStreamingThis ? (
+                          '…'
+                        ) : null}
                       </div>
                     )}
                   </div>
