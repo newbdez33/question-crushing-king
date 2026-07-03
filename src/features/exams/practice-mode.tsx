@@ -1356,6 +1356,7 @@ export function PracticeMode({
               <AiChatPanel
                 context={{
                   questionId: question.id,
+                  examId,
                   questionText: htmlToText(
                     getLocalizedText(
                       question.contentHtml ?? question.text,
