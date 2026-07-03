@@ -1,6 +1,32 @@
 import '@testing-library/jest-dom/vitest'
 import { vi } from 'vitest'
 
+// Node 24+ ships a native Web Storage that vitest activates with an invalid
+// `--localstorage-file`, leaving the global `localStorage` a broken empty object
+// (no getItem/setItem/clear) that shadows jsdom's. Replace it with a working
+// in-memory implementation so storage-backed tests are reliable on any runtime.
+function createStorageMock(): Storage {
+  const store = new Map<string, string>()
+  return {
+    get length() {
+      return store.size
+    },
+    clear: () => store.clear(),
+    getItem: (k) => (store.has(k) ? store.get(k)! : null),
+    key: (i) => Array.from(store.keys())[i] ?? null,
+    removeItem: (k) => void store.delete(k),
+    setItem: (k, v) => void store.set(k, String(v)),
+  }
+}
+
+for (const name of ['localStorage', 'sessionStorage'] as const) {
+  Object.defineProperty(globalThis, name, {
+    value: createStorageMock(),
+    writable: true,
+    configurable: true,
+  })
+}
+
 // Mock language provider with English translations as default
 const englishTranslations: Record<string, string> = {
   // Common
