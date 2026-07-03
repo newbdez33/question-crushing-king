@@ -25,6 +25,7 @@ import {
   buildSystemPrompt,
   type QuestionContext,
 } from './ai-chat-prompt'
+import { MarkdownMessage } from './markdown-message'
 
 interface AiChatPanelProps {
   context: QuestionContext
@@ -287,8 +288,12 @@ export function AiChatPanel({ context }: AiChatPanelProps) {
                       </details>
                     )}
                     {(msg.content || !msg.reasoning) && (
-                      <div className='whitespace-pre-wrap rounded-2xl rounded-bl-sm bg-muted px-3 py-2 text-sm leading-relaxed'>
-                        {msg.content || (isStreamingThis ? '…' : '')}
+                      <div className='rounded-2xl rounded-bl-sm bg-muted px-3 py-2 text-sm leading-relaxed'>
+                        {msg.content ? (
+                          <MarkdownMessage content={msg.content} />
+                        ) : isStreamingThis ? (
+                          '…'
+                        ) : null}
                       </div>
                     )}
                   </div>
