@@ -4,6 +4,7 @@ import { mockExams } from '@/features/exams/data/mock-exams'
 export type Exam = {
   id: string
   title: string
+  fullName?: string
   description: string
   questionCount?: number
   lastStudied?: string
@@ -14,6 +15,7 @@ type IndexFile = {
   exams?: Array<{
     id: string
     title?: string
+    fullName?: string
     description?: string
     questionCount?: number
     updatedAt?: string
@@ -48,6 +50,7 @@ export function useExams() {
           next.push({
             id,
             title: entry.title ?? id,
+            fullName: entry.fullName,
             description: entry.description ?? `/public/data/${id}.json`,
             questionCount: typeof entry.questionCount === 'number' ? entry.questionCount : undefined,
             lastUpdated:

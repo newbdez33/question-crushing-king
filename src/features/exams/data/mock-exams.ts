@@ -9,6 +9,7 @@ export interface Question {
 export interface Exam {
   id: string
   title: string
+  fullName?: string
   description: string
   questionCount: number
   lastUpdated?: string // ISO date string for question bank content updates

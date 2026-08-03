@@ -77,7 +77,7 @@ export async function signIn(page: Page, email: string, password: string) {
 export async function joinExam(page: Page, examId: string) {
   await page.goto(`/exams/${examId}`)
   await page.waitForLoadState('networkidle')
-  const joinBtn = page.getByRole('button', { name: /Join My Exams/i })
+  const joinBtn = page.getByRole('button', { name: /Join Exam/i })
   await joinBtn.click()
   await joinBtn.waitFor({ state: 'hidden' })
 }
