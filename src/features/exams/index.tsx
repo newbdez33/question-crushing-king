@@ -132,6 +132,11 @@ export function ExamsList() {
                       <CardTitle className='text-lg'>{exam.title}</CardTitle>
                       <FileText className='h-5 w-5 text-muted-foreground' />
                     </div>
+                    {exam.fullName && (
+                      <p className='text-sm font-medium text-foreground/80'>
+                        {exam.fullName}
+                      </p>
+                    )}
                     <CardDescription>{exam.description}</CardDescription>
                   </CardHeader>
                   <CardContent className='mt-auto px-6 pt-4'>
