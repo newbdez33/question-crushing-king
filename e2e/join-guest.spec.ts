@@ -11,7 +11,7 @@ test.describe('Guest Join Exam with screenshots', () => {
     await page.waitForLoadState('networkidle')
     await page.screenshot({ path: path.join(dir, '01-details-before.png'), fullPage: true })
 
-    const joinBtn = page.getByRole('button', { name: /Join My Exams/i })
+    const joinBtn = page.getByRole('button', { name: /Join Exam/i })
     await expect(joinBtn).toBeVisible()
     await joinBtn.click()
 

@@ -183,6 +183,11 @@ export function ExamDetails({ examId }: ExamDetailsProps) {
               <h1 className='text-3xl font-bold tracking-tight'>
                 {exam.title}
               </h1>
+              {exam.fullName && (
+                <p className='mt-1 text-lg font-medium text-foreground/80'>
+                  {exam.fullName}
+                </p>
+              )}
               <p className='mt-2 text-muted-foreground'>{exam.description}</p>
             </div>
             {!isOwned && (

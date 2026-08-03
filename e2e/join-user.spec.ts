@@ -36,7 +36,7 @@ test.describe('User Join Exam with screenshots', () => {
     await page.goto('/exams/SOA-C03')
     await page.waitForLoadState('networkidle')
     await capture(page, '06-details-before')
-    const joinBtn = page.getByRole('button', { name: /Join My Exams/i })
+    const joinBtn = page.getByRole('button', { name: /Join Exam/i })
     await expect(joinBtn).toBeVisible()
     await joinBtn.click()
     await expect(joinBtn).toBeHidden()
