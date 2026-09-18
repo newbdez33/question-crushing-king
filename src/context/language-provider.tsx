@@ -161,6 +161,14 @@ const translations: Record<Language, Record<string, string>> = {
     'sidebar.myExams': 'My Exams',
     'sidebar.other': 'Other',
     'sidebar.helpCenter': 'Help Center',
+    'sidebar.requestExam': 'Request an Exam',
+
+    // Request an Exam
+    'requestExam.ctaTitle': "Can't find your exam? Request it!",
+    'requestExam.ctaDesc':
+      "Open a GitHub issue with your exam files (PDF, JSON, images…) and we'll turn them into a practice exam for everyone.",
+    'requestExam.ctaButton': 'Request an Exam',
+    'requestExam.tileDesc': "Missing one? Upload the files and we'll add it.",
 
     // Authentication
     'auth.email': 'Email',
@@ -445,6 +453,13 @@ const translations: Record<Language, Record<string, string>> = {
     'sidebar.myExams': '我的考试',
     'sidebar.other': '其他',
     'sidebar.helpCenter': '帮助中心',
+    'sidebar.requestExam': '申请添加题库',
+
+    // Request an Exam
+    'requestExam.ctaTitle': '找不到你的考试？申请添加！',
+    'requestExam.ctaDesc': '在 GitHub 上提一个 Issue 并附上考试文件（PDF、JSON、图片等），我们会把它做成所有人都能练习的题库。',
+    'requestExam.ctaButton': '申请添加题库',
+    'requestExam.tileDesc': '缺了哪个考试？上传文件，我们来添加。',
 
     // Authentication
     'auth.email': '邮箱',
@@ -729,6 +744,13 @@ const translations: Record<Language, Record<string, string>> = {
     'sidebar.myExams': 'マイ試験',
     'sidebar.other': 'その他',
     'sidebar.helpCenter': 'ヘルプセンター',
+    'sidebar.requestExam': '試験の追加をリクエスト',
+
+    // Request an Exam
+    'requestExam.ctaTitle': '探している試験が見つかりませんか？リクエストしましょう！',
+    'requestExam.ctaDesc': 'GitHub の Issue に試験ファイル（PDF、JSON、画像など）を添付すると、みんなが練習できる問題集に変換します。',
+    'requestExam.ctaButton': '試験をリクエスト',
+    'requestExam.tileDesc': '足りない試験は？ファイルをアップロードすれば追加します。',
 
     // Authentication
     'auth.email': 'メールアドレス',
@@ -1013,6 +1035,13 @@ const translations: Record<Language, Record<string, string>> = {
     'sidebar.myExams': '我的考試',
     'sidebar.other': '其他',
     'sidebar.helpCenter': '說明中心',
+    'sidebar.requestExam': '申請新增題庫',
+
+    // Request an Exam
+    'requestExam.ctaTitle': '找不到你的考試？申請新增！',
+    'requestExam.ctaDesc': '在 GitHub 上開一個 Issue 並附上考試檔案（PDF、JSON、圖片等），我們會把它做成所有人都能練習的題庫。',
+    'requestExam.ctaButton': '申請新增題庫',
+    'requestExam.tileDesc': '缺了哪個考試？上傳檔案，我們來新增。',
 
     // Authentication
     'auth.email': '電子郵件',

@@ -1,0 +1,35 @@
+name: Request an Exam / 申请添加题库
+description: Upload the source files of an exam you'd like to practice and we'll turn them into a question bank. / 上传考试原始文件，我们整理成题库。
+title: "[Exam request] "
+labels: ["exam-request"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for contributing! Drag & drop your files into the **Files** box below — GitHub attaches them automatically (up to 25 MB each; PDF, DOCX, TXT, MD, JSON, ZIP and images are accepted, zip anything else).
+        感谢投稿！把文件拖进下面的 **Files** 框即可自动上传（单个 ≤ 25 MB；支持 PDF、DOCX、TXT、MD、JSON、ZIP 和图片，其它格式请打包成 ZIP）。
+  - type: textarea
+    id: files
+    attributes:
+      label: Files / 文件
+      description: Drag & drop the exam files here. Required. / 把考试文件拖到这里，必填。
+      placeholder: Drop files here… / 把文件拖到这里…
+    validations:
+      required: true
+  - type: input
+    id: exam-name
+    attributes:
+      label: Exam name or code / 考试名称或代号
+      description: Helps us name the exam. Leave blank if you're not sure. / 帮助我们命名题库，不确定可留空。
+      placeholder: e.g. MLA-C01
+  - type: input
+    id: contact
+    attributes:
+      label: Contact / 联系方式
+      description: How we can reach you about this exam (email, WeChat, Telegram…). / 方便我们就这个题库联系你。
+      placeholder: Email, WeChat, Telegram…
+  - type: textarea
+    id: notes
+    attributes:
+      label: Notes / 备注
+      description: Anything we should know about these files (language, source, missing answers…). / 关于这些文件需要我们了解的信息。

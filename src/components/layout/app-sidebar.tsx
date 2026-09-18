@@ -1,8 +1,9 @@
 import { useNavigate } from '@tanstack/react-router'
-import { LayoutDashboard, HelpCircle, FileText } from 'lucide-react'
+import { LayoutDashboard, HelpCircle, FileText, FilePlus2 } from 'lucide-react'
 import { useAuth } from '@/context/auth-ctx'
 import { useLayout } from '@/context/layout-provider'
 import { useLanguage } from '@/context/language-provider'
+import { buildExamRequestIssueUrl } from '@/lib/exam-request-url'
 import {
   Sidebar,
   SidebarContent,
@@ -45,6 +46,11 @@ export function AppSidebar() {
           title: t('sidebar.myExams'),
           url: '/exams',
           icon: FileText,
+        },
+        {
+          title: t('sidebar.requestExam'),
+          url: buildExamRequestIssueUrl({ contact: user?.email }),
+          icon: FilePlus2,
         },
       ],
     },
