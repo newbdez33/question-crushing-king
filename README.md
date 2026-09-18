@@ -10,6 +10,7 @@ A modern exam practice application with multiple study modes, progress tracking,
 - **Exam Mode** - Randomized question sessions by count; full paper submission, result page, and review flow are planned
 - **Mistake Review** - Targeted practice on previously incorrect answers
 - **My Exams** - Personalized list of joined exams
+- **Request an Exam** - Dashboard and sidebar entry points open a pre-filled GitHub issue form where users attach exam source files (PDF, JSON, images, …) for the owner to turn into a new question bank
 - **Progress Sync** - Cross-device synchronization via Firebase
 - **Profile Data** - Firebase Auth profile fields plus custom Realtime Database fields
 - **Localization** - English, Simplified Chinese, Traditional Chinese, and Japanese UI strings, with localized answer explanations when present in question data

@@ -62,8 +62,18 @@ function NavBadge({ children }: { children: ReactNode }) {
   return <Badge className='rounded-full px-1 py-0 text-xs'>{children}</Badge>
 }
 
+const isExternalUrl = (url: unknown) =>
+  typeof url === 'string' && /^https?:\/\//.test(url)
+
 function SidebarMenuLink({ item, href }: { item: NavLink; href: string }) {
   const { setOpenMobile } = useSidebar()
+  const content = (
+    <>
+      {item.icon && <item.icon />}
+      <span>{item.title}</span>
+      {item.badge && <NavBadge>{item.badge}</NavBadge>}
+    </>
+  )
   return (
     <SidebarMenuItem>
       <SidebarMenuButton
@@ -71,11 +81,20 @@ function SidebarMenuLink({ item, href }: { item: NavLink; href: string }) {
         isActive={checkIsActive(href, item)}
         tooltip={item.title}
       >
-        <Link to={item.url} onClick={() => setOpenMobile(false)}>
-          {item.icon && <item.icon />}
-          <span>{item.title}</span>
-          {item.badge && <NavBadge>{item.badge}</NavBadge>}
-        </Link>
+        {isExternalUrl(item.url) ? (
+          <a
+            href={item.url}
+            target='_blank'
+            rel='noreferrer noopener'
+            onClick={() => setOpenMobile(false)}
+          >
+            {content}
+          </a>
+        ) : (
+          <Link to={item.url} onClick={() => setOpenMobile(false)}>
+            {content}
+          </Link>
+        )}
       </SidebarMenuButton>
     </SidebarMenuItem>
   )

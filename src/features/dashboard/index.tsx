@@ -6,12 +6,16 @@ import {
   BookOpen,
   CheckCircle,
   FileText,
+  FilePlus2,
+  Plus,
   TrendingUp,
   Cloud,
+  Upload,
 } from 'lucide-react'
 import { useAuth } from '@/context/auth-ctx'
 import { useLanguage } from '@/context/language-provider'
 import { useExams } from '@/hooks/use-exams'
+import { buildExamRequestIssueUrl } from '@/lib/exam-request-url'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import {
@@ -32,6 +36,7 @@ export function Dashboard() {
   const { user, guestId } = useAuth()
   const { t } = useLanguage()
   const userId = user?.uid || guestId
+  const requestExamUrl = buildExamRequestIssueUrl({ contact: user?.email })
 
   const { exams: allExams, loading: examsLoading } = useExams()
 
@@ -148,6 +153,24 @@ export function Dashboard() {
             </AlertDescription>
           </Alert>
         )}
+
+        <Card className='relative mb-6 overflow-hidden border-primary/30 bg-gradient-to-br from-primary/10 via-card to-card'>
+          <CardContent className='flex flex-wrap items-center gap-5 p-6'>
+            <div className='flex h-13 w-13 shrink-0 items-center justify-center rounded-2xl bg-primary/15 text-primary'>
+              <FilePlus2 className='h-7 w-7' />
+            </div>
+            <div className='min-w-0 flex-1'>
+              <p className='text-lg font-semibold'>{t('requestExam.ctaTitle')}</p>
+              <p className='text-muted-foreground'>{t('requestExam.ctaDesc')}</p>
+            </div>
+            <Button asChild size='lg' className='max-sm:w-full'>
+              <a href={requestExamUrl} target='_blank' rel='noreferrer noopener'>
+                <Upload />
+                {t('requestExam.ctaButton')}
+              </a>
+            </Button>
+          </CardContent>
+        </Card>
 
         <div className='mb-8 grid gap-4 md:grid-cols-2 lg:grid-cols-4'>
           <Card>
@@ -319,6 +342,13 @@ export function Dashboard() {
                   </Card>
                 </Link>
               ))}
+              <a href={requestExamUrl} target='_blank' rel='noreferrer noopener' className='block'>
+                <Card className='flex h-full min-h-40 flex-col items-center justify-center gap-2 border-dashed border-primary/40 bg-transparent p-6 text-center shadow-none transition-colors hover:bg-primary/5'>
+                  <Plus className='h-7 w-7 text-primary' />
+                  <p className='font-semibold text-primary'>{t('requestExam.ctaButton')}</p>
+                  <p className='text-sm text-muted-foreground'>{t('requestExam.tileDesc')}</p>
+                </Card>
+              </a>
             </div>
           )}
         </div>

@@ -147,6 +147,7 @@ const englishTranslations: Record<string, string> = {
   'sidebar.myExams': 'My Exams',
   'sidebar.other': 'Other',
   'sidebar.helpCenter': 'Help Center',
+  'sidebar.requestExam': 'Request an Exam',
 
   // Authentication
   'auth.email': 'Email',
@@ -274,6 +275,13 @@ const englishTranslations: Record<string, string> = {
   'common.comingSoon': 'Coming Soon!',
   'common.comingSoonDesc': 'This page has not been created yet. Stay tuned though!',
   'common.guestUser': 'Guest User',
+
+  // Request an Exam
+  'requestExam.ctaTitle': "Can't find your exam? Request it!",
+  'requestExam.ctaDesc':
+    "Open a GitHub issue with your exam files (PDF, JSON, images…) and we'll turn them into a practice exam for everyone.",
+  'requestExam.ctaButton': 'Request an Exam',
+  'requestExam.tileDesc': "Missing one? Upload the files and we'll add it.",
 
   // Sign out dialog
   'signOut.title': 'Sign out',
