@@ -24,6 +24,7 @@ interface PracticeMobileBarProps {
   mistakesSessionStatus: Record<string, 'correct' | 'incorrect' | undefined>
   settings: PracticeSettings
   onSettingsChange: (settings: PracticeSettings) => void
+  onClearProgress: () => void
 }
 
 export function PracticeMobileBar({
@@ -37,6 +38,7 @@ export function PracticeMobileBar({
   mistakesSessionStatus,
   settings,
   onSettingsChange,
+  onClearProgress,
 }: PracticeMobileBarProps) {
   let correct = 0
   let incorrect = 0
@@ -178,7 +180,20 @@ export function PracticeMobileBar({
           >
             <div data-drag-handle className='mx-auto mb-2 h-1.5 w-12 shrink-0 rounded-full bg-muted-foreground/30' />
             <SheetHeader className='shrink-0'>
-              <SheetTitle>Answer Sheet</SheetTitle>
+              <div className='flex items-center justify-between'>
+                <SheetTitle>Answer Sheet</SheetTitle>
+                <Button
+                  variant='ghost'
+                  size='sm'
+                  className='h-auto p-0 text-blue-500 hover:text-blue-600'
+                  onClick={() => {
+                    setSheetOpen(false)
+                    onClearProgress()
+                  }}
+                >
+                  Clear Progress
+                </Button>
+              </div>
             </SheetHeader>
             <div className='mx-auto w-full max-w-3xl flex-1 overflow-y-auto px-4 py-4'>
               <div className='grid grid-cols-6 gap-2'>

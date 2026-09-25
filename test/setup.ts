@@ -105,6 +105,9 @@ const englishTranslations: Record<string, string> = {
   'practice.graduatedDesc': 'You answered it correctly {count} times in a row.',
   'practice.savedLocally': 'Saved locally. Sign in to sync to cloud',
   'practice.bookmarkSavedLocally': 'Bookmark saved locally. Sign in to sync to cloud',
+  'practice.copyQuestion': 'Copy question and options',
+  'practice.copied': 'Copied to clipboard',
+  'practice.copyFailed': 'Copy failed',
 
   // Study mode
   'study.title': 'Study Mode',
