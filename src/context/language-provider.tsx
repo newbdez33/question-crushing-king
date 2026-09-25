@@ -101,6 +101,9 @@ const translations: Record<Language, Record<string, string>> = {
     'practice.graduatedDesc': 'You answered it correctly {count} times in a row.',
     'practice.savedLocally': 'Saved locally. Sign in to sync to cloud',
     'practice.bookmarkSavedLocally': 'Bookmark saved locally. Sign in to sync to cloud',
+    'practice.copyQuestion': 'Copy question and options',
+    'practice.copied': 'Copied to clipboard',
+    'practice.copyFailed': 'Copy failed',
 
     // Study mode
     'study.title': 'Study Mode',
@@ -393,6 +396,9 @@ const translations: Record<Language, Record<string, string>> = {
     'practice.graduatedDesc': '你连续答对了 {count} 次。',
     'practice.savedLocally': '已保存到本地。登录以同步到云端',
     'practice.bookmarkSavedLocally': '收藏已保存到本地。登录以同步到云端',
+    'practice.copyQuestion': '复制题目和选项',
+    'practice.copied': '已复制到剪贴板',
+    'practice.copyFailed': '复制失败',
 
     // Study mode
     'study.title': '学习模式',
@@ -684,6 +690,9 @@ const translations: Record<Language, Record<string, string>> = {
     'practice.graduatedDesc': '{count}回連続で正解しました。',
     'practice.savedLocally': 'ローカルに保存しました。クラウドに同期するにはログインしてください',
     'practice.bookmarkSavedLocally': 'ブックマークをローカルに保存しました。クラウドに同期するにはログインしてください',
+    'practice.copyQuestion': '問題と選択肢をコピー',
+    'practice.copied': 'クリップボードにコピーしました',
+    'practice.copyFailed': 'コピーに失敗しました',
 
     // Study mode
     'study.title': '学習モード',
@@ -975,6 +984,9 @@ const translations: Record<Language, Record<string, string>> = {
     'practice.graduatedDesc': '您連續答對了 {count} 次。',
     'practice.savedLocally': '已儲存到本機。登入以同步到雲端',
     'practice.bookmarkSavedLocally': '收藏已儲存到本機。登入以同步到雲端',
+    'practice.copyQuestion': '複製題目和選項',
+    'practice.copied': '已複製到剪貼簿',
+    'practice.copyFailed': '複製失敗',
 
     // Study mode
     'study.title': '學習模式',

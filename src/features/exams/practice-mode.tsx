@@ -46,6 +46,7 @@ import {
 } from '@/context/language-provider'
 import { AiChatPanel } from './components/ai-chat-panel'
 import { PracticeMobileBar } from './components/practice-mobile-bar'
+import { CopyQuestionButton } from './components/copy-question-button'
 import {
   PracticeSidebar,
   type PracticeSettings,
@@ -1102,22 +1103,25 @@ export function PracticeMode({
                     })()}
                   </div>
                 </CardTitle>
-                <Button
-                  variant='ghost'
-                  size='sm'
-                  className={cn(
-                    'absolute top-0 right-2 gap-2 sm:right-6',
-                    isBookmarked && 'text-yellow-500 hover:text-yellow-600'
-                  )}
-                  onClick={toggleBookmark}
-                >
-                  <Bookmark
+                <div className='absolute top-0 right-2 flex sm:right-6'>
+                  <CopyQuestionButton question={question} />
+                  <Button
+                    variant='ghost'
+                    size='sm'
                     className={cn(
-                      'h-4 w-4 self-start',
-                      isBookmarked && 'fill-current'
+                      'gap-2',
+                      isBookmarked && 'text-yellow-500 hover:text-yellow-600'
                     )}
-                  />
-                </Button>
+                    onClick={toggleBookmark}
+                  >
+                    <Bookmark
+                      className={cn(
+                        'h-4 w-4 self-start',
+                        isBookmarked && 'fill-current'
+                      )}
+                    />
+                  </Button>
+                </div>
               </CardHeader>
               <CardContent className='space-y-3 px-2 sm:space-y-6 sm:px-6'>
                 {question.type === 'single' ? (
