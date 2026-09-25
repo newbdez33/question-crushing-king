@@ -1419,6 +1419,7 @@ export function PracticeMode({
         mistakesSessionStatus={mistakesSessionStatus}
         settings={settings}
         onSettingsChange={handleSettingsChange}
+        onClearProgress={handleClearProgress}
       />
 
       <AlertDialog open={showClearConfirm} onOpenChange={setShowClearConfirm}>

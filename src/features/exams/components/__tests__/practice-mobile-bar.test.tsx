@@ -42,6 +42,7 @@ describe('PracticeMobileBar', () => {
     mistakesSessionStatus: {},
     settings: defaultSettings,
     onSettingsChange: vi.fn(),
+    onClearProgress: vi.fn(),
   }
 
   beforeEach(() => {
@@ -171,6 +172,40 @@ describe('PracticeMobileBar', () => {
     expect(onSettingsChange).toHaveBeenCalledWith(
       expect.objectContaining({ fontSize: 'large' })
     )
+  })
+
+  it('should show clear progress button in sheet', async () => {
+    const user = userEvent.setup()
+    render(<PracticeMobileBar {...defaultProps} />)
+
+    const answerCardButton = screen.getByText('Answer Card').closest('button')
+    await user.click(answerCardButton!)
+
+    await waitFor(() => {
+      expect(screen.getByText('Clear Progress')).toBeInTheDocument()
+    })
+  })
+
+  it('should call onClearProgress and close sheet when clear progress is clicked', async () => {
+    const user = userEvent.setup()
+    const onClearProgress = vi.fn()
+    render(
+      <PracticeMobileBar {...defaultProps} onClearProgress={onClearProgress} />
+    )
+
+    const answerCardButton = screen.getByText('Answer Card').closest('button')
+    await user.click(answerCardButton!)
+
+    await waitFor(() => {
+      expect(screen.getByText('Clear Progress')).toBeInTheDocument()
+    })
+
+    await user.click(screen.getByText('Clear Progress'))
+
+    expect(onClearProgress).toHaveBeenCalledTimes(1)
+    await waitFor(() => {
+      expect(screen.queryByText('Answer Sheet')).not.toBeInTheDocument()
+    })
   })
 
   it('should use mistakesSessionStatus in mistakes mode', () => {

@@ -914,6 +914,7 @@ export function ExamMode({
         mistakesSessionStatus={{}}
         settings={settings}
         onSettingsChange={handleSettingsChange}
+        onClearProgress={handleClearProgress}
       />
     </div>
   )
