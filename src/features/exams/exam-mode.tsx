@@ -38,6 +38,7 @@ import {
 } from './localized-content'
 import { PracticeMobileBar } from './components/practice-mobile-bar'
 import { CopyQuestionButton } from './components/copy-question-button'
+import { QuestionsLoading } from './components/questions-loading'
 import {
   PracticeSidebar,
   type PracticeSettings,
@@ -589,9 +590,7 @@ export function ExamMode({
           </div>
         </Header>
         <Main className='mx-auto w-full max-w-3xl'>
-          <div className='text-sm text-muted-foreground'>
-            {t('practice.loadingQuestions')}
-          </div>
+          <QuestionsLoading />
         </Main>
       </>
     )

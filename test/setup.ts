@@ -93,6 +93,7 @@ const englishTranslations: Record<string, string> = {
   'practice.yourAnswer': 'Your Answer',
   'practice.explanation': 'Explanation',
   'practice.loadingQuestions': 'Loading questions…',
+  'practice.loadingQuestionsHint': 'Large question banks can take a moment the first time.',
   'practice.noMistakes': 'No mistakes to review!',
   'practice.noMistakesDesc': "Great job! You don't have any incorrect answers yet.",
   'practice.noBookmarks': 'No bookmarked questions!',

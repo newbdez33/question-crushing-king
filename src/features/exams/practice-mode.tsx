@@ -47,6 +47,7 @@ import {
 import { AiChatPanel } from './components/ai-chat-panel'
 import { PracticeMobileBar } from './components/practice-mobile-bar'
 import { CopyQuestionButton } from './components/copy-question-button'
+import { QuestionsLoading } from './components/questions-loading'
 import {
   PracticeSidebar,
   type PracticeSettings,
@@ -1002,7 +1003,7 @@ export function PracticeMode({
         </Header>
         <div className='flex flex-1 items-start justify-center gap-2 pt-0 sm:gap-4'>
           <Main className='mx-auto w-full max-w-3xl px-3 sm:px-0 py-4'>
-            <div className='text-sm text-muted-foreground'>{t('practice.loadingQuestions')}</div>
+            <QuestionsLoading />
           </Main>
         </div>
       </>
