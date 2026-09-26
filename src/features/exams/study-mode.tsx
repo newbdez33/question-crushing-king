@@ -36,6 +36,7 @@ import {
 } from './localized-content'
 import { StudyMobileBar } from './components/study-mobile-bar'
 import { CopyQuestionButton } from './components/copy-question-button'
+import { QuestionsLoading } from './components/questions-loading'
 import { StudySidebar, type StudySettings } from './components/study-sidebar'
 import { mockExams } from './data/mock-exams'
 
@@ -379,9 +380,7 @@ export function StudyMode({ examId }: StudyModeProps) {
         </Header>
 
         <Main className='mx-auto w-full max-w-3xl'>
-          <div className='text-sm text-muted-foreground'>
-            {t('practice.loadingQuestions')}
-          </div>
+          <QuestionsLoading />
         </Main>
       </>
     )
