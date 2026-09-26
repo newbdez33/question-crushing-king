@@ -15,13 +15,18 @@ const SETTINGS_PATH = '_settings'
 export function subscribeExamProgress(
   userId: string,
   examId: string,
-  onChange: (progress: ExamProgress) => void
+  onChange: (progress: ExamProgress) => void,
+  onError?: (error: Error) => void
 ) {
   const r = ref(db, `${BASE}/${userId}/${examId}`)
-  const unsubscribe = onValue(r, (snap) => {
-    const val = snap.val() as ExamProgress | null
-    onChange(val || {})
-  })
+  const unsubscribe = onValue(
+    r,
+    (snap) => {
+      const val = snap.val() as ExamProgress | null
+      onChange(val || {})
+    },
+    onError
+  )
   return () => unsubscribe()
 }
 
